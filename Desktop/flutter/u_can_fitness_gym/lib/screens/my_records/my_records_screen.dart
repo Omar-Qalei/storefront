@@ -11,7 +11,6 @@ class MyRecordsScreen extends StatelessWidget {
     SizeConfig().init(context);
     AppLocalizationsConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       body: Body(),
     );
   }

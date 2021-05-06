@@ -27,7 +27,6 @@ class _AddExercisesScreenState extends State<AddExercisesScreen> {
     final app = Provider.of<AppSetting>(context);
     app.selectedExercise = params;
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         backgroundColor: kSecondaryColor,
         // automaticallyImplyLeading: false,

@@ -11,7 +11,6 @@ class ExercisesCategoriesScreen extends StatelessWidget {
     SizeConfig().init(context);
     AppLocalizationsConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       // appBar: AppBar(
       //   backgroundColor: kSecondaryColor,
       //   automaticallyImplyLeading: false,

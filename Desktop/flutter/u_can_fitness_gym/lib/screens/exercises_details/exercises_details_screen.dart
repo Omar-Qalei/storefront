@@ -25,10 +25,13 @@ class _ExercisesDetailsScreenState extends State<ExercisesDetailsScreen> {
     SizeConfig().init(context);
     AppLocalizationsConfig().init(context);
     final app = Provider.of<AppSetting>(context);
+    final ExercisesModel params =
+        ModalRoute.of(context)?.settings.arguments as ExercisesModel;
+    app.selectedExercise =
+        new ExercisesModel(id: params.id, title: params.title);
     final int exerciseId = (app.selectedExercise.id)!;
     final String exerciseTitle = (app.selectedExercise.title)!;
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       body: Body(),
       floatingActionButton: SpeedDial(
         /// both default to 16

@@ -11,7 +11,6 @@ class StartupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       body: Body(),
     );
   }

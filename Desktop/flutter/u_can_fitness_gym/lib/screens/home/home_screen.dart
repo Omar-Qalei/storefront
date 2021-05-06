@@ -13,9 +13,7 @@ class HomeScreen extends StatelessWidget {
     SizeConfig().init(context);
     AppLocalizationsConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
-        backgroundColor: kSecondaryColor,
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.home),
         actions: [IconButton(icon: Icon(Icons.settings), onPressed: () {})],

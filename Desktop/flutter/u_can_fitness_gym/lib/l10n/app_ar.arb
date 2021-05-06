@@ -8,7 +8,7 @@
   "suggestionsComplaints": "اقتراحات و شكاوي",
   "faq": "اسئلة شائعة",
   "myRecords": "سجلي",
-  "exerciseClassDates": "مواعيد حصص التمرين",
+  "exerciseClassDates": "حصص",
   "categories": "الفئات",
   "subcategories": "الفئات الفرعية",
   "exerciseDetails": "تفاصيل التمرين",
@@ -25,5 +25,7 @@
   "saturday": "السبت",
   "done": "تم",
   "cancel": "الغاء",
-  "add": "أضف"
+  "add": "أضف",
+  "more": "المزيد",
+  "search": "بحث"
 }

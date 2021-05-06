@@ -14,4 +14,5 @@ class Generals {
   static String done = appLocalizations.done;
   static String cancel = appLocalizations.cancel;
   static String add = appLocalizations.add;
+  static String search = appLocalizations.search;
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:u_can_fitness_gym/constants.dart';
 import 'package:u_can_fitness_gym/screens/exercises_subcategories/exercises_subcategories_screen.dart';
@@ -5,6 +7,8 @@ import 'package:u_can_fitness_gym/shared/data/data.dart';
 import 'package:u_can_fitness_gym/shared/enum/screens.dart';
 import 'package:u_can_fitness_gym/shared/models/exercises.dart';
 import 'package:u_can_fitness_gym/size_config.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 // import 'package:flutter_youtube/flutter_youtube.dart';
 import 'header.dart';
@@ -15,9 +19,17 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: 'x530q4hlv9c',
+    flags: YoutubePlayerFlags(
+      autoPlay: false,
+      mute: true,
+    ),
+  );
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   // void listener() {
@@ -32,11 +44,18 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    final ExercisesModel params =
-        ModalRoute.of(context)?.settings.arguments as ExercisesModel;
+    print(_controller.value.playerState);
     return SafeArea(
       child: CustomScrollView(
         slivers: [
+          SliverAppBar(
+            backgroundColor: kSecondaryColor,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text("Details"),
+              // centerTitle: true,
+            ),
+            expandedHeight: 120,
+          ),
           SliverPersistentHeader(
               // backgroundColor: kSecondaryColor,
               // flexibleSpace: FlexibleSpaceBar(
@@ -53,11 +72,30 @@ class _BodyState extends State<Body> {
               children: [
                 Column(
                   children: [
+                    Container(
+                      width: 200,
+                      height: 200,
+                      child: WebView(
+                        initialUrl: 'https://www.flutter.dev',
+                      ),
+                    ),
                     // Container(
-                    //     width: SizeConfig.screenWidth,
-                    //     height: 300,
-                    //     child:),
-                    //
+                    //   width: 200,
+                    //   height: 300,
+                    //   child: YoutubePlayer(
+                    //     controller: _controller,
+                    //     showVideoProgressIndicator: true,
+                    //     // videoProgressIndicatorColor: Colors.amber,
+                    //     // progressColors: ProgressColors(
+                    //     //     playedColor: Colors.amber,
+                    //     //     handleColor: Colors.amberAccent,
+                    //     // ),
+                    //     // onReady () {
+                    //     //     _controller.addListener(listener);
+                    //     // },
+                    //   ),
+                    // ),
+
                     // Container(
                     //   width: SizeConfig.screenWidth,
                     //   height: 300,

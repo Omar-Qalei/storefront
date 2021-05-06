@@ -14,6 +14,7 @@ class Screens {
   static String faq = appLocalizations.faq;
   static String myRecords = appLocalizations.myRecords;
   static String exerciseClassDates = appLocalizations.exerciseClassDates;
+  static String more = appLocalizations.more;
   // static String exercises = appLocalizations.qr;
   static String categories = appLocalizations.categories;
   static String subcategories = appLocalizations.subcategories;

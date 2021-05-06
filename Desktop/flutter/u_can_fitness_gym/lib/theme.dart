@@ -2,18 +2,17 @@ import 'constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const appBarTheme = AppBarTheme(centerTitle: false, elevation: 0);
-
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
-    primaryColor: kPrimaryColor,
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: appBarTheme,
-    iconTheme: IconThemeData(color: kContentColorLightTheme),
+    primaryColor: kPrimaryLightColor,
+    scaffoldBackgroundColor: kPrimaryLightColor,
+    appBarTheme: AppBarTheme(
+        centerTitle: false, elevation: 0, backgroundColor: kPrimaryDarkColor),
+    iconTheme: IconThemeData(color: kContentColorDarkTheme),
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorLightTheme),
+        .apply(bodyColor: kContentColorDarkTheme, fontFamily: kFontFamily),
     colorScheme: ColorScheme.light().copyWith(
-      primary: kPrimaryColor,
+      primary: kPrimaryLightColor,
       secondary: kSecondaryColor,
       error: kErrorColor,
     ),
@@ -22,14 +21,15 @@ ThemeData lightThemeData(BuildContext context) {
 
 ThemeData darkThemeData(BuildContext context) {
   return ThemeData.dark().copyWith(
-    primaryColor: kPrimaryColor,
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: appBarTheme,
-    iconTheme: IconThemeData(color: kContentColorDarkTheme),
+    primaryColor: kPrimaryDarkColor,
+    scaffoldBackgroundColor: kPrimaryDarkColor,
+    appBarTheme: AppBarTheme(
+        centerTitle: false, elevation: 0, backgroundColor: kSecondaryColor),
+    iconTheme: IconThemeData(color: kContentColorLightTheme),
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorDarkTheme),
+        .apply(bodyColor: kContentColorLightTheme, fontFamily: kFontFamily),
     colorScheme: ColorScheme.dark().copyWith(
-      primary: kPrimaryColor,
+      primary: kPrimaryDarkColor,
       secondary: kSecondaryColor,
       error: kErrorColor,
     ),
