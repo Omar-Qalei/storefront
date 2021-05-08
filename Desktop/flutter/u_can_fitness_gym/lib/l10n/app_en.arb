@@ -27,5 +27,8 @@
   "cancel": "Cancel",
   "add": "Add",
   "more": "More",
-  "search": "Search"
+  "search": "Search",
+  "noRecords": "No Records",
+  "images": "Images",
+  "video": "Video"
 }

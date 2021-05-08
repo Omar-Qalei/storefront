@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:u_can_fitness_gym/constants.dart';
 import 'package:u_can_fitness_gym/screens/exercises_categories/exercises_categories_screen.dart';
 import 'package:u_can_fitness_gym/shared/data/data.dart';
-import 'package:u_can_fitness_gym/shared/enum/generals.dart';
 import 'package:u_can_fitness_gym/shared/enum/screens.dart';
 import 'package:u_can_fitness_gym/shared/models/exercises.dart';
 import 'package:u_can_fitness_gym/size_config.dart';

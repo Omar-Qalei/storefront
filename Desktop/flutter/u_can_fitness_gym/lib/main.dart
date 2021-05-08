@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkThemeData(context),
       routes: routes,
       themeMode: ThemeMode.dark,
-      home: HomeScreen(),
+      home: StartupScreen(),
     );
   }
 }

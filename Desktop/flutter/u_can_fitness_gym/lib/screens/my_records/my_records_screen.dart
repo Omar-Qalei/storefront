@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:u_can_fitness_gym/constants.dart';
 import 'package:u_can_fitness_gym/shared/configurations/app_localizations_config.dart';
+import 'package:u_can_fitness_gym/shared/enum/screens.dart';
 import 'package:u_can_fitness_gym/size_config.dart';
 import 'components/body.dart';
 
@@ -11,6 +12,10 @@ class MyRecordsScreen extends StatelessWidget {
     SizeConfig().init(context);
     AppLocalizationsConfig().init(context);
     return Scaffold(
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   actions: [IconButton(icon: Icon(Icons.settings), onPressed: () {})],
+      // ),
       body: Body(),
     );
   }

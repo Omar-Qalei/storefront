@@ -15,4 +15,6 @@ class Generals {
   static String cancel = appLocalizations.cancel;
   static String add = appLocalizations.add;
   static String search = appLocalizations.search;
+  static String images = appLocalizations.images;
+  static String video = appLocalizations.video;
 }

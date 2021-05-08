@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:u_can_fitness_gym/shared/data/data.dart';
-import 'package:u_can_fitness_gym/shared/enum/dialogs.dart';
+import 'package:u_can_fitness_gym/shared/enum/exercises.dart';
 import 'package:u_can_fitness_gym/shared/models/exercises.dart';
 import 'package:u_can_fitness_gym/shared/settings/app.setting.dart';
 import 'package:u_can_fitness_gym/size_config.dart';
@@ -27,6 +27,7 @@ class _ListView_ExercisesState extends State<ListView_Exercises> {
     final app = Provider.of<AppSetting>(context);
     exerciseId = (app.selectedExercise.id)!;
     Data.exercise[exerciseId].title = (app.selectedExercise.title)!;
+    print(Data.exercise[exerciseId].exercises!.length);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 8.0),
       child: ListView.separated(
@@ -64,7 +65,7 @@ class _ListView_ExercisesState extends State<ListView_Exercises> {
                           maxLength: 2,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: Dialogs.duplicates,
+                            labelText: ExercisesEnum.duplicates,
                           ),
                           onSaved: (String? value) {
                             // This optional block of code can be used to run
@@ -91,7 +92,7 @@ class _ListView_ExercisesState extends State<ListView_Exercises> {
                           maxLength: 2,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: Dialogs.groups,
+                            labelText: ExercisesEnum.groups,
                           ),
                           onSaved: (String? value) {
                             // This optional block of code can be used to run

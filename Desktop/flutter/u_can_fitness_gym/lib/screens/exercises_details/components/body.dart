@@ -1,14 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:u_can_fitness_gym/constants.dart';
 import 'package:u_can_fitness_gym/screens/exercises_subcategories/exercises_subcategories_screen.dart';
 import 'package:u_can_fitness_gym/shared/data/data.dart';
+import 'package:u_can_fitness_gym/shared/enum/exercises.dart';
+import 'package:u_can_fitness_gym/shared/enum/generals.dart';
 import 'package:u_can_fitness_gym/shared/enum/screens.dart';
 import 'package:u_can_fitness_gym/shared/models/exercises.dart';
+import 'package:u_can_fitness_gym/shared/settings/app.setting.dart';
 import 'package:u_can_fitness_gym/size_config.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+// import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 // import 'package:flutter_youtube/flutter_youtube.dart';
 import 'header.dart';
@@ -19,17 +23,10 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  YoutubePlayerController _controller = YoutubePlayerController(
-    initialVideoId: 'x530q4hlv9c',
-    flags: YoutubePlayerFlags(
-      autoPlay: false,
-      mute: true,
-    ),
-  );
+  DateTime selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   // void listener() {
@@ -41,112 +38,212 @@ class _BodyState extends State<Body> {
   //   }
   // }
   //
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+      confirmText: Generals.done,
+      cancelText: Generals.cancel,
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(_controller.value.playerState);
+    final app = Provider.of<AppSetting>(context);
+    final String exerciseTitle = (app.selectedExercise.title)!;
+
     return SafeArea(
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
             backgroundColor: kSecondaryColor,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text("Details"),
+              title: Text(
+                exerciseTitle,
+                style: TextStyle(fontFamily: kFontFamily),
+              ),
               // centerTitle: true,
             ),
             expandedHeight: 120,
           ),
-          SliverPersistentHeader(
-              // backgroundColor: kSecondaryColor,
-              // flexibleSpace: FlexibleSpaceBar(
-              //   title: Text(params.title ?? ""),
-              //   // centerTitle: true,
-              // ),
-              // expandedHeight: 120,
-              floating: true,
-              pinned: false,
-              delegate: Header(minExtent: 150, maxExtent: 250)),
           SliverFillRemaining(
             fillOverscroll: true,
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 200,
-                      child: WebView(
-                        initialUrl: 'https://www.flutter.dev',
+            hasScrollBody: true,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Header(),
+                      // TextButton(
+                      //   child: Text(
+                      //     'Youtube',
+                      //     style: TextStyle(color: kDefaultColor),
+                      //   ),
+                      //   onPressed: () => showDialog(
+                      //     context: context,
+                      //     builder: (context) => AlertDialog(
+                      //       content:
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   width: SizeConfig.screenWidth,
+                      //   child: YoutubePlayerIFrame(
+                      //     controller: _controller,
+                      //     aspectRatio: 16 / 9,
+                      //   ),
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${ExercisesEnum.groups}: ',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            '3',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
                       ),
-                    ),
-                    // Container(
-                    //   width: 200,
-                    //   height: 300,
-                    //   child: YoutubePlayer(
-                    //     controller: _controller,
-                    //     showVideoProgressIndicator: true,
-                    //     // videoProgressIndicatorColor: Colors.amber,
-                    //     // progressColors: ProgressColors(
-                    //     //     playedColor: Colors.amber,
-                    //     //     handleColor: Colors.amberAccent,
-                    //     // ),
-                    //     // onReady () {
-                    //     //     _controller.addListener(listener);
-                    //     // },
-                    //   ),
-                    // ),
-
-                    // Container(
-                    //   width: SizeConfig.screenWidth,
-                    //   height: 300,
-                    //   child: YoutubePlayerIFrame(
-                    //     // controller: _controller,
-                    //     aspectRatio: 16 / 9,
-                    //   ),
-                    // ),
-                    //             FlutterYoutube.playYoutubeVideoByUrl(
-                    // apiKey: "AIzaSyBxc3NhQUnjPb3wQEKOZRMz-0YLn-jHWnY",
-                    // videoUrl: "https://www.youtube.com/watch?v=OBm2mz3IHoM&ab_channel=MrTojake",
-                    // autoPlay: true, //default falase
-                    // fullScreen: true //default false
-                    // )
-                    // Container(
-                    //   child: YoutubePlayerBuilder(
-                    //       player: YoutubePlayer(
-                    //         controller: _controller,
-                    //       ),
-                    //       builder: (context, player) {
-                    //         return Column(
-                    //           children: [
-                    //             // some widgets
-                    //             player,
-                    //             //some other widgets
-                    //           ],
-                    //         );
-                    //       }),
-                    // ),
-                    // YoutubePlayer(
-                    //   controller: _controller,
-                    //   showVideoProgressIndicator: true,
-                    //   progressIndicatorColor: Colors.amber,
-                    //   progressColors: ProgressBarColors(
-                    //     playedColor: Colors.amber,
-                    //     handleColor: Colors.amberAccent,
-                    //   ),
-                    //   onReady: () {
-                    //     _controller.addListener(listener);
-                    //   },
-                    // ),
-                  ],
-                ),
-              ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${ExercisesEnum.duplicates}: ',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              '12',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              '10',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              '8',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: SizeConfig.screenWidth,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.symmetric(
+                            horizontal:
+                                BorderSide(color: kDefaultColor, width: 1),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: InkWell(
+                                onTap: () => _selectDate(context),
+                                child: Text(
+                                  "${selectedDate.toLocal()}".split(' ')[0],
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                // Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Text(
+                                //       '${ExercisesEnum.duplicates}: ',
+                                //       style: TextStyle(fontSize: 20),
+                                //     ),
+                                //     Text(
+                                //       '${ExercisesEnum.weight}: ',
+                                //       style: TextStyle(fontSize: 20),
+                                //     ),
+                                //   ],
+                                // ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 100,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) => {setState(() {})},
+                                        maxLength: 2,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: ExercisesEnum.duplicates,
+                                        ),
+                                        onSaved: (String? value) {
+                                          // This optional block of code can be used to run
+                                          // code when the user saves the form.
+                                        },
+                                        validator: (String? value) {
+                                          return (value != null &&
+                                                  value.contains('@'))
+                                              ? 'Do not use the @ char.'
+                                              : null;
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 100,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) => {setState(() {})},
+                                        maxLength: 2,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: ExercisesEnum.weight,
+                                        ),
+                                        onSaved: (String? value) {
+                                          // This optional block of code can be used to run
+                                          // code when the user saves the form.
+                                        },
+                                        validator: (String? value) {
+                                          return (value != null &&
+                                                  value.contains('@'))
+                                              ? 'Do not use the @ char.'
+                                              : null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          //  Header(
-          //   toolBarHeight: MediaQuery.of(context).padding.top,
-          //   openHeight: 250,
-          //   closedHeight: 40),
-          // Sliver
         ],
       ),
     );

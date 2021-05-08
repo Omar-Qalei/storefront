@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:u_can_fitness_gym/constants.dart';
 import 'package:u_can_fitness_gym/shared/enum/screens.dart';
 import 'package:u_can_fitness_gym/size_config.dart';
 
@@ -23,7 +24,7 @@ class Header extends SliverPersistentHeaderDelegate {
           width: double.maxFinite,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.transparent, Colors.black54],
+                colors: [Colors.black54, Colors.transparent],
                 stops: [0.5, 1.0],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -38,6 +39,15 @@ class Header extends SliverPersistentHeaderDelegate {
             Screens.myRecords,
             style: TextStyle(
                 fontSize: 32, color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+        ),
+        Positioned(
+          top: 16.0,
+          right: 16.0,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: kPrimaryLightColor,
+            onPressed: () => Navigator.pop(context),
           ),
         ),
       ],
