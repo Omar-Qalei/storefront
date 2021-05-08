@@ -34,13 +34,16 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     //   print('test');
     // });
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight,
-      child: FadeTransition(
-        opacity: animationController.drive(CurveTween(curve: Curves.easeOut)),
-        child: Image.network(
-            'https://seeklogo.com/images/E/ea-sport-games-logo-7DC3774303-seeklogo.com.png'),
+    return Center(
+      child: Container(
+        width: SizeConfig.screenWidth / 2,
+        height: SizeConfig.screenHeight / 2,
+        child: FadeTransition(
+          opacity: animationController.drive(CurveTween(curve: Curves.easeOut)),
+          child: Image.asset(
+            'assets/images/logo.png',
+          ),
+        ),
       ),
     );
   }
