@@ -3439,24 +3439,29 @@ module.exports = !__webpack_require__("79e5")(function () {
 /* unused harmony export findAndRemove */
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a481");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("456d");
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("ac6a");
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("55dd");
-/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("cadf");
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("456d");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("ac6a");
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("55dd");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
 
 // @flow
 
-/*:: export type LayoutItemRequired = {w: number, h: number, x: number, y: number, i: string};*/
+/*:: export type LayoutItemRequired = { w: number, h: number, x: number, y: number, i: string };*/
 
 /*:: export type LayoutItem = LayoutItemRequired &
-                         {minW?: number, minH?: number, maxW?: number, maxH?: number,
-                          moved?: boolean, static?: boolean,
-                          isDraggable?: ?boolean, isResizable?: ?boolean};*/
+{
+  minW?: number, minH?: number, maxW?: number, maxH?: number,
+  moved?: boolean, static?: boolean,
+  isDraggable?: ?boolean, isResizable?: ?boolean
+};*/
 
 // export type Position = {left: number, top: number, width: number, height: number};
 
@@ -3482,7 +3487,7 @@ export type DragCallbackData = {
  * @return {Number}       Bottom coordinate.
  */
 
-/*:: export type Size = {width: number, height: number};*/
+/*:: export type Size = { width: number, height: number };*/
 
 function bottom(layout
 /*: Layout*/
@@ -3561,6 +3566,7 @@ function collides(l1
  *   vertically.
  * @return {Array}       Compacted Layout.
  */
+// Overlap
 
 function compact(layout
 /*: Layout*/
@@ -3574,28 +3580,25 @@ function compact(layout
 
   var sorted = sortLayoutItemsByRowCol(layout); // Holding for new items.
 
-  var out = Array(layout.length);
-
-  for (var i = 0, len = sorted.length; i < len; i++) {
-    var l = sorted[i]; // Don't move static elements
-
-    if (!l.static) {
-      l = compactItem(compareWith, l, verticalCompact); // Add to comparison array. We only collide with items before this one.
-      // Statics are already in this array.
-
-      compareWith.push(l);
-    } // Add to output array to make sure they still come out in the right order.
-
-
-    out[layout.indexOf(l)] = l; // Clear moved flag, if it exists.
-
-    l.moved = false;
-  }
+  var out = Array(layout.length); // for (let i = 0, len = sorted.length; i < len; i++) {
+  //   let l = sorted[i];
+  //   // Don't move static elements
+  //   if (!l.static) {
+  //     l = compactItem(compareWith, l, verticalCompact);
+  //     // Add to comparison array. We only collide with items before this one.
+  //     // Statics are already in this array.
+  //     compareWith.push(l);
+  //   }
+  //   // Add to output array to make sure they still come out in the right order.
+  //   out[layout.indexOf(l)] = l;
+  //   // Clear moved flag, if it exists.
+  //   l.moved = false;
+  // }
 
   return out;
 }
 /**
- * Compact an item in the layout.
+ * Compact an item in the layout. Overlap
  */
 
 function compactItem(compareWith
@@ -3607,20 +3610,17 @@ function compactItem(compareWith
 )
 /*: LayoutItem*/
 {
-  if (verticalCompact) {
-    // Move the element up as far as it can go without colliding.
-    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-      l.y--;
-    }
-  } // Move it down, and keep moving it down if it's colliding.
-
-
-  var collides;
-
-  while (collides = getFirstCollision(compareWith, l)) {
-    l.y = collides.y + collides.h;
-  }
-
+  // if (verticalCompact) {
+  //   // Move the element up as far as it can go without colliding.
+  //   while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+  //     l.y--;
+  //   }
+  // }
+  // // Move it down, and keep moving it down if it's colliding.
+  // let collides;
+  // while((collides = getFirstCollision(compareWith, l))) {
+  //   l.y = collides.y + collides.h;
+  // }
   return l;
 }
 /**
@@ -3633,7 +3633,7 @@ function compactItem(compareWith
 function correctBounds(layout
 /*: Layout*/
 , bounds
-/*: {cols: number}*/
+/*: { cols: number }*/
 )
 /*: Layout*/
 {
