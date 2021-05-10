@@ -39,6 +39,7 @@ import {
   validateLayout,
   cloneLayout,
   getAllCollisions,
+  getAllowCollides,
 } from "@/helpers/utils";
 import {
   getBreakpointFromWidth,
@@ -146,6 +147,10 @@ export default {
       type: Number,
       default: null,
     },
+    allowCollides: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: function() {
     return {
@@ -177,6 +182,7 @@ export default {
     self.eventBus.$on("resizeEvent", self.resizeEventHandler);
     self.eventBus.$on("dragEvent", self.dragEventHandler);
     self.$emit("layout-created", self.layout);
+    getAllowCollides(this.allowCollides);
   },
   beforeDestroy: function() {
     //Remove listeners
@@ -206,6 +212,7 @@ export default {
         //self.width = self.$el.offsetWidth;
         addWindowEventListener("resize", self.onWindowResize);
 
+        //
         compact(self.layout, self.verticalCompact);
 
         self.$emit("layout-updated", self.layout);
@@ -311,6 +318,7 @@ export default {
           this.initResponsiveFeatures();
         }
 
+        //
         compact(this.layout, this.verticalCompact);
         this.eventBus.$emit("updateWidth", this.width);
         this.updateHeight();
@@ -422,8 +430,10 @@ export default {
         x,
         y,
         true,
-        this.preventCollision
+        this.preventCollision,
+        true
       );
+      //
       compact(this.layout, this.verticalCompact);
       // needed because vue can't detect changes on array element properties
       this.eventBus.$emit("compact");
@@ -440,9 +450,11 @@ export default {
 
       let hasCollisions;
       if (this.preventCollision) {
-        const collisions = getAllCollisions(this.layout, { ...l, w, h }).filter(
-          (layoutItem) => layoutItem.i !== l.i
-        );
+        const collisions = getAllCollisions(
+          this.layout,
+          { ...l, w, h },
+          true
+        ).filter((layoutItem) => layoutItem.i !== l.i);
         hasCollisions = collisions.length > 0;
 
         // If we're colliding, we need adjust the placeholder.
@@ -504,8 +516,9 @@ export default {
       }
       if (this.responsive) this.responsiveGridLayout();
 
-      compact(this.layout, this.verticalCompact);
-      this.eventBus.$emit("compact");
+      //
+      compact(this.layout);
+      this.eventBus.$emit("compact", this.verticalCompact);
       this.updateHeight();
 
       if (eventName === "resizeend") this.$emit("layout-updated", this.layout);

@@ -18,6 +18,9 @@ export type DragCallbackData = {
 */
 // export type DragEvent = {e: Event} & DragCallbackData;
 export type Size = { width: number, height: number };
+
+export let statusCollides = true;
+
 // export type ResizeEvent = {e: Event, node: HTMLElement, size: Size};
 
 // const isProduction = process.env.NODE_ENV === 'production';
@@ -62,12 +65,18 @@ export function cloneLayoutItem(layoutItem: LayoutItem): LayoutItem {
  * @return {Boolean}   True if colliding.
  */
 export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
-  if (l1 === l2) return false; // same element
-  if (l1.x + l1.w <= l2.x) return false; // l1 is left of l2
-  if (l1.x >= l2.x + l2.w) return false; // l1 is right of l2
-  if (l1.y + l1.h <= l2.y) return false; // l1 is above l2
-  if (l1.y >= l2.y + l2.h) return false; // l1 is below l2
-  return true; // boxes overlap
+  if (statusCollides) {
+    if (l1 === l2) return false; // same element
+    if (l1.x + l1.w <= l2.x) return false; // l1 is left of l2
+    if (l1.x >= l2.x + l2.w) return false; // l1 is right of l2
+    if (l1.y + l1.h <= l2.y) return false; // l1 is above l2
+    if (l1.y >= l2.y + l2.h) return false; // l1 is below l2
+
+    // If want to margin between element set true
+    return true; // boxes overlap
+  } else {
+    return false;
+  }
 }
 
 /**
@@ -80,7 +89,8 @@ export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
  * @return {Array}       Compacted Layout.
  */
 
-// Overlap
+
+// Overlap  ++ 
 export function compact(layout: Layout, verticalCompact: Boolean): Layout {
   // Statics go in the compareWith array right away so items flow around them.
   const compareWith = getStatics(layout);
@@ -89,24 +99,24 @@ export function compact(layout: Layout, verticalCompact: Boolean): Layout {
   // Holding for new items.
   const out = Array(layout.length);
 
-  // for (let i = 0, len = sorted.length; i < len; i++) {
-  //   let l = sorted[i];
+  for (let i = 0, len = sorted.length; i < len; i++) {
+    let l = sorted[i];
 
-  //   // Don't move static elements
-  //   if (!l.static) {
-  //     l = compactItem(compareWith, l, verticalCompact);
+    // Don't move static elements
+    if (!l.static) {
+      l = compactItem(compareWith, l, verticalCompact);
 
-  //     // Add to comparison array. We only collide with items before this one.
-  //     // Statics are already in this array.
-  //     compareWith.push(l);
-  //   }
+      // Add to comparison array. We only collide with items before this one.
+      // Statics are already in this array.
+      compareWith.push(l);
+    }
 
-  //   // Add to output array to make sure they still come out in the right order.
-  //   out[layout.indexOf(l)] = l;
+    // Add to output array to make sure they still come out in the right order.
+    out[layout.indexOf(l)] = l;
 
-  //   // Clear moved flag, if it exists.
-  //   l.moved = false;
-  // }
+    // Clear moved flag, if it exists.
+    l.moved = false;
+  }
 
   return out;
 }
@@ -115,18 +125,18 @@ export function compact(layout: Layout, verticalCompact: Boolean): Layout {
  * Compact an item in the layout. Overlap
  */
 export function compactItem(compareWith: Layout, l: LayoutItem, verticalCompact: boolean): LayoutItem {
-  // if (verticalCompact) {
-  //   // Move the element up as far as it can go without colliding.
-  //   while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-  //     l.y--;
-  //   }
-  // }
+  if (verticalCompact) {
+    // Move the element up as far as it can go without colliding.
+    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+      l.y--;
+    }
+  }
 
-  // // Move it down, and keep moving it down if it's colliding.
-  // let collides;
-  // while((collides = getFirstCollision(compareWith, l))) {
-  //   l.y = collides.y + collides.h;
-  // }
+  // Move it down, and keep moving it down if it's colliding.
+  let collides;
+  while ((collides = getFirstCollision(compareWith, l))) {
+    l.y = collides.y + collides.h;
+  }
   return l;
 }
 
@@ -186,8 +196,8 @@ export function getFirstCollision(layout: Layout, layoutItem: LayoutItem): ?Layo
   }
 }
 
-export function getAllCollisions(layout: Layout, layoutItem: LayoutItem): Array<LayoutItem> {
-  return layout.filter((l) => collides(l, layoutItem));
+export function getAllCollisions(layout: Layout, layoutItem: LayoutItem, allowCollides: Boolean): Array<LayoutItem> {
+  return layout.filter((l) => collides(l, layoutItem, allowCollides));
 }
 
 /**
@@ -210,9 +220,8 @@ export function getStatics(layout: Layout): Array<LayoutItem> {
  * @param  {Boolean}    [isUserAction] If true, designates that the item we're moving is
  *                                     being dragged/resized by th euser.
  */
-export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number, isUserAction: Boolean, preventCollision: Boolean): Layout {
+export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number, isUserAction: Boolean, preventCollision: Boolean, allowCollides: Boolean): Layout {
   if (l.static) return layout;
-
   // Short-circuit if nothing to do.
   //if (l.y === y && l.x === x) return layout;
 
@@ -231,7 +240,7 @@ export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number,
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout);
   if (movingUp) sorted = sorted.reverse();
-  const collisions = getAllCollisions(sorted, l);
+  const collisions = getAllCollisions(sorted, l, allowCollides);
 
   if (preventCollision && collisions.length) {
     l.x = oldX;
@@ -592,4 +601,9 @@ export function findAndRemove(array, property, value) {
       array.splice(index, 1);
     }
   });
+}
+
+export function getAllowCollides(allowCollides) {
+  console.log('getAllowCollides', allowCollides);
+  statusCollides = allowCollides;
 }

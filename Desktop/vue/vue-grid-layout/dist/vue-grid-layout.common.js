@@ -1259,12 +1259,12 @@ module.exports = __webpack_require__("9e1e") ? function (object, key, value) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5946bc39-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=77c61004&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5946bc39-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=10deee98&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-layout",style:(_vm.mergedStyle)},[_vm._t("default"),_vm._l((_vm.placeholder),function(item,index){return _c('grid-item',{key:index + 'placeholder',staticClass:"vue-grid-placeholder",attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i}})})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=77c61004&
+// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=10deee98&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
@@ -1533,7 +1533,8 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
         self.onWindowResize();
         self.initResponsiveFeatures(); //self.width = self.$el.offsetWidth;
 
-        Object(DOM["a" /* addWindowEventListener */])("resize", self.onWindowResize);
+        Object(DOM["a" /* addWindowEventListener */])("resize", self.onWindowResize); //
+
         Object(utils["c" /* compact */])(self.layout, self.verticalCompact);
         self.$emit("layout-updated", self.layout);
         self.updateHeight();
@@ -1639,7 +1640,8 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
 
           this.lastLayoutLength = this.layout.length;
           this.initResponsiveFeatures();
-        }
+        } //
+
 
         Object(utils["c" /* compact */])(this.layout, this.verticalCompact);
         this.eventBus.$emit("updateWidth", this.width);
@@ -1736,7 +1738,8 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
       } // Move the element to the dragged location.
 
 
-      this.layout = Object(utils["g" /* moveElement */])(this.layout, l, x, y, true, this.preventCollision);
+      this.layout = Object(utils["g" /* moveElement */])(this.layout, l, x, y, true, this.preventCollision); //
+
       Object(utils["c" /* compact */])(this.layout, this.verticalCompact); // needed because vue can't detect changes on array element properties
 
       this.eventBus.$emit("compact");
@@ -1825,9 +1828,10 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
         this.placeholder = placeholderGrids;
       }
 
-      if (this.responsive) this.responsiveGridLayout();
-      Object(utils["c" /* compact */])(this.layout, this.verticalCompact);
-      this.eventBus.$emit("compact");
+      if (this.responsive) this.responsiveGridLayout(); //
+
+      Object(utils["c" /* compact */])(this.layout);
+      this.eventBus.$emit("compact", this.verticalCompact);
       this.updateHeight();
       if (eventName === "resizeend") this.$emit("layout-updated", this.layout);
     },
@@ -3554,6 +3558,7 @@ function collides(l1
   if (l1.y + l1.h <= l2.y) return false; // l1 is above l2
 
   if (l1.y >= l2.y + l2.h) return false; // l1 is below l2
+  // If want to margin between element set true
 
   return true; // boxes overlap
 }
@@ -3566,7 +3571,7 @@ function collides(l1
  *   vertically.
  * @return {Array}       Compacted Layout.
  */
-// Overlap
+// Overlap  ++ 
 
 function compact(layout
 /*: Layout*/
@@ -3580,20 +3585,23 @@ function compact(layout
 
   var sorted = sortLayoutItemsByRowCol(layout); // Holding for new items.
 
-  var out = Array(layout.length); // for (let i = 0, len = sorted.length; i < len; i++) {
-  //   let l = sorted[i];
-  //   // Don't move static elements
-  //   if (!l.static) {
-  //     l = compactItem(compareWith, l, verticalCompact);
-  //     // Add to comparison array. We only collide with items before this one.
-  //     // Statics are already in this array.
-  //     compareWith.push(l);
-  //   }
-  //   // Add to output array to make sure they still come out in the right order.
-  //   out[layout.indexOf(l)] = l;
-  //   // Clear moved flag, if it exists.
-  //   l.moved = false;
-  // }
+  var out = Array(layout.length);
+
+  for (var i = 0, len = sorted.length; i < len; i++) {
+    var l = sorted[i]; // Don't move static elements
+
+    if (!l.static) {
+      l = compactItem(compareWith, l, verticalCompact); // Add to comparison array. We only collide with items before this one.
+      // Statics are already in this array.
+
+      compareWith.push(l);
+    } // Add to output array to make sure they still come out in the right order.
+
+
+    out[layout.indexOf(l)] = l; // Clear moved flag, if it exists.
+
+    l.moved = false;
+  }
 
   return out;
 }
@@ -3610,17 +3618,20 @@ function compactItem(compareWith
 )
 /*: LayoutItem*/
 {
-  // if (verticalCompact) {
-  //   // Move the element up as far as it can go without colliding.
-  //   while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-  //     l.y--;
-  //   }
-  // }
-  // // Move it down, and keep moving it down if it's colliding.
-  // let collides;
-  // while((collides = getFirstCollision(compareWith, l))) {
-  //   l.y = collides.y + collides.h;
-  // }
+  if (verticalCompact) {
+    // Move the element up as far as it can go without colliding.
+    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+      l.y--;
+    }
+  } // Move it down, and keep moving it down if it's colliding.
+
+
+  var collides;
+
+  while (collides = getFirstCollision(compareWith, l)) {
+    l.y = collides.y + collides.h;
+  }
+
   return l;
 }
 /**
