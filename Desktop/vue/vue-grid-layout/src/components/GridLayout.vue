@@ -39,7 +39,6 @@ import {
   validateLayout,
   cloneLayout,
   getAllCollisions,
-  getAllowCollides,
 } from "@/helpers/utils";
 import {
   getBreakpointFromWidth,
@@ -149,7 +148,7 @@ export default {
     },
     allowCollides: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   data: function() {
@@ -182,7 +181,6 @@ export default {
     self.eventBus.$on("resizeEvent", self.resizeEventHandler);
     self.eventBus.$on("dragEvent", self.dragEventHandler);
     self.$emit("layout-created", self.layout);
-    getAllowCollides(this.allowCollides);
   },
   beforeDestroy: function() {
     //Remove listeners
@@ -213,7 +211,7 @@ export default {
         addWindowEventListener("resize", self.onWindowResize);
 
         //
-        compact(self.layout, self.verticalCompact);
+        compact(self.layout, self.verticalCompact, self.allowCollides);
 
         self.$emit("layout-updated", self.layout);
 
@@ -319,7 +317,7 @@ export default {
         }
 
         //
-        compact(this.layout, this.verticalCompact);
+        compact(this.layout, this.verticalCompact, this.allowCollides);
         this.eventBus.$emit("updateWidth", this.width);
         this.updateHeight();
 
@@ -430,11 +428,10 @@ export default {
         x,
         y,
         true,
-        this.preventCollision,
-        true
+        this.preventCollision
       );
       //
-      compact(this.layout, this.verticalCompact);
+      compact(this.layout, this.verticalCompact, this.allowCollides);
       // needed because vue can't detect changes on array element properties
       this.eventBus.$emit("compact");
       this.updateHeight();
@@ -517,7 +514,7 @@ export default {
       if (this.responsive) this.responsiveGridLayout();
 
       //
-      compact(this.layout);
+      compact(this.layout, this.verticalCompact, this.allowCollides);
       this.eventBus.$emit("compact", this.verticalCompact);
       this.updateHeight();
 

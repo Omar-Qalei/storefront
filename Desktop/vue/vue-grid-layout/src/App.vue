@@ -51,6 +51,7 @@
         :vertical-compact="compact"
         :use-css-transforms="true"
         :responsive="responsive"
+        :allowCollides="false"
         @layout-created="layoutCreatedEvent"
         @layout-before-mount="layoutBeforeMountEvent"
         @layout-mounted="layoutMountedEvent"

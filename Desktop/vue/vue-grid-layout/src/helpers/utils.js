@@ -7,6 +7,8 @@ export type LayoutItem = LayoutItemRequired &
   isDraggable?: ?boolean, isResizable?: ?boolean
 };
 export type Layout = Array<LayoutItem>;
+
+export let statusCollides = true;
 // export type Position = {left: number, top: number, width: number, height: number};
 /*
 export type DragCallbackData = {
@@ -18,8 +20,6 @@ export type DragCallbackData = {
 */
 // export type DragEvent = {e: Event} & DragCallbackData;
 export type Size = { width: number, height: number };
-
-export let statusCollides = true;
 
 // export type ResizeEvent = {e: Event, node: HTMLElement, size: Size};
 
@@ -91,7 +91,9 @@ export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
 
 
 // Overlap  ++ 
-export function compact(layout: Layout, verticalCompact: Boolean): Layout {
+export function compact(layout: Layout, verticalCompact: Boolean, allowCollides: Boolean): Layout {
+  console.log('compactItem', allowCollides)
+
   // Statics go in the compareWith array right away so items flow around them.
   const compareWith = getStatics(layout);
   // We go through the items by row and column.
@@ -104,7 +106,7 @@ export function compact(layout: Layout, verticalCompact: Boolean): Layout {
 
     // Don't move static elements
     if (!l.static) {
-      l = compactItem(compareWith, l, verticalCompact);
+      l = compactItem(compareWith, l, verticalCompact, allowCollides);
 
       // Add to comparison array. We only collide with items before this one.
       // Statics are already in this array.
@@ -124,18 +126,21 @@ export function compact(layout: Layout, verticalCompact: Boolean): Layout {
 /**
  * Compact an item in the layout. Overlap
  */
-export function compactItem(compareWith: Layout, l: LayoutItem, verticalCompact: boolean): LayoutItem {
-  if (verticalCompact) {
-    // Move the element up as far as it can go without colliding.
-    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-      l.y--;
+export function compactItem(compareWith: Layout, l: LayoutItem, verticalCompact: boolean, allowCollides: Boolean): LayoutItem {
+  statusCollides = allowCollides;
+  if (allowCollides) {
+    if (verticalCompact) {
+      // Move the element up as far as it can go without colliding.
+      while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+        l.y--;
+      }
     }
-  }
 
-  // Move it down, and keep moving it down if it's colliding.
-  let collides;
-  while ((collides = getFirstCollision(compareWith, l))) {
-    l.y = collides.y + collides.h;
+    // Move it down, and keep moving it down if it's colliding.
+    let collides;
+    while ((collides = getFirstCollision(compareWith, l))) {
+      l.y = collides.y + collides.h;
+    }
   }
   return l;
 }
@@ -196,8 +201,8 @@ export function getFirstCollision(layout: Layout, layoutItem: LayoutItem): ?Layo
   }
 }
 
-export function getAllCollisions(layout: Layout, layoutItem: LayoutItem, allowCollides: Boolean): Array<LayoutItem> {
-  return layout.filter((l) => collides(l, layoutItem, allowCollides));
+export function getAllCollisions(layout: Layout, layoutItem: LayoutItem): Array<LayoutItem> {
+  return layout.filter((l) => collides(l, layoutItem));
 }
 
 /**
@@ -220,7 +225,7 @@ export function getStatics(layout: Layout): Array<LayoutItem> {
  * @param  {Boolean}    [isUserAction] If true, designates that the item we're moving is
  *                                     being dragged/resized by th euser.
  */
-export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number, isUserAction: Boolean, preventCollision: Boolean, allowCollides: Boolean): Layout {
+export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number, isUserAction: Boolean, preventCollision: Boolean): Layout {
   if (l.static) return layout;
   // Short-circuit if nothing to do.
   //if (l.y === y && l.x === x) return layout;
@@ -240,7 +245,8 @@ export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number,
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout);
   if (movingUp) sorted = sorted.reverse();
-  const collisions = getAllCollisions(sorted, l, allowCollides);
+
+  const collisions = getAllCollisions(sorted, l);
 
   if (preventCollision && collisions.length) {
     l.x = oldX;
@@ -283,7 +289,7 @@ export function moveElement(layout: Layout, l: LayoutItem, x: Number, y: Number,
  */
 export function moveElementAwayFromCollision(layout: Layout, collidesWith: LayoutItem,
   itemToMove: LayoutItem, isUserAction: ?boolean): Layout {
-
+  console.log('moveElementAwayFromCollision');
   const preventCollision = false // we're already colliding
   // If there is enough space above the collision to put this element, move it there.
   // We only do this on the main collision as this can get funky in cascades and cause
@@ -603,7 +609,3 @@ export function findAndRemove(array, property, value) {
   });
 }
 
-export function getAllowCollides(allowCollides) {
-  console.log('getAllowCollides', allowCollides);
-  statusCollides = allowCollides;
-}
