@@ -2,16 +2,17 @@
   <div class="grid-vue">
     <GridLayout
       :layout="resources"
-      :col-num="12"
+      :col-num="cols"
       :row-height="rowHeight"
       :is-draggable="statusSection"
       :is-resizable="statusSection"
       :is-mirrored="false"
       :vertical-compact="false"
       :responsive="true"
-      :margin="[10, 10]"
+      :allow-overlap="false"
+      :margin="margin"
       :use-css-transforms="statusSection"
-      :autoSize="statusSection"
+      :autoSize="getResizeSectionStatus"
       :ref="'gridLayout'"
       id="layout"
       :prevent-collision="statusPreventCollision || !statusMoveElement"
@@ -39,10 +40,8 @@
             :static="statusPreventCollision"
             ref="gridItem"
             @move="moveElementY(item)"
+            @resize="resizeEvent"
           >
-            <!-- :style="
-            item.i === 'drop' && getElementPosition ? { top: '-50px' } : {}
-            " -->
             <!-- <div
             v-if="!preview"
             @click="removeItem({ key: index })"
@@ -118,7 +117,8 @@ export default {
     statusPreventCollision: Boolean,
     minHLayout: Number,
     sectionId: Number,
-    marginSection: Array,
+    cols: Number,
+    margin: Array,
   },
   data() {
     return {
@@ -126,24 +126,29 @@ export default {
       isResizable: true,
       preview: true,
       contenteditable: true,
-      selectedGridId: null,
       statusMoveElement: false,
       rowHeight: 30,
     };
   },
   methods: {
-    ...mapActions(["onSetLayout", "elementSizePx", "updateSectionLayout"]),
+    ...mapActions([
+      "onSetLayout",
+      "updateSectionLayout",
+      "onResizeSection",
+      "onUpdateSectionLayoutGridResized",
+    ]),
     onMouseUp() {
       this.$emit("onDragElement", false);
       this.statusMoveElement = false;
-      this.selectedGridId = null;
+      this.onResizeSection(false);
+      this.$emit("onMouseUpGrid", false);
     },
     onMouseDown() {
       this.$emit("onDragElement", true);
       this.statusMoveElement = true;
     },
-    onMoveElement(itemId) {
-      this.selectedGridId = itemId;
+    onMoveElement() {
+      this.$emit("onMoveGrid", true);
     },
     moveElementY(result) {
       let max = 0;
@@ -157,6 +162,7 @@ export default {
         max: max,
         margin: [],
       };
+      this.onResizeSection(true);
       this.$emit("onMoveElementY", data);
       this.$emit("sectionH", document.getElementById("layout").style.height);
     },
@@ -170,37 +176,21 @@ export default {
       //   "sectionHeight",
       //   document.getElementById("layout").style.height
       // );
-      // this.calcContainerHeightByRow();
       this.updateSectionLayout(data);
       // this.$emit("layout-height", layoutH);
     },
-    calcContainerHeightByRow: function() {
-      let h = "";
-      h = document.getElementById("layout").style.height;
-      h = +h.split("px")[0];
-      let out = {
-        height:
-          h === Infinity
-            ? h
-            : Math.round(
-                (h - this.marginSection[1]) /
-                  (this.rowHeight + this.marginSection[1])
-              ),
+    resizeEvent: function() {
+      this.onResizeSection(true);
+      const data = {
+        sectionId: this.sectionId,
+        h: this.minHLayout,
       };
-
-      if (out.height % 2 !== 0) {
-        out.height += 1;
-      }
-      console.log(out.height);
-      return out.height;
+      this.$emit("resizeGrid", true);
+      this.onUpdateSectionLayoutGridResized(data);
     },
   },
   computed: {
-    ...mapGetters([
-      "getResources",
-      "getElementPosition",
-      "getCurrentSectionLayout",
-    ]),
+    ...mapGetters(["getResources", "getResizeSectionStatus", "getScreenSize"]),
   },
   updated() {
     var data = {
@@ -214,11 +204,12 @@ export default {
 <style scoped>
 .vue-grid-layout {
   /* background: #eee; */
-  height: 100%;
+  /* height: 100%; */
+  /* border: 1px solid black; */
 }
 .vue-grid-item:not(.vue-grid-placeholder) {
   /* background: #ccc; */
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .vue-grid-item .resizing {
   opacity: 0.9;

@@ -22,10 +22,6 @@ export default {
 };
 </script>
 <style>
-.gird-vue {
-  display: block;
-  width: 100%;
-}
 .page {
   padding: 0 45px 45px;
 }

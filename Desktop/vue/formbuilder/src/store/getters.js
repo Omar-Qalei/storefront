@@ -22,10 +22,23 @@ export const getPreventCollision = (state) => {
     return state.preventCollision
 };
 
-export const getElementPosition = (state) => {
-    return state.elementPosition
-};
 
 export const getCurrentSectionLayout = (state) => {
     return state.currentSectionLayout
+};
+
+export const getResizeSectionStatus = (state) => {
+    return state.resizeSection
+};
+
+export const getScreenSize = (state) => {
+    return state.screenSize
+};
+
+export const getIsResizeable = (state) => {
+    return state.isResizeable
+};
+
+export const getIsAutoResize = (state) => {
+    return state.isAutoResize;
 };

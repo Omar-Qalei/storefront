@@ -7,7 +7,12 @@ export const onDrawer = ({ commit }) => {
 // Action to fetch sections and set in state through the mutation
 export const fetchSections = ({ commit }, payload) => {
     let g = lib.guid()
-    let k = { id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 4, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0 }
+    let k = {
+        id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0, resize: {
+            status: false,
+            h: 10
+        }
+    }
     if (payload === undefined) {
         commit('setSections', [k])
     } else {
@@ -26,7 +31,12 @@ export const fetchResources = ({ commit }, payload) => {
 
 export const addNewSection = ({ commit, state }, payload) => {
     let g = lib.guid()
-    let k = { id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 4, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: payload }
+    let k = {
+        id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: payload, resize: {
+            status: false,
+            h: 10
+        }
+    }
     commit('setNewSection', k)
 }
 
@@ -43,7 +53,7 @@ export const onDragOver = ({ commit }, payload) => {
 }
 
 export const onDrag = ({ commit, state }) => {
-    let k = { 'x': (state.resources.length * 2) % (state.properties.colNum || 8), 'y': state.resources.length + (state.properties.colNum || 8), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type }
+    let k = { 'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type }
     commit('setDrag', k);
 }
 
@@ -68,21 +78,31 @@ export const onMouseTouched = ({ commit }, payload) => {
     commit('setMouseTouched', payload)
 }
 
-// For remove duplicated dropped on multiple section from reference children and resources array 
-export const onRemoveDuplicated = ({ commit }, payload) => {
-    commit('removedDuplicated', payload)
+// For update refs after each actions
+export const onUpdateRefs = ({ commit }, payload) => {
+    commit('setUpdateRefs', payload)
 }
 
 export const updateSectionLayout = ({ commit }, payload) => {
     commit('setUpdateSectionLayout', payload)
 }
 
-export const elementSizePx = ({ commit, state }, payload) => {
-    console.log(state);
-    let k = { 'w': payload.w, 'h': payload.h }
-    commit('setElementSizePx', k)
+export const onSelectedSection = ({ commit }, payload) => {
+    commit('setSelectedSection', payload)
 }
 
-export const onSelectedSectionByIndex = ({ commit }, payload) => {
-    commit('setSelectedSection', payload)
+export const onResizeSection = ({ commit }, payload) => {
+    commit('setResizeSection', payload)
+}
+
+export const onUpdateSectionLayoutGridResized = ({ commit }, payload) => {
+    commit('setUpdateSectionLayoutGridResized', payload)
+}
+
+export const onUpdateSectionLayoutResized = ({ commit }, payload) => {
+    commit('setUpdateSectionLayoutResized', payload)
+}
+
+export const onResizeSectionScreen = ({ commit }, payload) => {
+    commit('setResizeSectionScreen', payload)
 }

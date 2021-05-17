@@ -1,27 +1,28 @@
 <template>
   <!-- <div class="navbar"> -->
-    <v-app-bar app color="white" dense clipped-right dark>
+  <v-app-bar app color="white" dense clipped-right dark>
     <a class="logo">
-        Wimmly
+      Wimmly
+    </a>
+    <div class="spacer"></div>
+    <div class="settings d-flex">
+      <a
+        class="link-icon"
+        @click="onResizeSectionScreen({ width: 320, cols: 1 })"
+      >
+        <span class="mdi mdi-cellphone-cog"></span>
       </a>
-      <div class="spacer"></div>
-      <div class="settings d-flex">
-        <a class="link-icon">
-          <span class="mdi mdi-cellphone-cog"></span>
-        </a>
-        <a class="link-icon">
-          <span class="mdi mdi-monitor"></span>
-        </a>
-        <v-btn
-          icon
-          small
-          color="primary"
-          @click.stop="onDrawer"
-        >
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-      </div>
-    </v-app-bar>
+      <a
+        class="link-icon"
+        @click="onResizeSectionScreen({ width: 1174, cols: 12 })"
+      >
+        <span class="mdi mdi-monitor"></span>
+      </a>
+      <v-btn icon small color="primary" @click.stop="onDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </div>
+  </v-app-bar>
   <!-- </div> -->
 </template>
 
@@ -30,8 +31,8 @@ import { mapActions } from "vuex";
 export default {
   name: "Navbar",
   methods: {
-    ...mapActions(['onDrawer'])
-  }
+    ...mapActions(["onDrawer", "onResizeSectionScreen"]),
+  },
 };
 </script>
 

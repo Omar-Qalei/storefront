@@ -1,43 +1,80 @@
 <template>
+  <!--  :style="{ width: getScreenSize.width + 'px' }" -->
   <GridLayout
     :layout="getSections"
-    :col-num="12"
-    :row-height="30"
-    :margin="[0, 0]"
+    :row-height="rowHeight"
+    :margin="margin"
     :is-draggable="false"
     :is-resizable="true"
     :is-mirrored="false"
     :vertical-compact="true"
     :autoSize="true"
+    :allow-overlap="true"
+    :allow-resize-grid="getIsResizeable"
+    :responsive="true"
     :use-css-transforms="true"
+    :col-num="getScreenSize.cols"
+    :style="{
+      width: getScreenSize.width + 'px',
+      margin: '0 auto',
+    }"
   >
     <template v-for="(item, index) in getSections">
       <div
         :key="index"
         @dragover="onMouseTouched({ i: item.i, indexSection: index })"
-        @click="onSelectedSection(item.id)"
+        @click="
+          selectedSection = item.id;
+          onSelectedSection({ index: index, id: item.id });
+        "
+        @mousedown="
+          currentSelectedSection = item.id;
+          selectedSectionByI = item.i;
+        "
       >
         <GridItem
           :class="{ editMode: true }"
-          :autoSize="true"
+          :autoSize="item.id === selectedSection && getIsAutoResize"
           :x="item.x"
           :y="item.y"
-          :w="12"
+          :w="getScreenSize.cols"
           :h="item.h"
           :i="item.i"
-          :minW="12"
-          :minH="getCurrentSectionLayout"
+          :is-resizable="item.id === selectedSection"
+          :minW="getScreenSize.cols"
           class="section"
           :id="item.i"
           :ref="'section'"
-          :style="[selectedSection !== null ? activeSection : '']"
+          :style="[
+            selectedSection !== null ? activeSection : '',
+            {
+              width: getScreenSize.width + 'px',
+            },
+          ]"
           @resize="resizeEvent"
         >
-          <!-- statusSection ? sectionLayout : '',
-            statusSection ? {'min-height': 10 * 30 + 'px', 'transform': 'translate3d(0px,' + -10 * 30 +'px, 0px)'} : '', -->
-          <!-- index: {{ index }} id: {{item.id}} -->
-
-          <!-- @sectionHeight="sectionHeight = $event" -->
+          <template
+            v-if="
+              item.id === selectedSection &&
+                currentSelectedSection === selectedSection
+            "
+          >
+            <GridItem
+              v-for="(placeholder, placeholderIndex) in placeholders(item.h)"
+              :key="placeholderIndex + 'placeholder'"
+              :x="placeholder.x"
+              :y="placeholder.y"
+              :w="placeholder.w"
+              :h="placeholder.h"
+              :i="placeholder.i"
+              :is-resizable="false"
+              :class="{
+                hidePlacerholder: !displayPlaceholder,
+                placeholder: true,
+              }"
+            ></GridItem>
+          </template>
+          <!-- index: {{ index }} id: {{ item.id }} -->
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -46,9 +83,12 @@
             :minHLayout="item.h"
             @onDragElement="onDragElement($event)"
             @onMoveElementY="onMoveElementY($event)"
-            :marginSection="marginSection"
+            @onMouseUpGrid="onMouseUpGrid($event)"
+            @onMoveGrid="onMoveGrid($event)"
+            @resizeGrid="resizeGrid($event)"
+            :margin="margin"
+            :cols="getScreenSize.cols"
           ></SectionWidget>
-          <!-- {{statusSection}} -->
           <v-btn
             class="btn-add-section"
             dark
@@ -142,7 +182,11 @@ export default {
       },
       selectedSection: 0,
       statusSection: false,
-      marginSection: [10, 10],
+      margin: [0, 0],
+      rowHeight: 30,
+      displayPlaceholder: false,
+      currentSelectedSection: "",
+      selectedSectionByI: null,
     };
   },
   methods: {
@@ -151,55 +195,121 @@ export default {
       "fetchResources",
       "addNewSection",
       "onMouseTouched",
-      "onRemoveDuplicated",
+      "onUpdateRefs",
       "updateSectionLayout",
-      "onSelectedSectionByIndex",
+      "onSelectedSection",
+      "onResizeSection",
+      "onUpdateSectionLayoutResized",
     ]),
-    onSelectedSection(sectionId) {
-      this.selectedSection = null;
-      this.selectedSection = sectionId;
-      this.onSelectedSectionByIndex(sectionId);
-    },
     onDragElement(event) {
       this.statusSection = event;
     },
     onMoveElementY(event) {
       this.updateSectionLayout({
-        id: this.selectedSection,
+        sectionId: this.selectedSection,
         h: event.max,
         gridHeight: event.gridHeight,
         margin: event.margin,
       });
     },
-    resizeEvent: function(i, newH, newW, newHPx, newWPx) {
-      console.log(
-        "RESIZE i=" +
-          i +
-          ", H=" +
-          newH +
-          ", W=" +
-          newW +
-          ", H(px)=" +
-          newHPx +
-          ", W(px)=" +
-          newWPx
-      );
+    // i, newH, newW, newHPx, newWPx
+    resizeEvent: function(i, newH) {
+      this.onResizeSection(true);
+      const data = {
+        sectionId: this.selectedSection,
+        h: newH,
+      };
+      this.onUpdateSectionLayoutResized(data);
+      this.updateSectionLayout(data);
+    },
+    containerHeight: function(h) {
+      let containerHeight = null;
+      if (!isNaN(h) && h !== undefined) {
+        containerHeight =
+          h * (this.rowHeight + this.margin[1]) + this.margin[1] + "px";
+      }
+      return containerHeight;
+    },
+    placeholders: function(h) {
+      const placeholderGrids = [];
+      // this.containerHeight(h);
+      for (let row = 0; row < h - 1; row++) {
+        for (let col = 0; col <= 12 - 3; col++) {
+          if (row % 2 === 0) {
+            placeholderGrids.push({
+              x: col,
+              y: row,
+              w: 1,
+              h: 2,
+              i: "row" + row,
+            });
+          } else {
+            row = row + 1;
+            placeholderGrids.push({
+              x: col,
+              y: row,
+              w: 1,
+              h: 2,
+              i: "row" + row,
+            });
+          }
+        }
+      }
+      return placeholderGrids;
+    },
+    resizeGrid(event) {
+      this.displayPlaceholder = event;
+      // if (this.selectedSectionByI) {
+      //   let h =
+      //     document.getElementById(this.selectedSectionByI).offsetHeight +
+      //     this.margin[0] +
+      //     this.margin[1];
+      //   document.getElementById(this.selectedSectionByI).style.height =
+      //     h + "px";
+      // }
+      // document.querySelectorAll(".section").forEach((element) => {
+      //   let h = element.offsetHeight + this.margin[0] + this.margin[1];
+      //   document.getElementById(element.id).style.height = h + "px";
+      // });
+    },
+    onMoveGrid(event) {
+      this.displayPlaceholder = event;
+      // if (this.selectedSectionByI) {
+      //   let h =
+      //     document.getElementById(this.selectedSectionByI).offsetHeight +
+      //     this.margin[0] +
+      //     this.margin[1];
+      //   document.getElementById(this.selectedSectionByI).style.height =
+      //     h + "px";
+      // }
+    },
+    onMouseUpGrid(event) {
+      this.displayPlaceholder = event;
     },
   },
   computed: {
     ...mapGetters([
       "getSections",
       "getPreventCollision",
-      "getCurrentSectionLayout",
+      "getScreenSize",
+      "getIsResizeable",
+      "getIsAutoResize",
     ]),
   },
   created() {
     this.fetchResources();
-    this.onSelectedSectionByIndex(this.selectedSection);
+    this.onSelectedSection({ index: 0, id: 0 });
   },
   updated() {
-    this.onRemoveDuplicated(this.$refs["section"]);
-    // console.log(this.$refs["section"][1].style)
+    this.onUpdateRefs(this.$refs["section"]);
+    this.placeholders();
+    // document.querySelectorAll(".section").forEach((element) => {
+    //   let h = element.offsetHeight + this.margin[0] + this.margin[1];
+    //   // let transformHeight = (element.offsetHeight = this.margin[0]);
+    //   // document.getElementById(element.id).style.transform =
+    //   //   "translate3d(10px," + transformHeight + "px, 0px)";
+    //   document.getElementById(element.id).style.height = h + "px";
+    // });
   },
 };
 </script>
@@ -212,7 +322,7 @@ export default {
   border-left: 0.5px solid black;
   border-right: 0.5px solid black;
 } */
-.vue-grid-item.section:not(:last-child):not(:first-child) {
+.vue-grid-item.section {
   /* border-left: 0.5px solid black;
   border-right: 0.5px solid black; */
 }
@@ -230,5 +340,11 @@ export default {
   bottom: -1rem;
   margin-left: -4rem;
   z-index: 1;
+}
+.placeholder {
+  border: 1px solid #ccc;
+}
+.hidePlacerholder {
+  display: none;
 }
 </style>
