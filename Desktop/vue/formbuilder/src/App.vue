@@ -2,6 +2,7 @@
   <v-app>
     <Navbar />
     <Sidebar />
+    <Pages />
     <div class="d-flex h-100">
       <v-main>
         <router-view />
@@ -13,18 +14,21 @@
 <script>
 import Navbar from "./layouts/Navbar";
 import Sidebar from "./layouts/Sidebar";
+import Pages from "./layouts/Pages";
+import { mapActions } from "vuex";
 
 export default {
   name: "App",
-  components: { Navbar, Sidebar },
-  data: () => ({
-    //
-  }),
+  components: { Navbar, Sidebar, Pages },
+  methods: {
+    ...mapActions({
+      fetchPages: "fetchPages",
+    }),
+  },
+  created() {
+    this.fetchPages();
+  },
 };
 </script>
 
-<style>
-/* main {
-  margin-top: 80px;
-} */
-</style>
+<style></style>

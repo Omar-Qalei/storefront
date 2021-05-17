@@ -1,5 +1,6 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="showSettings" />
     <v-btn class="draggable" draggable="true" unselectable="on">
       Button
     </v-btn>
@@ -7,9 +8,12 @@
 </template>
 
 <script>
-
+import SettingsWidget from "./SettingsWidget";
 export default {
   name: "ButtonWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       // height: Number,
@@ -17,9 +21,7 @@ export default {
     };
   },
   props: {
-    refItem: null,
-  },
-  mounted() {
+    showSettings: Boolean,
   },
 };
 </script>

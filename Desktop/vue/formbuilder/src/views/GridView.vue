@@ -1,5 +1,4 @@
 <template>
-  <!--  :style="{ width: getScreenSize.width + 'px' }" -->
   <GridLayout
     :layout="getSections"
     :row-height="rowHeight"
@@ -15,7 +14,7 @@
     :use-css-transforms="true"
     :col-num="getScreenSize.cols"
     :style="{
-      width: getScreenSize.width + 'px',
+      width: getScreenSize.width,
       margin: '0 auto',
     }"
   >
@@ -31,9 +30,10 @@
           currentSelectedSection = item.id;
           selectedSectionByI = item.i;
         "
+        @mouseup="displayPlaceholder = false"
       >
         <GridItem
-          :class="{ editMode: true }"
+          :class="{ editMode: true, resizeSection: true }"
           :autoSize="item.id === selectedSection && getIsAutoResize"
           :x="item.x"
           :y="item.y"
@@ -42,13 +42,12 @@
           :i="item.i"
           :is-resizable="item.id === selectedSection"
           :minW="getScreenSize.cols"
-          class="section"
           :id="item.i"
           :ref="'section'"
           :style="[
             selectedSection !== null ? activeSection : '',
             {
-              width: getScreenSize.width + 'px',
+              width: getScreenSize.width,
             },
           ]"
           @resize="resizeEvent"
@@ -214,6 +213,7 @@ export default {
     },
     // i, newH, newW, newHPx, newWPx
     resizeEvent: function(i, newH) {
+      this.displayPlaceholder = true;
       this.onResizeSection(true);
       const data = {
         sectionId: this.selectedSection,

@@ -1,20 +1,24 @@
 <template>
   <!-- <div class="navbar"> -->
-  <v-app-bar app color="white" dense clipped-right dark>
-    <a class="logo">
+  <v-app-bar app color="white" dense clipped-right clipped-left dark>
+    <a class="logo mr-6">
       Wimmly
+    </a>
+    <div class="separator"></div>
+    <a class="pages ml-2" @click="onDrawerPages">
+      Pages: <b class="ml-1">{{ title }}</b>
     </a>
     <div class="spacer"></div>
     <div class="settings d-flex">
       <a
         class="link-icon"
-        @click="onResizeSectionScreen({ width: 320, cols: 1 })"
+        @click="onResizeSectionScreen({ width: '320px', cols: 1 })"
       >
         <span class="mdi mdi-cellphone-cog"></span>
       </a>
       <a
         class="link-icon"
-        @click="onResizeSectionScreen({ width: 1174, cols: 12 })"
+        @click="onResizeSectionScreen({ width: '100%', cols: 12 })"
       >
         <span class="mdi mdi-monitor"></span>
       </a>
@@ -27,11 +31,30 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Navbar",
+  data: function() {
+    return {
+      title: null,
+    };
+  },
   methods: {
-    ...mapActions(["onDrawer", "onResizeSectionScreen"]),
+    ...mapActions(["onDrawer", "onDrawerPages", "onResizeSectionScreen"]),
+  },
+  computed: {
+    ...mapGetters(["getSelectedPage", "getPages"]),
+  },
+  watch: {
+    getSelectedPage(value) {
+      this.title = this.getPages.find((item) => item.id === value).title;
+    },
+    getPages(value) {
+      console.log(value);
+    },
+  },
+  mounted() {
+    this.title = this.getPages.find((item) => item.id === 1).title;
   },
 };
 </script>
@@ -65,5 +88,14 @@ nav {
 .settings {
   margin-right: 30px;
   align-items: center;
+}
+.separator {
+  width: 1px;
+  height: 16px;
+  margin: 0 6px;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.pages {
+  font-size: 13px;
 }
 </style>

@@ -25,6 +25,7 @@
             onMouseDown;
             onMoveElement(index);
           "
+          @click="onSelectedWidget"
           @mouseup="onMouseUp"
         >
           <GridItem
@@ -81,7 +82,10 @@
             :item="item"
             :itemIndex="index"
           ></ButtonWidget> -->
-            <ButtonWidget v-if="item.type == 'button'" />
+            <ButtonWidget
+              v-if="item.type == 'button'"
+              :showSettings="selectedWidget"
+            />
             <CarouselWidget v-if="item.type == 'carousel'" />
             <LabelWidget v-if="item.type == 'label'" />
             <ImageWidget v-if="item.type == 'image'" />
@@ -128,6 +132,7 @@ export default {
       contenteditable: true,
       statusMoveElement: false,
       rowHeight: 30,
+      selectedWidget: false,
     };
   },
   methods: {
@@ -188,9 +193,13 @@ export default {
       this.$emit("resizeGrid", true);
       this.onUpdateSectionLayoutGridResized(data);
     },
+    onSelectedWidget: function() {
+      console.log("hello");
+      this.selectedWidget = true;
+    },
   },
   computed: {
-    ...mapGetters(["getResources", "getResizeSectionStatus", "getScreenSize"]),
+    ...mapGetters(["getResources", "getResizeSectionStatus"]),
   },
   updated() {
     var data = {

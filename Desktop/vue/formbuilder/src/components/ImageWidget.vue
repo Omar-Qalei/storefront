@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 export default {
   name: "ImageWidget",
   data() {
@@ -17,8 +16,7 @@ export default {
   props: {
     refItem: null,
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
@@ -34,12 +32,13 @@ export default {
   background: #cce;
 }
 .label {
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 }
-.widget, img {
-  /* position: absolute; */
+.widget,
+img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 </style>

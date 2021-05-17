@@ -1,7 +1,14 @@
 <template>
   <div>
     <div class="d-flex settings">
-      <v-navigation-drawer height="100%" v-model="getDrawer" :permanent="getDrawer" right app clipped>
+      <v-navigation-drawer
+        height="100%"
+        v-model="drawer"
+        :permanent="drawer"
+        right
+        app
+        clipped
+      >
         <!-- <v-list-item class="px-2">
           <v-list-item-title>Add Element</v-list-item-title>
         </v-list-item>
@@ -9,7 +16,7 @@
         <v-divider></v-divider> -->
         <v-row class="justify-space-around mt-4 mx-2">
           <v-col cols="6">
-             <Carousel />
+            <Carousel />
           </v-col>
           <v-col cols="6">
             <Button />
@@ -37,7 +44,7 @@ export default {
   data: function() {
     return {
       addElement: false,
-      drawer: false,
+      drawer: true,
       items: [
         { title: "Home", icon: "mdi-home-city" },
         { title: "My Account", icon: "mdi-account" },
@@ -50,7 +57,7 @@ export default {
     Button,
     Carousel,
     Label,
-    ImageView
+    ImageView,
   },
   methods: {
     onAddElement: function() {
@@ -59,6 +66,11 @@ export default {
   },
   computed: {
     ...mapGetters(["getDrawer"]),
+  },
+  watch: {
+    getDrawer(value) {
+      this.drawer = value;
+    },
   },
 };
 </script>
