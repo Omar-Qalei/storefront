@@ -8,7 +8,7 @@
       :is-resizable="statusSection"
       :is-mirrored="false"
       :vertical-compact="false"
-      :responsive="true"
+      :responsive="responsive"
       :allow-overlap="false"
       :margin="margin"
       :use-css-transforms="statusSection"
@@ -138,6 +138,8 @@ export default {
     sectionId: Number,
     cols: Number,
     margin: Array,
+    responsive: Boolean,
+    rowHeight: Number,
   },
   data() {
     return {
@@ -146,7 +148,6 @@ export default {
       preview: true,
       contenteditable: true,
       statusMoveElement: false,
-      rowHeight: 30,
       selectedWidget: false,
     };
   },
@@ -209,7 +210,6 @@ export default {
       this.onUpdateSectionLayoutGridResized(data);
     },
     onSelectedWidget: function() {
-      console.log("hello");
       this.selectedWidget = true;
     },
   },

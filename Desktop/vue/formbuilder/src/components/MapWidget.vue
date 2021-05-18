@@ -6,14 +6,16 @@
       map-type-id="terrain"
       class="map"
     >
-      <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="true"
-        @click="center = m.position"
-      />
+      <template v-if="!markers.length">
+        <GmapMarker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true"
+          :draggable="true"
+          @click="center = m.position"
+        />
+      </template>
     </GmapMap>
   </div>
 </template>
@@ -29,6 +31,7 @@ export default {
         { title: "Click Me" },
         { title: "Click Me 2" },
       ],
+      markers: [],
     };
   },
   props: {

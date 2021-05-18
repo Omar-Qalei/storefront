@@ -86,6 +86,8 @@
             @onMoveGrid="onMoveGrid($event)"
             @resizeGrid="resizeGrid($event)"
             :margin="margin"
+            :row-height="rowHeight"
+            :responsive="getScreenSize.responsive"
             :cols="getScreenSize.cols"
           ></SectionWidget>
           <v-btn

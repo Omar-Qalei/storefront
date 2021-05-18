@@ -25,7 +25,7 @@ export default {
       element: {
         type: "map",
         width: 6,
-        height: 6,
+        height: 10,
       },
     };
   },
