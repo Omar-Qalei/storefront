@@ -1,27 +1,30 @@
 <template>
   <div
-    class="widget-element"
+    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
-    @mousedown="onMoveElement(false);onSetElement(element);"
+    @mousedown="
+      onMoveElement(false);
+      onSetElement(element);
+    "
     draggable="true"
     unselectable="on"
-    ref="label"
+    ref="audio"
   >
-    Label
+    Audio
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 export default {
-  name: "Label",
+  name: "Audio",
   data() {
     return {
       element: {
-        type: "label",
-        width: 2,
+        type: "audio",
+        width: 4,
         height: 2,
       },
     };

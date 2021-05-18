@@ -22,10 +22,25 @@
             <Button />
           </v-col>
           <v-col cols="6">
-            <Label />
+            <TextView />
           </v-col>
           <v-col cols="6">
             <ImageView />
+          </v-col>
+          <v-col cols="6">
+            <Form />
+          </v-col>
+          <v-col cols="6">
+            <Video />
+          </v-col>
+          <v-col cols="6">
+            <Menu />
+          </v-col>
+          <v-col cols="6">
+            <Map />
+          </v-col>
+          <v-col cols="6">
+            <Audio />
           </v-col>
         </v-row>
       </v-navigation-drawer>
@@ -37,32 +52,31 @@
 import { mapGetters } from "vuex";
 import Button from "./components/Button";
 import Carousel from "./components/Carousel";
-import Label from "./components/Label";
+import TextView from "./components/TextView";
 import ImageView from "./components/ImageView";
+import Form from "./components/Form";
+import Video from "./components/Video";
+import Menu from "./components/Menu";
+import Map from "./components/Map";
+import Audio from "./components/Audio";
+
 export default {
   name: "Sidebar",
-  data: function() {
-    return {
-      addElement: false,
-      drawer: true,
-      items: [
-        { title: "Home", icon: "mdi-home-city" },
-        { title: "My Account", icon: "mdi-account" },
-        { title: "Users", icon: "mdi-account-group-outline" },
-      ],
-      mini: true,
-    };
-  },
   components: {
     Button,
     Carousel,
-    Label,
+    TextView,
     ImageView,
+    Form,
+    Video,
+    Menu,
+    Map,
+    Audio,
   },
-  methods: {
-    onAddElement: function() {
-      this.addElement = !this.addElement;
-    },
+  data: function() {
+    return {
+      drawer: true,
+    };
   },
   computed: {
     ...mapGetters(["getDrawer"]),
@@ -72,6 +86,7 @@ export default {
       this.drawer = value;
     },
   },
+  methods: {},
 };
 </script>
 

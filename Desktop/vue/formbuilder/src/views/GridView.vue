@@ -10,7 +10,7 @@
     :autoSize="true"
     :allow-overlap="true"
     :allow-resize-grid="getIsResizeable"
-    :responsive="true"
+    :responsive="getScreenSize.responsive"
     :use-css-transforms="true"
     :col-num="getScreenSize.cols"
     :style="{
@@ -232,26 +232,51 @@ export default {
     },
     placeholders: function(h) {
       const placeholderGrids = [];
-      // this.containerHeight(h);
-      for (let row = 0; row < h - 1; row++) {
-        for (let col = 0; col <= 12 - 3; col++) {
-          if (row % 2 === 0) {
-            placeholderGrids.push({
-              x: col,
-              y: row,
-              w: 1,
-              h: 2,
-              i: "row" + row,
-            });
-          } else {
-            row = row + 1;
-            placeholderGrids.push({
-              x: col,
-              y: row,
-              w: 1,
-              h: 2,
-              i: "row" + row,
-            });
+      if (this.getScreenSize.width === "100%") {
+        for (let row = 0; row < h - 1; row++) {
+          for (let col = 0; col <= this.getScreenSize.cols - 1; col++) {
+            if (row % 2 === 0) {
+              placeholderGrids.push({
+                x: col,
+                y: row,
+                w: 1,
+                h: 2,
+                i: "row" + row,
+              });
+            } else {
+              row = row + 1;
+              placeholderGrids.push({
+                x: col,
+                y: row,
+                w: 1,
+                h: 2,
+                i: "row" + row,
+              });
+            }
+          }
+        }
+      }
+      if (this.getScreenSize.width === "320px") {
+        for (let row = 0; row < h - 1; row++) {
+          for (let col = 0; col <= this.getScreenSize.cols; col++) {
+            if (row % 2 === 0) {
+              placeholderGrids.push({
+                x: col,
+                y: row,
+                w: 1,
+                h: 2,
+                i: "row" + row,
+              });
+            } else {
+              row = row + 1;
+              placeholderGrids.push({
+                x: col,
+                y: row,
+                w: 1,
+                h: 2,
+                i: "row" + row,
+              });
+            }
           }
         }
       }
@@ -302,7 +327,7 @@ export default {
   },
   updated() {
     this.onUpdateRefs(this.$refs["section"]);
-    this.placeholders();
+    // this.placeholders();
     // document.querySelectorAll(".section").forEach((element) => {
     //   let h = element.offsetHeight + this.margin[0] + this.margin[1];
     //   // let transformHeight = (element.offsetHeight = this.margin[0]);

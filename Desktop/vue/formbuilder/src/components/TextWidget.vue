@@ -5,9 +5,8 @@
 </template>
 
 <script>
-
 export default {
-  name: "LabelWidget",
+  name: "TextWidget",
   data() {
     return {
       // height: Number,
@@ -17,8 +16,7 @@ export default {
   props: {
     refItem: null,
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
@@ -34,8 +32,8 @@ export default {
   background: #cce;
 }
 .label {
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 }
 .widget {
   /* position: absolute; */

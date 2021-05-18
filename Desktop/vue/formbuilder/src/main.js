@@ -8,13 +8,14 @@ import './assets/css/styles.css'
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
+import * as VueGoogleMaps from './plugins/g-map';
 
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,
   gridLayout,
   vuetify,
+  VueGoogleMaps,
   render: h => h(App)
 }).$mount('#app')

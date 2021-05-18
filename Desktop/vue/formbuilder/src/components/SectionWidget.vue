@@ -87,8 +87,13 @@
               :showSettings="selectedWidget"
             />
             <CarouselWidget v-if="item.type == 'carousel'" />
-            <LabelWidget v-if="item.type == 'label'" />
+            <TextWidget v-if="item.type == 'text'" />
             <ImageWidget v-if="item.type == 'image'" />
+            <FormWidget v-if="item.type == 'form'" />
+            <MenuWidget v-if="item.type == 'menu'" />
+            <VideoWidget v-if="item.type == 'video'" />
+            <MapWidget v-if="item.type == 'map'" />
+            <AudioWidget v-if="item.type == 'audio'" />
           </GridItem>
         </div>
       </template>
@@ -102,8 +107,13 @@ import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
 import ButtonWidget from "../components/ButtonWidget";
 import CarouselWidget from "../components/CarouselWidget";
-import LabelWidget from "../components/LabelWidget";
+import TextWidget from "../components/TextWidget";
 import ImageWidget from "../components/ImageWidget";
+import FormWidget from "../components/FormWidget";
+import MenuWidget from "../components/MenuWidget";
+import VideoWidget from "../components/VideoWidget";
+import MapWidget from "../components/MapWidget";
+import AudioWidget from "../components/AudioWidget";
 
 export default {
   name: "SectionWidget",
@@ -112,8 +122,13 @@ export default {
     GridItem,
     ButtonWidget,
     CarouselWidget,
-    LabelWidget,
+    TextWidget,
     ImageWidget,
+    FormWidget,
+    MenuWidget,
+    VideoWidget,
+    MapWidget,
+    AudioWidget,
   },
   props: {
     resources: Array,

@@ -23,6 +23,18 @@
               </v-btn>
             </v-list-item-action>
           </v-list-item>
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon
+                color="indigo"
+                v-text="'mdi-plus-circle-outline'"
+              ></v-icon>
+            </v-list-item-icon>
+            <v-list-item-title
+              class="indigo--text"
+              v-text="'Add A New Page'"
+            ></v-list-item-title>
+          </v-list-item>
         </v-list>
         <v-divider></v-divider>
         <v-list>

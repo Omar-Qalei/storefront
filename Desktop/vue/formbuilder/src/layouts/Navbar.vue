@@ -12,13 +12,17 @@
     <div class="settings d-flex">
       <a
         class="link-icon"
-        @click="onResizeSectionScreen({ width: '320px', cols: 1 })"
+        @click="
+          onResizeSectionScreen({ width: '320px', cols: 1, responsive: true })
+        "
       >
         <span class="mdi mdi-cellphone-cog"></span>
       </a>
       <a
         class="link-icon"
-        @click="onResizeSectionScreen({ width: '100%', cols: 12 })"
+        @click="
+          onResizeSectionScreen({ width: '100%', cols: 12, responsive: false })
+        "
       >
         <span class="mdi mdi-monitor"></span>
       </a>
