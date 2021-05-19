@@ -9,6 +9,7 @@ import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import * as VueGoogleMaps from './plugins/g-map';
+import * as VModal from './plugins/v-modal';
 
 Vue.config.productionTip = false
 new Vue({
@@ -17,5 +18,6 @@ new Vue({
   gridLayout,
   vuetify,
   VueGoogleMaps,
+  VModal,
   render: h => h(App)
 }).$mount('#app')

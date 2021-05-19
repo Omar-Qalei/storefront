@@ -151,6 +151,7 @@
       </div>
     </template>
   </GridLayout>
+
   <!-- </div> -->
 </template>
 
@@ -188,6 +189,7 @@ export default {
       displayPlaceholder: false,
       currentSelectedSection: "",
       selectedSectionByI: null,
+      dialog: false,
     };
   },
   methods: {

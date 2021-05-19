@@ -26,7 +26,41 @@ export default {
   props: {
     refItem: null,
   },
-  mounted() {},
+  mounted() {
+    document.addEventListener(
+      "dragover",
+      function(e) {
+        const data = {
+          x: e.clientX,
+          y: e.clientY,
+        };
+        console.log(data);
+        // documents.getElementById("dialog-settings").style.top = data.y + "px";
+        // documents.getElementById("dialog-settings").style.left = data.x + "px";
+      },
+      false
+    );
+    // onMouseOver: function() {
+    //   // // const thiz = this;
+    //   // const top = document.getElementById("dialog-settings").style.top;
+    //   // const left = document.getElementById("dialog-settings").style.left;
+    //   // const left = document.getElementById("").style.left;
+    //   // const documents = document;
+    //   // console.log(top, left);
+
+    //   // document.addEventListener(
+    //   //   "dragover",
+    //   //   function(e) {
+    //   //     const data = {
+    //   //       x: e.clientX,
+    //   //       y: e.clientY,
+    //   //     };
+    //   //     console.log(data);
+    //   //   },
+    //   //   false
+    //   // );
+    // },
+  },
 };
 </script>
 

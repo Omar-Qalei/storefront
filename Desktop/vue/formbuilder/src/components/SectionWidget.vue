@@ -25,7 +25,7 @@
             onMouseDown;
             onMoveElement(index);
           "
-          @click="onSelectedWidget"
+          @click="onSelectedWidgetById(item)"
           @mouseup="onMouseUp"
         >
           <GridItem
@@ -82,10 +82,7 @@
             :item="item"
             :itemIndex="index"
           ></ButtonWidget> -->
-            <ButtonWidget
-              v-if="item.type == 'button'"
-              :showSettings="selectedWidget"
-            />
+            <ButtonWidget v-if="item.type == 'button'" :item="item" />
             <CarouselWidget v-if="item.type == 'carousel'" />
             <TextWidget v-if="item.type == 'text'" />
             <ImageWidget v-if="item.type == 'image'" />
@@ -105,7 +102,7 @@
 // @ is an alias to /src
 import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
-import ButtonWidget from "../components/ButtonWidget";
+import ButtonWidget from "../components/button/ButtonWidget";
 import CarouselWidget from "../components/CarouselWidget";
 import TextWidget from "../components/TextWidget";
 import ImageWidget from "../components/ImageWidget";
@@ -148,7 +145,6 @@ export default {
       preview: true,
       contenteditable: true,
       statusMoveElement: false,
-      selectedWidget: false,
     };
   },
   methods: {
@@ -157,6 +153,7 @@ export default {
       "updateSectionLayout",
       "onResizeSection",
       "onUpdateSectionLayoutGridResized",
+      "onSelectedWidgetById",
     ]),
     onMouseUp() {
       this.$emit("onDragElement", false);
@@ -208,9 +205,6 @@ export default {
       };
       this.$emit("resizeGrid", true);
       this.onUpdateSectionLayoutGridResized(data);
-    },
-    onSelectedWidget: function() {
-      this.selectedWidget = true;
     },
   },
   computed: {

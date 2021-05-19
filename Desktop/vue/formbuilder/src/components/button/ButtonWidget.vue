@@ -1,6 +1,6 @@
 <template>
   <div class="widget">
-    <SettingsWidget :show="showSettings" />
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <v-btn class="draggable" draggable="true" unselectable="on">
       Button
     </v-btn>
@@ -8,20 +8,23 @@
 </template>
 
 <script>
-import SettingsWidget from "./SettingsWidget";
+import SettingsWidget from "../settings/SettingsWidget";
+// mapActions,
+import { mapGetters } from "vuex";
+
 export default {
   name: "ButtonWidget",
   components: {
     SettingsWidget,
   },
   data() {
-    return {
-      // height: Number,
-      // width: Number,
-    };
+    return {};
   },
   props: {
-    showSettings: Boolean,
+    item: {},
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
 };
 </script>
