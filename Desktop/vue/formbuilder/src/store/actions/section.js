@@ -49,19 +49,25 @@ export const onDragOver = ({ commit }, payload) => {
 }
 
 export const onDrag = ({ commit, state }) => {
-    let k = { 'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type }
-    commit('setDrag', k);
-}
-
-
-export const onDragGrid = ({ commit, state }) => {
-    let k = { 'x': (state.resources.length * 2) % (state.properties.colNum || 12), 'y': state.resources.length + (state.properties.colNum || 12), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type, layouts: state.element.layouts }
+    let k = {
+        'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type,
+        properties: {
+            name: state.element.type,
+            style: null
+        }
+    }
     commit('setDrag', k);
 }
 
 export const onDragend = ({ commit, state }) => {
     let g = lib.guid()
-    let k = { 'x': state.dragPos.x, 'y': state.dragPos.y, 'w': state.element.width, 'h': state.element.height, 'i': g, 'type': state.element.type }
+    let k = {
+        'x': state.dragPos.x, 'y': state.dragPos.y, 'w': state.element.width, 'h': state.element.height, 'i': g, 'type': state.element.type, properties: {
+            name: state.element.type,
+            style: null,
+            elementHover: null
+        }
+    }
     commit('setDragEnd', k)
 }
 

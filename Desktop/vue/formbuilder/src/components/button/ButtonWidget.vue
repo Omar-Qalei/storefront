@@ -1,9 +1,72 @@
 <template>
-  <div class="widget">
+  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <v-btn class="draggable" draggable="true" unselectable="on">
-      Button
-    </v-btn>
+    <template v-if="selectedLinkTo === null">
+      <v-btn
+        class="draggable"
+        draggable="true"
+        unselectable="on"
+        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :id="item.i + 'button'"
+      >
+        {{ item.properties.name }}
+      </v-btn>
+    </template>
+
+    <!-- <template v-if="selectedLinkTo && selectedLinkTo === 0">
+      <v-btn
+        class="draggable"
+        draggable="true"
+        unselectable="on"
+        :to="'/' + getSelectedWidgetById.properties.page"
+        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :id="item.i + 'button'"
+      >
+        {{ item.properties.name }}
+      </v-btn>
+    </template>
+
+    <template v-if="selectedLinkTo && selectedLinkTo === 1">
+      <v-btn
+        class="draggable"
+        draggable="true"
+        unselectable="on"
+        :to="'/' + getSelectedWidgetById.properties.page"
+        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :id="item.i + 'button'"
+        @click="goTo"
+      >
+        {{ item.properties.name }}
+      </v-btn>
+    </template>
+
+    <template v-if="selectedLinkTo && selectedLinkTo === 2">
+      <v-btn
+        class="draggable"
+        draggable="true"
+        unselectable="on"
+        :to="'/' + getSelectedWidgetById.properties.page"
+        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :id="item.i + 'button'"
+        @click="onCall"
+      >
+        {{ item.properties.name }}
+      </v-btn>
+    </template>
+
+    <template v-if="selectedLinkTo && selectedLinkTo === 3">
+      <v-btn
+        class="draggable"
+        draggable="true"
+        unselectable="on"
+        :to="'/' + getSelectedWidgetById.properties.page"
+        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :id="item.i + 'button'"
+        @click="onEmail"
+      >
+        {{ item.properties.name }}
+      </v-btn>
+    </template> -->
   </div>
 </template>
 
@@ -11,20 +74,60 @@
 import SettingsWidget from "../settings/SettingsWidget";
 // mapActions,
 import { mapGetters } from "vuex";
-
 export default {
   name: "ButtonWidget",
   components: {
     SettingsWidget,
   },
   data() {
-    return {};
+    return {
+      hover: false,
+      selectedLinkTo: null,
+    };
   },
   props: {
     item: {},
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
+  },
+  methods: {
+    onHover: function() {
+      if (this.hover) {
+        if (this.getSelectedWidgetById.properties?.elementHover !== undefined) {
+          return this.getSelectedWidgetById.properties.elementHover;
+        }
+      } else {
+        return "";
+      }
+    },
+    goTo: function() {
+      let url = this.getSelectedWidgetById.properties.selectedLinkTo.url;
+      let newTab = this.getSelectedWidgetById.properties.selectedLinkTo.newTab;
+      if (newTab) {
+        window.open(url, "_blank");
+      } else {
+        window.open(url, "_self");
+      }
+    },
+    onCall: function() {
+      let phone = this.getSelectedWidgetById.properties.selectedLinkTo.phone;
+      if (phone) {
+        window.open("tel:" + phone);
+      }
+    },
+    onEmail: function() {
+      let email = this.getSelectedWidgetById.properties.selectedLinkTo.email;
+      if (email) {
+        window.location.href = "mailto:" + email;
+      }
+      console.log(email);
+    },
+  },
+  updated() {
+    if (this.getSelectedWidgetById.properties?.selectedLinkTo) {
+      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+    }
   },
 };
 </script>
@@ -50,6 +153,10 @@ export default {
 .widget {
   position: absolute;
   width: 100%;
+  height: 100%;
+}
+.widget .v-btn ::v-deep.v-btn__content {
+  align-items: inherit;
   height: 100%;
 }
 </style>

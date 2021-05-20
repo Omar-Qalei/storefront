@@ -2,28 +2,14 @@
   <modal
     name="settings"
     classes="settings-model"
-    :draggable="true"
-    :reset="true"
     width="500"
     height="auto"
     @before-open="beforeOpen"
     @opened="opened"
     @before-close="beforeClose"
     @closed="closed"
+    :draggable="true"
   >
-    <!-- <v-card>
-      <v-card-title class="headline grey lighten-2">
-        Button Settings
-      </v-card-title>
-      <SettingsDialogContent />
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="dialog = false">
-          I accept
-        </v-btn>
-      </v-card-actions>
-    </v-card> -->
     <SettingsDialogContent />
   </modal>
 </template>
@@ -34,17 +20,19 @@ export default {
   name: "SettingsDialog",
   components: { SettingsDialogContent },
   methods: {
-    beforeOpen(event) {
-      console.log("before-open", event);
+    beforeOpen() {
+      // console.log("before-open", event);
+      // event.ref.draggable = true;
     },
     beforeClose() {},
-    opened(event) {
+    opened() {
       // e.ref should not be undefined here
-      console.log("opened", event);
-      console.log("ref", event.ref);
+      // console.log("opened", event);
+      // event.ref.draggable = true;
     },
-    closed(event) {
-      console.log("closed", event);
+    closed() {
+      // console.log("closed", event);
+      // event.defaultPrevented;
     },
   },
 };

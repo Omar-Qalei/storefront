@@ -15,7 +15,7 @@
     <v-btn class="mr-2" color="white" fab x-small light>
       <v-icon>mdi-content-duplicate</v-icon>
     </v-btn>
-    <v-btn color="red" fab x-small dark>
+    <v-btn color="white" fab x-small>
       <v-icon>mdi-trash-can</v-icon>
     </v-btn>
   </div>
@@ -35,7 +35,6 @@ export default {
       // width: Number,
     };
   },
-  methods: {},
 };
 </script>
 

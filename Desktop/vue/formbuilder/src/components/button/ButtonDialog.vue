@@ -13,11 +13,7 @@
             <ButtonContent />
           </v-tab-item>
           <v-tab-item>
-            <v-container fluid>
-              <v-row>
-                <v-col v-for="i in 6" :key="i" cols="12" md="4"> </v-col>
-              </v-row>
-            </v-container>
+            <ButtonDesign :buttonId="getSelectedWidgetById.i" />
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -25,9 +21,6 @@
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" text @click="$modal.hide('settings')">
-        Cancel
-      </v-btn>
       <v-btn color="primary" text @click="$modal.hide('settings')">
         Done
       </v-btn>
@@ -37,9 +30,12 @@
 
 <script>
 import ButtonContent from "./ButtonContent";
+import ButtonDesign from "./ButtonDesign";
+import { mapGetters } from "vuex";
+
 export default {
   name: "ButtonDialog",
-  components: { ButtonContent },
+  components: { ButtonContent, ButtonDesign },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);
@@ -53,6 +49,9 @@ export default {
     closed(event) {
       console.log("closed", event);
     },
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
 };
 </script>
