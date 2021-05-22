@@ -86,7 +86,7 @@
             <CarouselWidget v-if="item.type == 'carousel'" />
             <TextWidget v-if="item.type == 'text'" />
             <ImageWidget v-if="item.type == 'image'" />
-            <FormWidget v-if="item.type == 'form'" />
+            <FormWidget v-if="item.type == 'form'" :item="item" />
             <MenuWidget v-if="item.type == 'menu'" />
             <VideoWidget v-if="item.type == 'video'" />
             <MapWidget v-if="item.type == 'map'" />
@@ -106,7 +106,7 @@ import ButtonWidget from "../components/button/ButtonWidget";
 import CarouselWidget from "../components/CarouselWidget";
 import TextWidget from "../components/TextWidget";
 import ImageWidget from "../components/ImageWidget";
-import FormWidget from "../components/FormWidget";
+import FormWidget from "../components/form/FormWidget";
 import MenuWidget from "../components/MenuWidget";
 import VideoWidget from "../components/VideoWidget";
 import MapWidget from "../components/MapWidget";

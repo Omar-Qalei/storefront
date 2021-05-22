@@ -52,6 +52,7 @@
           @colorElement="textColor = $event"
           @colorElementHover="textColorHover = $event"
           :type="elementStatus"
+          :color="textColor"
         />
         {{ textColor }} {{ textColorHover }}
       </v-col>
@@ -65,6 +66,7 @@
           @colorElement="backgroundColor = $event"
           @colorElementHover="backgroundColorHover = $event"
           :type="elementStatus"
+          :color="backgroundColor"
         />
         {{ backgroundColor }} {{ backgroundColorHover }}
       </v-col>
@@ -158,18 +160,18 @@ export default {
       text: null,
       selectedTextHorizontal: 1,
       selectedTextVertical: 1,
-      borderRadius: 25,
+      borderRadius: 4,
       borderRadiusTopLeft: 0,
       borderRadiusTopRight: 0,
       borderRadiusBottomLeft: 0,
       borderRadiusBottomRight: 0,
       selectedUrl: null,
       statusNewTab: false,
-      textColor: null,
-      backgroundColor: null,
+      textColor: "#000000de",
+      backgroundColor: "#f5f5f5",
       textColorHover: null,
       backgroundColorHover: null,
-      elementStatus: 0,
+      elementStatus: "element",
       textHorizontal: [
         { id: 0, title: "flex-start", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
@@ -188,15 +190,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById", "getRefElement"]),
+    ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
     ...mapActions([""]),
-  },
-  created() {
-    let style = document.getElementById(this.getSelectedWidgetById.i + "button")
-      .style;
-    console.log(style);
   },
   updated() {
     this.getSelectedWidgetById.properties.style = {
@@ -210,6 +207,10 @@ export default {
       color: this.textColorHover,
       backgroundColor: this.backgroundColorHover,
     };
+  },
+  destroyed() {
+    this.textColorHover = null;
+    this.backgroundColorHover = null;
   },
 };
 </script>

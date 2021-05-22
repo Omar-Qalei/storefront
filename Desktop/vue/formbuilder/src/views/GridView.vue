@@ -73,7 +73,6 @@
               }"
             ></GridItem>
           </template>
-          <!-- index: {{ index }} id: {{ item.id }} -->
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -98,55 +97,6 @@
             @click="addNewSection(item.selectedIndex)"
             >Add Section {{ item.h }}</v-btn
           >
-          <!-- <div
-            v-if="!preview"
-            @click="removeItem({ key: index })"
-            style="position: absolute; bottom: 0px; left: 4px"
-          >
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </div> -->
-
-          <!-- <TextWidget
-            v-if="item.type == 'title'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></TextWidget>
-
-          <TextAreaWidget
-            v-if="item.type == 'content'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></TextAreaWidget>
-
-          <ImageWidget
-            v-if="item.type == 'image'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></ImageWidget>
-
-          <ButtonWidget
-            v-if="item.type == 'button'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></ButtonWidget> -->
-
-          <!-- <ButtonWidget
-            v-if="item.type == 'button'"
-            :refItem="refGridItem[index]"
-          /> -->
-          <!-- <SectionWidget
-              v-if="item.type == 'section'"
-              :key="item.i"
-              :layouts="item.layouts"
-            /> -->
         </GridItem>
       </div>
     </template>

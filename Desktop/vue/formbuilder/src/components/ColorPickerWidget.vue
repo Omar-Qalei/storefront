@@ -1,25 +1,28 @@
 <template>
   <v-menu
-    v-model="color"
+    v-model="isColored"
     :close-on-content-click="false"
     :nudge-width="200"
     offset-x
     left
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-avatar
-        :color="currentColor ? currentColor.hexa : 'accent'"
-        v-bind="attrs"
-        v-on="on"
-        size="25"
-        @click="color = !color"
-      ></v-avatar>
+      <div class="border">
+        <v-avatar
+          :color="currentColor ? currentColor.hexa : color"
+          v-bind="attrs"
+          v-on="on"
+          size="18"
+          @click="isColored = !isColored"
+          class="border"
+        ></v-avatar>
+      </div>
     </template>
     <v-card>
       <v-card-text>
         <v-color-picker
           v-model="currentColor"
-          dot-size="25"
+          dot-size="10"
           swatches-max-height="200"
         ></v-color-picker>
       </v-card-text>
@@ -32,14 +35,13 @@ export default {
   name: "ColorPickerWidget",
   data() {
     return {
-      // height: Number,
-      // width: Number,
       currentColor: null,
-      color: false,
+      isColored: false,
     };
   },
   props: {
     type: null,
+    color: null,
   },
   watch: {
     currentColor: function(value) {
@@ -54,27 +56,29 @@ export default {
       }
     },
   },
+  created() {
+    console.log(this.color);
+  },
 };
 </script>
 
 <style scoped>
-.vue-grid-item:not(.vue-grid-placeholder) {
-  background: #ccc;
+.border {
   border: 1px solid black;
-}
-.vue-grid-item .resizing {
-  opacity: 0.9;
-}
-.vue-grid-item .static {
-  background: #cce;
-}
-.label {
-  border: none;
-  outline: none;
+  height: 32px;
+  min-width: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 .widget {
-  /* position: absolute; */
+  position: absolute;
   width: 100%;
   height: 100%;
+}
+.v-menu {
+  z-index: 999;
 }
 </style>

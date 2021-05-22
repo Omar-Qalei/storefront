@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="headline grey lighten-2">
-      Button Settings
+      Form Settings
     </v-card-title>
     <v-card-text>
       <v-card class="overflow-y-auto elevation-0" max-height="495">
@@ -10,10 +10,10 @@
           <v-tab>Design</v-tab>
 
           <v-tab-item>
-            <ButtonContent />
+            <FormContent />
           </v-tab-item>
           <v-tab-item>
-            <ButtonDesign />
+            <FormDesign />
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import ButtonContent from "./ButtonContent";
-import ButtonDesign from "./ButtonDesign";
+import FormContent from "./FormContent";
+import FormDesign from "./FormDesign";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "ButtonDialog",
-  components: { ButtonContent, ButtonDesign },
+  name: "FormDialog",
+  components: { FormContent, FormDesign },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);

@@ -91,7 +91,6 @@ export default {
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
-    console.log(this.getSelectedWidgetById.properties);
   },
 };
 </script>

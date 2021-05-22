@@ -53,7 +53,9 @@ export const onDrag = ({ commit, state }) => {
         'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type,
         properties: {
             name: state.element.type,
-            style: null
+            style: null,
+            elementHover: null,
+            fields: [],
         }
     }
     commit('setDrag', k);
@@ -62,10 +64,12 @@ export const onDrag = ({ commit, state }) => {
 export const onDragend = ({ commit, state }) => {
     let g = lib.guid()
     let k = {
-        'x': state.dragPos.x, 'y': state.dragPos.y, 'w': state.element.width, 'h': state.element.height, 'i': g, 'type': state.element.type, properties: {
+        'x': state.dragPos.x, 'y': state.dragPos.y, 'w': state.element.width, 'h': state.element.height, 'i': g, 'type': state.element.type,
+        properties: {
             name: state.element.type,
             style: null,
-            elementHover: null
+            elementHover: null,
+            fields: [],
         }
     }
     commit('setDragEnd', k)

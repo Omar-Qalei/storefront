@@ -1,17 +1,20 @@
 <template>
   <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <template v-if="selectedLinkTo === null">
-      <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
-        :id="item.i + 'button'"
-      >
-        {{ item.properties.name }}
-      </v-btn>
-    </template>
+    <!-- <template v-if="selectedLinkTo === null"> -->
+    <v-btn
+      class="draggable"
+      draggable="true"
+      unselectable="on"
+      :style="[
+        item.properties.style ? item.properties.style : '',
+        onHover(item.properties.elementHover),
+      ]"
+      :id="item.i + 'button'"
+    >
+      {{ item.properties.name }}
+    </v-btn>
+    <!-- </template> -->
 
     <!-- <template v-if="selectedLinkTo && selectedLinkTo === 0">
       <v-btn
@@ -92,10 +95,10 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
-    onHover: function() {
+    onHover: function(elementHover) {
       if (this.hover) {
-        if (this.getSelectedWidgetById.properties?.elementHover !== undefined) {
-          return this.getSelectedWidgetById.properties.elementHover;
+        if (elementHover !== undefined) {
+          return elementHover;
         }
       } else {
         return "";
@@ -121,13 +124,13 @@ export default {
       if (email) {
         window.location.href = "mailto:" + email;
       }
-      console.log(email);
     },
   },
   updated() {
     if (this.getSelectedWidgetById.properties?.selectedLinkTo) {
       this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
     }
+    console.log(this.item.properties);
   },
 };
 </script>
@@ -154,6 +157,9 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+.widget ::v-deep.v-btn {
+  text-transform: inherit;
 }
 .widget .v-btn ::v-deep.v-btn__content {
   align-items: inherit;
