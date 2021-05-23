@@ -268,9 +268,27 @@ export const setUpdateRefs = (state, payload) => {
     state.refs = payload;
 }
 
+export const setSortSectionsLayout = (state) => {
+    let sectionId = 0;
+    console.log();
+    if (sectionId !== undefined) {
+        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let maxGridHeight = 0;
+        state.sections[currentIndex].resources.map(element => {
+            if ((element.y + element.h) > maxGridHeight) {
+                maxGridHeight = element.y + element.h;
+            }
+        });
+        if (state.sections[currentIndex].h < maxGridHeight) {
+            state.sections[currentIndex].h = maxGridHeight;
+            state.sections = compact(state.sections);
+        }
+    }
+}
+
 export const setUpdateSectionLayout = (state, payload) => {
     let sectionId = state.currentSelectedSectionId ? state.currentSelectedSectionId : payload.sectionId;
-    let gridHeight = payload.sectionH;
+    let gridHeight = payload.h;
     if (sectionId !== undefined) {
         let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
         if (state.sections[currentIndex].resize.h < gridHeight) {
@@ -301,15 +319,15 @@ export const setUpdateSectionLayoutResized = (state, payload) => {
                 maxGridHeight = element.y + element.h;
             }
         });
-        if (payload.h <= maxGridHeight) {
-            state.isResizeable = false;
-            state.sections[currentIndex].resize.h = maxGridHeight;
-        }
         if (payload.h > maxGridHeight) {
             state.isResizeable = true;
             state.sections[currentIndex].resize.h = payload.h;
         }
-        if (payload.h <= state.sectionProperties.minH) {
+        if (payload.h <= maxGridHeight) {
+            state.isResizeable = false;
+            state.sections[currentIndex].resize.h = maxGridHeight;
+        }
+        if (payload.h < state.sectionProperties.minH) {
             state.isResizeable = false;
             state.sections[currentIndex].resize.h = state.sectionProperties.minH;
         }

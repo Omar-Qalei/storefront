@@ -89,6 +89,11 @@ export const onUpdateRefs = ({ commit }, payload) => {
     commit('setUpdateRefs', payload)
 }
 
+
+export const onSortSectionsLayout = ({ commit }) => {
+    commit('setSortSectionsLayout')
+}
+
 export const updateSectionLayout = ({ commit }, payload) => {
     commit('setUpdateSectionLayout', payload)
 }

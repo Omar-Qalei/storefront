@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 export default {
   name: "FormContent",
@@ -182,6 +182,7 @@ export default {
       selectedUrl: null,
       statusNewTab: false,
       inputIndex: null,
+      height: 0,
       tags: [
         { id: 0, title: "Page" },
         { id: 1, title: "URL" },
@@ -238,6 +239,7 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
+    ...mapActions(["onSortSectionsLayout"]),
     handleInputLabel: function(result, index) {
       if (this.fieldsList[index].id === this.inputIndex) {
         this.fieldsList[this.inputIndex].label = result;
@@ -264,6 +266,11 @@ export default {
       this.fieldsList.push(data);
       this.selectedField = {};
       this.getSelectedWidgetById.properties.fields = this.fieldsList;
+      this.height += 2;
+      if (this.height + 4 >= this.getSelectedWidgetById.h) {
+        this.getSelectedWidgetById.h += 2;
+      }
+      this.onSortSectionsLayout();
     },
     onRemoveField: function(fieldIndex) {
       this.fieldsList.splice(fieldIndex, 1);

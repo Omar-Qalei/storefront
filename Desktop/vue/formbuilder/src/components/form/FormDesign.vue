@@ -2,10 +2,31 @@
   <v-container class="form-design" fluid>
     <v-expansion-panels v-model="panels" key="form">
       <!-- Form -->
-      <v-expansion-panel expanded>
+      <v-expansion-panel>
         <v-expansion-panel-header>Form</v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-row>
+            <v-col cols="12">
+              <h2 class="body-1 font-weight-medium">
+                Text Alignment
+              </h2>
+            </v-col>
+            <v-col cols="6">
+              <v-btn-toggle
+                return-object
+                v-model="form.textAlign"
+                shaped
+                mandatory
+              >
+                <v-btn
+                  v-for="text in textAlignments"
+                  :key="text.id"
+                  :value="text.title"
+                >
+                  <v-icon>{{ text.icon }}</v-icon>
+                </v-btn>
+              </v-btn-toggle>
+            </v-col>
             <v-col cols="9">
               <h2 class="body-1 font-weight-medium">
                 Border Width
@@ -276,8 +297,9 @@ export default {
       selectedUrl: null,
       statusNewTab: false,
       form: {
+        textAlign: "left",
         border: "solid",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "transparent",
         borderRadius: 0,
         borderWidth: 0,
         borderColor: "transparent",
@@ -298,6 +320,11 @@ export default {
         selectedTextVertical: 1,
       },
       elementStatus: "element",
+      textAlignments: [
+        { id: 0, title: "left", icon: "mdi-format-align-left" },
+        { id: 1, title: "center", icon: "mdi-format-align-center" },
+        { id: 2, title: "right", icon: "mdi-format-align-right" },
+      ],
       textHorizontal: [
         { id: 0, title: "flex-start", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
@@ -329,6 +356,7 @@ export default {
   updated() {
     this.getSelectedWidgetById.properties.style = {
       form: {
+        textAlign: this.form.textAlign,
         border: this.form.border,
         backgroundColor: this.form.backgroundColor,
         borderRadius: this.form.borderRadius + "px",

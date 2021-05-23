@@ -1,9 +1,9 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <form :style="formStyle">
+    <form :style="formStyle" id="form">
       <h2
-        class="body-1 font-weight-medium mb-2"
+        class="h5 font-weight-medium mb-2"
         v-show="!item.properties.hideFormName"
       >
         {{ item.properties.name }}
@@ -27,13 +27,14 @@
       </template>
       <template v-else>
         <v-text-field
-          v-for="(field, index) in item.properties.demo"
+          class="mt-4"
+          v-for="(field, index) in fields"
           :key="index + 'disabled'"
           v-model="name"
           :error-messages="nameErrors"
-          :counter="10"
           :label="field.label"
           :disabled="true"
+          hide-details
           :placeholder="field.placeholder"
           :required="field.isRequired"
           @input="$v.name.$touch()"
@@ -46,7 +47,7 @@
         {{
           item.properties.submitBtnName
             ? item.properties.submitBtnName
-            : "submit"
+            : "Submit"
         }}
       </v-btn>
     </form>
@@ -85,6 +86,32 @@ export default {
       select: null,
       items: ["Item 1", "Item 2", "Item 3", "Item 4"],
       checkbox: false,
+      fields: [
+        {
+          icon: "mdi-account",
+          text: "Name",
+          label: "Name",
+          placerholder: "Enter your name",
+          isRequired: false,
+          type: "name",
+        },
+        {
+          icon: "mdi-email",
+          text: "Email",
+          label: "Email",
+          placerholder: "Enter your email",
+          isRequired: false,
+          type: "email",
+        },
+        {
+          icon: "mdi-phone",
+          text: "Phone",
+          label: "Phone ",
+          placerholder: "Enter your phone",
+          isRequired: false,
+          type: "phone",
+        },
+      ],
     };
   },
   computed: {
@@ -146,16 +173,31 @@ export default {
     },
   },
   methods: {
-    submit() {
+    submit: function() {
       this.$v.$touch();
     },
-    clear() {
+    clear: function() {
       this.$v.$reset();
       this.name = "";
       this.email = "";
       this.select = null;
       this.checkbox = false;
     },
+    calcHeight: function() {
+      let h = document.getElementById("form").getBoundingClientRect().height;
+      let out = {
+        height: h === Infinity ? h : Math.round((h - 0) / 30),
+      };
+
+      if (out.height % 2 !== 0) {
+        out.height += 1;
+      }
+      // this.item.y = out.height;
+      // return out.height;
+    },
+  },
+  updated() {
+    this.calcHeight();
   },
 };
 </script>
@@ -181,7 +223,6 @@ form {
   display: block !important;
   z-index: -1 !important;
   width: 100% !important;
-  height: 100% !important;
 }
 .widget .v-text-field ::v-deep.v-label {
   color: inherit !important;

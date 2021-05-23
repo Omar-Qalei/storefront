@@ -23,6 +23,7 @@
         <v-color-picker
           v-model="currentColor"
           dot-size="10"
+          mode="hexa"
           swatches-max-height="200"
         ></v-color-picker>
       </v-card-text>

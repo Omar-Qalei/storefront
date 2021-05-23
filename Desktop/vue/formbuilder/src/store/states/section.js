@@ -15,7 +15,7 @@ export default {
     currentSelectedSectionIndex: null, // for vertify if current equal selected Section by index
     resizeSection: false, // stop resize section from drag
     screenSize: { width: '100%', cols: 12 },
-    isResizeable: true, // for resize sections
+    isResizeable: false, // for resize sections
     isAutoResize: true, // prevent change height Section on draging
     sectionProperties: {
         default: 10, // defalut add a new section

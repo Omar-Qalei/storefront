@@ -29,6 +29,7 @@
           @mouseup="onMouseUp"
         >
           <GridItem
+            v-if="item.type != 'form'"
             :class="{ editMode: !preview, dropped: item.i === 'drop' }"
             :x="item.x"
             :y="item.y"
@@ -86,11 +87,29 @@
             <CarouselWidget v-if="item.type == 'carousel'" />
             <TextWidget v-if="item.type == 'text'" />
             <ImageWidget v-if="item.type == 'image'" />
-            <FormWidget v-if="item.type == 'form'" :item="item" />
             <MenuWidget v-if="item.type == 'menu'" />
             <VideoWidget v-if="item.type == 'video'" />
             <MapWidget v-if="item.type == 'map'" />
             <AudioWidget v-if="item.type == 'audio'" />
+          </GridItem>
+
+          <GridItem
+            v-if="item.type == 'form'"
+            :class="{ editMode: !preview, dropped: item.i === 'drop' }"
+            :x="item.x"
+            :y="item.y"
+            :w="item.w"
+            :h="item.h"
+            :i="item.i"
+            :minW="1"
+            :autoSize="true"
+            :is-resizable-vertical="false"
+            :static="statusPreventCollision"
+            ref="gridItem"
+            @move="moveElementY(item)"
+            @resize="resizeEvent"
+          >
+            <FormWidget :item="item" />
           </GridItem>
         </div>
       </template>
@@ -187,7 +206,7 @@ export default {
     layoutHeight: function(layoutH) {
       const data = {
         sectionId: this.sectionId,
-        sectionH: layoutH !== 0 ? layoutH : this.minHLayout,
+        h: layoutH !== 0 ? layoutH : this.minHLayout,
       };
       // console.log(data);
       // this.$emit(
