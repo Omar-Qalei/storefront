@@ -1,13 +1,18 @@
 import * as lib from '../lib';
 
 // Action to fetch sections and set in state through the mutation
-export const fetchSections = ({ commit }, payload) => {
+export const fetchSections = ({ commit, state }, payload) => {
     let g = lib.guid()
     let k = {
         id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0, resize: {
             status: false,
-            h: 10
-        }
+            h: 10,
+        },
+        properties: {
+            name: state.element.type,
+            style: null,
+            elementHover: null,
+        },
     }
     if (payload === undefined) {
         commit('setSections', [k])
@@ -30,8 +35,13 @@ export const addNewSection = ({ commit, state }, payload) => {
     let k = {
         id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: payload, resize: {
             status: false,
-            h: 10
-        }
+            h: 10,
+        },
+        properties: {
+            name: state.element.type,
+            style: null,
+            elementHover: null,
+        },
     }
     commit('setNewSection', k)
 }

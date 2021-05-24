@@ -17,6 +17,7 @@ export default {
     screenSize: { width: '100%', cols: 12 },
     isResizeable: false, // for resize sections
     isAutoResize: true, // prevent change height Section on draging
+    allowSorting: false,
     sectionProperties: {
         default: 10, // defalut add a new section
         minH: 2 // min height for  section

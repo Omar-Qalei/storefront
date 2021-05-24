@@ -58,7 +58,7 @@ export default {
     },
   },
   created() {
-    console.log(this.color);
+    console.log(this.currentColor);
   },
 };
 </script>

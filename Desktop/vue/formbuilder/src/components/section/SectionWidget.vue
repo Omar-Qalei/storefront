@@ -25,7 +25,7 @@
             onMouseDown;
             onMoveElement(index);
           "
-          @click="onSelectedWidgetById(item)"
+          @click.stop="onSelectedWidgetById(item)"
           @mouseup="onMouseUp"
         >
           <GridItem
@@ -121,15 +121,15 @@
 // @ is an alias to /src
 import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
-import ButtonWidget from "../components/button/ButtonWidget";
-import CarouselWidget from "../components/CarouselWidget";
-import TextWidget from "../components/TextWidget";
-import ImageWidget from "../components/ImageWidget";
-import FormWidget from "../components/form/FormWidget";
-import MenuWidget from "../components/MenuWidget";
-import VideoWidget from "../components/VideoWidget";
-import MapWidget from "../components/MapWidget";
-import AudioWidget from "../components/AudioWidget";
+import ButtonWidget from "../button/ButtonWidget";
+import CarouselWidget from "../CarouselWidget";
+import TextWidget from "../TextWidget";
+import ImageWidget from "../ImageWidget";
+import FormWidget from "../form/FormWidget";
+import MenuWidget from "../MenuWidget";
+import VideoWidget from "../VideoWidget";
+import MapWidget from "../MapWidget";
+import AudioWidget from "../AudioWidget";
 
 export default {
   name: "SectionWidget",

@@ -239,7 +239,11 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
-    ...mapActions(["onSortSectionsLayout"]),
+    ...mapActions([
+      "onSortSectionsLayout",
+      "onAddFormField",
+      "onRemoveFormField",
+    ]),
     handleInputLabel: function(result, index) {
       if (this.fieldsList[index].id === this.inputIndex) {
         this.fieldsList[this.inputIndex].label = result;
@@ -267,13 +271,29 @@ export default {
       this.selectedField = {};
       this.getSelectedWidgetById.properties.fields = this.fieldsList;
       this.height += 2;
+      if (this.fieldsList.length === 1) {
+        this.getSelectedWidgetById.h = 4;
+      }
       if (this.height + 4 >= this.getSelectedWidgetById.h) {
         this.getSelectedWidgetById.h += 2;
       }
       this.onSortSectionsLayout();
     },
-    onRemoveField: function(fieldIndex) {
-      this.fieldsList.splice(fieldIndex, 1);
+    onRemoveField: function(index) {
+      this.fieldsList.splice(index, 1);
+      this.height -= 2;
+      if (this.fieldsList.length === 0) {
+        this.getSelectedWidgetById.h = 12;
+      }
+      if (this.fieldsList.length === 1) {
+        this.getSelectedWidgetById.h = 4;
+      }
+      if (
+        this.height - 4 <= this.getSelectedWidgetById.h &&
+        this.fieldsList.length > 1
+      ) {
+        this.getSelectedWidgetById.h -= 2;
+      }
     },
   },
   created() {

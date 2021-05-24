@@ -4,12 +4,15 @@
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
-    @mousedown="onMoveElement(false);onSetElement(element)"
+    @mousedown="
+      onMoveElement(false);
+      onSetElement(element);
+    "
     draggable="true"
     unselectable="on"
     ref="carousel"
   >
-    Carousel
+    Slide
   </div>
 </template>
 

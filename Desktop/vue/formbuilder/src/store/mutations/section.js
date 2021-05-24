@@ -268,27 +268,9 @@ export const setUpdateRefs = (state, payload) => {
     state.refs = payload;
 }
 
-export const setSortSectionsLayout = (state) => {
-    let sectionId = 0;
-    console.log();
-    if (sectionId !== undefined) {
-        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
-        let maxGridHeight = 0;
-        state.sections[currentIndex].resources.map(element => {
-            if ((element.y + element.h) > maxGridHeight) {
-                maxGridHeight = element.y + element.h;
-            }
-        });
-        if (state.sections[currentIndex].h < maxGridHeight) {
-            state.sections[currentIndex].h = maxGridHeight;
-            state.sections = compact(state.sections);
-        }
-    }
-}
-
 export const setUpdateSectionLayout = (state, payload) => {
     let sectionId = state.currentSelectedSectionId ? state.currentSelectedSectionId : payload.sectionId;
-    let gridHeight = payload.h;
+    let gridHeight = payload.sectionH;
     if (sectionId !== undefined) {
         let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
         if (state.sections[currentIndex].resize.h < gridHeight) {
@@ -305,6 +287,27 @@ export const setSelectedSection = (state, payload) => {
 
 export const setResizeSection = (state, payload) => {
     state.resizeSection = payload;
+}
+
+export const setSortSectionsLayout = (state) => {
+    let sectionId = 0;
+    if (sectionId !== undefined) {
+        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let maxGridHeight = 0;
+        state.sections[currentIndex].resources.map(element => {
+            if ((element.y + element.h) > maxGridHeight) {
+                maxGridHeight = element.y + element.h;
+            }
+        });
+        if (state.sections[currentIndex].h < maxGridHeight) {
+            state.allowSorting = true;
+            state.sections[currentIndex].h = maxGridHeight;
+            if (state.allowSorting) {
+                state.sections = compact(state.sections);
+                state.allowSorting = false;
+            }
+        }
+    }
 }
 
 // Action for update section height on resize

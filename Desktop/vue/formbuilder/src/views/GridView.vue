@@ -25,6 +25,7 @@
         @click="
           selectedSection = item.id;
           onSelectedSection({ index: index, id: item.id });
+          onSelectedWidgetById(item);
         "
         @mousedown="
           currentSelectedSection = item.id;
@@ -73,6 +74,7 @@
               }"
             ></GridItem>
           </template>
+          <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -88,6 +90,7 @@
             :row-height="rowHeight"
             :responsive="getScreenSize.responsive"
             :cols="getScreenSize.cols"
+            :section="item"
           ></SectionWidget>
           <v-btn
             class="btn-add-section"
@@ -109,14 +112,15 @@
 // @ is an alias to /src
 import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
-import SectionWidget from "../components/SectionWidget";
-
+import SectionWidget from "../components/section/SectionWidget";
+import SettingsWidget from "../components/settings/SettingsWidget";
 export default {
   name: "GridView",
   components: {
     GridLayout,
     GridItem,
     SectionWidget,
+    SettingsWidget,
   },
   data() {
     return {
@@ -153,6 +157,7 @@ export default {
       "onSelectedSection",
       "onResizeSection",
       "onUpdateSectionLayoutResized",
+      "onSelectedWidgetById",
     ]),
     onDragElement(event) {
       this.statusSection = event;
@@ -273,6 +278,7 @@ export default {
       "getScreenSize",
       "getIsResizeable",
       "getIsAutoResize",
+      "getSelectedWidgetById",
     ]),
   },
   created() {
