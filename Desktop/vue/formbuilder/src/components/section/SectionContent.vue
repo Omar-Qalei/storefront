@@ -3,10 +3,23 @@
     <v-expansion-panels v-model="panels">
       <v-expansion-panel>
         <v-expansion-panel-header>
-          Backrgound Color
+          Backrgound
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-row class="pt-4">
+          <v-row>
+            <v-col cols="12">
+              <v-chip-group
+                active-class="primary--text"
+                mandatory
+                v-model="selectedLinkTo"
+              >
+                <v-chip v-for="tag in tags" :key="tag.id">
+                  {{ tag.title }}
+                </v-chip>
+              </v-chip-group>
+            </v-col>
+          </v-row>
+          <v-row v-if="selectedLinkTo === 0">
             <v-col
               cols="12"
               class="backgroundSection"
@@ -28,14 +41,7 @@
               />
             </v-col>
           </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          Backrgound Gradient
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-row class="pt-4">
+          <v-row v-if="selectedLinkTo === 1">
             <v-col
               cols="12"
               class="backgroundSection"
@@ -43,6 +49,31 @@
                 background: section.background,
               }"
             >
+            </v-col>
+            <v-col cols="4">
+              <h2 class="body-1 font-weight-medium">
+                Select Color
+              </h2>
+            </v-col>
+            <v-col cols="2">
+              <ColorPickerWidget
+                @colorElement="
+                  gradientFirstColor = $event;
+                  gradientColor();
+                "
+                :type="elementStatus"
+                :color="section.background"
+              />
+            </v-col>
+            <v-col cols="2">
+              <ColorPickerWidget
+                @colorElement="
+                  gradientSecondColor = $event;
+                  gradientColor();
+                "
+                :type="elementStatus"
+                :color="section.background"
+              />
             </v-col>
             <v-col cols="12">
               <v-select
@@ -54,6 +85,7 @@
                 hide-details
                 value="id"
                 outlined
+                @change="gradientColor()"
               >
                 <template v-slot:item="{ item }">
                   {{ item.title }}
@@ -126,45 +158,8 @@
                 label="%"
               ></v-text-field>
             </v-col>
-            <v-col cols="9">
-              <h2 class="body-1 font-weight-medium">
-                Background Color
-              </h2>
-            </v-col>
-            <v-col cols="3">
-              <ColorPickerWidget
-                @colorElement="
-                  gradientFirstColor = $event;
-                  gradientColor();
-                "
-                :type="elementStatus"
-                :color="section.background"
-              />
-            </v-col>
-            <v-col cols="9">
-              <h2 class="body-1 font-weight-medium">
-                Background Color
-              </h2>
-            </v-col>
-            <v-col cols="3">
-              <ColorPickerWidget
-                @colorElement="
-                  gradientSecondColor = $event;
-                  gradientColor();
-                "
-                :type="elementStatus"
-                :color="section.background"
-              />
-            </v-col>
           </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          Backrgound Image
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-row class="pt-4">
+          <v-row v-if="selectedLinkTo === 2">
             <v-col
               cols="12"
               class="backgroundSection"
@@ -246,14 +241,7 @@
               ></v-select>
             </v-col>
           </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          Backrgound Video
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-row class="pt-4">
+          <v-row v-if="selectedLinkTo === 3">
             <v-col
               cols="12"
               class="backgroundSection"
@@ -310,14 +298,20 @@ export default {
       selectedBackgroundImagePosition: 0,
       selectedBackgroundImageRepeat: 0,
       selectedBackgroundImageBlend: 0,
+      tags: [
+        { id: 0, title: "Color" },
+        { id: 1, title: "Gradient" },
+        { id: 2, title: "Image" },
+        { id: 3, title: "Video" },
+      ],
       backgroundGradientTypes: [
         { id: 0, title: "Linear Gradient", type: "linearGradient" },
         { id: 1, title: "Radial Gradient", type: "radialGradient" },
       ],
       backgroundImageSize: [
-        { id: 0, title: "Cover", type: "cover" },
-        { id: 1, title: "Fit", type: "contain" },
-        { id: 2, title: "Actual Size", type: "auto" },
+        { id: 0, title: "Actual Size", type: "auto" },
+        { id: 1, title: "Cover", type: "cover" },
+        { id: 2, title: "Fit", type: "contain" },
       ],
       backgroundImagePosition: [
         { id: 0, title: "Top Left", type: "top left" },
@@ -331,8 +325,8 @@ export default {
         { id: 8, title: "Bottom Right", type: "bottom right" },
       ],
       backgroundImageRepeat: [
-        { id: 0, title: "No Repeat", type: "no-repeat" },
-        { id: 1, title: "Repeat", type: "repeat" },
+        { id: 0, title: "Repeat", type: "repeat" },
+        { id: 1, title: "No Repeat", type: "no-repeat" },
         { id: 2, title: "Repeat X (horizontal)", type: "repeat-x" },
         { id: 3, title: "Repeat Y (vertical)", type: "repeat-y" },
         { id: 4, title: "Space", type: "space" },
@@ -369,6 +363,7 @@ export default {
         backgroundRepeat: "",
         backgroundBlendMode: "",
       },
+      selectedLinkTo: 0,
     };
   },
   computed: {
@@ -409,12 +404,11 @@ export default {
     },
     uploadBackgroundVideo: function(event) {
       console.log(event);
-      this.backgroundVideo =
-        "https://css-tricks-post-videos.s3.us-east-1.amazonaws.com/Island%20-%204141.mp4";
+      this.backgroundVideo = "https://www.w3schools.com/howto/rain.mp4";
     },
   },
   watch: {
-    panels: function(oldValue, newValue) {
+    selectedLinkTo: function(oldValue, newValue) {
       if (
         oldValue !== undefined &&
         oldValue !== newValue &&
@@ -447,11 +441,13 @@ export default {
     this.section.backgroundBlendMode = this.backgroundImageBlend[
       this.selectedBackgroundImageBlend
     ].type;
+    this.getSelectedWidgetById.properties.style = this.section;
+    this.getSelectedWidgetById.properties.backgroundVideo = this.backgroundVideo;
   },
 };
 </script>
 
-<style>
+<style scoped>
 .backgroundSection {
   height: 150px;
   border-radius: 4px;

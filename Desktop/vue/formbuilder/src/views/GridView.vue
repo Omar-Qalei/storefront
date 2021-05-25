@@ -33,6 +33,7 @@
         "
         @mouseup="displayPlaceholder = false"
       >
+        <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
         <GridItem
           :class="{ editMode: true, resizeSection: true }"
           :autoSize="item.id === selectedSection && getIsAutoResize"
@@ -50,9 +51,20 @@
             {
               width: getScreenSize.width,
             },
+            item.properties.style,
           ]"
           @resize="resizeEvent"
         >
+          <template v-if="item.properties.backgroundVideo">
+            <div class="position-relative">
+              <video autoplay muted loop id="myVideo">
+                <source
+                  :src="item.properties.backgroundVideo"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          </template>
           <template
             v-if="
               item.id === selectedSection &&
@@ -74,7 +86,6 @@
               }"
             ></GridItem>
           </template>
-          <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -169,6 +180,7 @@ export default {
         gridHeight: event.gridHeight,
         margin: event.margin,
       });
+      console.log(event);
     },
     // i, newH, newW, newHPx, newWPx
     resizeEvent: function(i, newH) {
@@ -331,5 +343,10 @@ export default {
 }
 .hidePlacerholder {
   display: none;
+}
+#myVideo {
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 </style>

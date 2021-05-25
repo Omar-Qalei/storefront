@@ -1,12 +1,18 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <img src="https://i.imgur.com/x97x4tG.jpg" />
   </div>
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
   name: "ImageWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       // height: Number,
@@ -14,7 +20,10 @@ export default {
     };
   },
   props: {
-    refItem: null,
+    item: {},
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
   mounted() {},
 };

@@ -84,13 +84,13 @@
             :itemIndex="index"
           ></ButtonWidget> -->
             <ButtonWidget v-if="item.type == 'button'" :item="item" />
-            <CarouselWidget v-if="item.type == 'carousel'" />
-            <TextWidget v-if="item.type == 'text'" />
-            <ImageWidget v-if="item.type == 'image'" />
-            <MenuWidget v-if="item.type == 'menu'" />
-            <VideoWidget v-if="item.type == 'video'" />
-            <MapWidget v-if="item.type == 'map'" />
-            <AudioWidget v-if="item.type == 'audio'" />
+            <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
+            <TextWidget v-if="item.type == 'text'" :item="item" />
+            <ImageWidget v-if="item.type == 'image'" :item="item" />
+            <MenuWidget v-if="item.type == 'menu'" :item="item" />
+            <VideoWidget v-if="item.type == 'video'" :item="item" />
+            <MapWidget v-if="item.type == 'map'" :item="item" />
+            <AudioWidget v-if="item.type == 'audio'" :item="item" />
           </GridItem>
 
           <GridItem
@@ -122,14 +122,14 @@
 import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
 import ButtonWidget from "../button/ButtonWidget";
-import CarouselWidget from "../CarouselWidget";
-import TextWidget from "../TextWidget";
-import ImageWidget from "../ImageWidget";
+import CarouselWidget from "../carousel/CarouselWidget";
+import TextWidget from "../text/TextWidget";
+import ImageWidget from "../image/ImageWidget";
 import FormWidget from "../form/FormWidget";
-import MenuWidget from "../MenuWidget";
-import VideoWidget from "../VideoWidget";
-import MapWidget from "../MapWidget";
-import AudioWidget from "../AudioWidget";
+import MenuWidget from "../menu/MenuWidget";
+import VideoWidget from "../video/VideoWidget";
+import MapWidget from "../map/MapWidget";
+import AudioWidget from "../audio/AudioWidget";
 
 export default {
   name: "SectionWidget",

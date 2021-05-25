@@ -1,5 +1,6 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <audio controls>
       <source
         src="https://www.w3schools.com/html/horse.mp3"
@@ -15,8 +16,13 @@
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
   name: "AudioWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       // height: Number,
@@ -24,7 +30,10 @@ export default {
     };
   },
   props: {
-    refItem: null,
+    item: {},
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
   mounted() {
     document.addEventListener(

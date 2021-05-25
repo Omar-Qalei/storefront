@@ -1,5 +1,6 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <v-carousel v-model="model">
       <v-carousel-item v-for="(color, i) in colors" :key="color">
         <v-sheet :color="color" height="100%" tile>
@@ -13,8 +14,13 @@
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
   name: "CarouselWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       model: 0,
@@ -22,7 +28,10 @@ export default {
     };
   },
   props: {
-    refItem: null,
+    item: {},
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
   mounted() {},
 };

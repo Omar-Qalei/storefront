@@ -1,5 +1,5 @@
 <template>
-  <div class="widget" v-show="show">
+  <div class="widget-settings" v-show="show">
     <!-- Setting Button + Dialog -->
     <v-btn
       class="mr-2"
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style scoped>
-.widget {
+.widget-settings {
   position: absolute;
   top: -40px;
 }

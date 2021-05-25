@@ -1,4 +1,3 @@
-// import Vue from 'vue';
 export const setSelectedWidgetById = (state, payload) => {
     console.log(payload);
     state.selectedWidget = payload;

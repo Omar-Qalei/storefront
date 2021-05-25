@@ -12,6 +12,7 @@ export const fetchSections = ({ commit, state }, payload) => {
             name: state.element.type,
             style: null,
             elementHover: null,
+            backgroundVideo: null
         },
     }
     if (payload === undefined) {
@@ -41,6 +42,7 @@ export const addNewSection = ({ commit, state }, payload) => {
             name: state.element.type,
             style: null,
             elementHover: null,
+            backgroundVideo: null
         },
     }
     commit('setNewSection', k)

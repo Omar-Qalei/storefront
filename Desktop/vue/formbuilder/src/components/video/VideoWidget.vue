@@ -1,5 +1,6 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <iframe
       src="https://www.youtube.com/embed/y881t8ilMyc"
       frameborder="0"
@@ -9,8 +10,13 @@
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
   name: "VideoWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       items: [
@@ -22,7 +28,10 @@ export default {
     };
   },
   props: {
-    refItem: null,
+    item: {},
+  },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
   },
   mounted() {},
 };

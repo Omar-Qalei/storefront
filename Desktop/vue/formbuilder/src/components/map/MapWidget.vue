@@ -1,5 +1,6 @@
 <template>
   <div class="widget">
+    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <GmapMap
       :center="{ lat: 10, lng: 10 }"
       :zoom="7"
@@ -21,8 +22,13 @@
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
   name: "MapWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       items: [
@@ -34,8 +40,11 @@ export default {
       markers: [],
     };
   },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
+  },
   props: {
-    refItem: null,
+    item: {},
   },
   mounted() {},
 };

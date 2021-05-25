@@ -270,7 +270,7 @@ export const setUpdateRefs = (state, payload) => {
 
 export const setUpdateSectionLayout = (state, payload) => {
     let sectionId = state.currentSelectedSectionId ? state.currentSelectedSectionId : payload.sectionId;
-    let gridHeight = payload.sectionH;
+    let gridHeight = payload.h;
     if (sectionId !== undefined) {
         let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
         if (state.sections[currentIndex].resize.h < gridHeight) {
