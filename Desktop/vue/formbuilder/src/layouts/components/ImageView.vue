@@ -1,15 +1,20 @@
 <template>
   <div
-    class="widget-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
-    @mousedown="onMoveElement(false);onSetElement(element);"
+    @mousedown="
+      onMoveElement(false);
+      onSetElement(element);
+    "
     draggable="true"
     unselectable="on"
     ref="image"
   >
-    Image
+    <div class="widget-element">
+      <v-icon>mdi-image</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Image</v-flex>
   </div>
 </template>
 
@@ -21,8 +26,8 @@ export default {
     return {
       element: {
         type: "image",
-        width: 2,
-        height: 2,
+        width: 4,
+        height: 10,
       },
     };
   },

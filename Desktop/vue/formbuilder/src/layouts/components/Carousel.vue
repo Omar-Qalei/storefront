@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="carousel"
   >
-    Slider
+    <div class="widget-element">
+      <v-icon>mdi-view-carousel</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Slider</v-flex>
   </div>
 </template>
 

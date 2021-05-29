@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="menu"
   >
-    Menu
+    <div class="widget-element">
+      <v-icon>mdi-menu</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Menu</v-flex>
   </div>
 </template>
 

@@ -18,42 +18,47 @@
       :prevent-collision="statusPreventCollision || !statusMoveElement"
       @layoutHeight="layoutHeight"
     >
-      <template v-for="(item, index) in resources">
-        <div
-          :key="index"
-          @mouseleave="hoverElement = null"
-          @mouseover="onMouseOverElement(item)"
-          @mousedown="
-            onMouseDown;
-            onMoveElement(index);
-          "
-          @click.stop="onSelectedWidgetById(item)"
-          @mouseup="
-            onMouseUp;
-            onCheckGridHeight();
-          "
-        >
-          <GridItem
-            v-if="item.type != 'form'"
-            :class="{ editMode: !preview, dropped: item.i === 'drop' }"
-            :x="item.x"
-            :y="item.y"
-            :w="item.w"
-            :h="item.h"
-            :i="item.i"
-            :minH="2"
-            :minW="1"
-            :autoSize="true"
-            :static="statusPreventCollision"
-            ref="gridItem"
-            @move="moveElementY(item)"
-            @resize="
-              resizeEvent;
-              onRemoveBreakLines();
+      <template v-if="resources.length > 0">
+        <template v-for="(item, index) in resources">
+          <div
+            :key="index"
+            @mouseleave="hoverElement = null"
+            @mouseover="onMouseOverElement(item)"
+            @click="selectedElement = item.i"
+            @mousedown="
+              onMouseDown;
+              onMoveElement(index);
             "
-            :style="[hoverElement === item.i ? activeSection : '']"
+            @click.stop="onSelectedWidgetById(item)"
+            @mouseup="
+              onMouseUp;
+              onCheckGridHeight();
+            "
           >
-            <!-- <div
+            <GridItem
+              v-if="item.type != 'form'"
+              :class="{ editMode: !preview, dropped: item.i === 'drop' }"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :minH="2"
+              :minW="1"
+              :autoSize="true"
+              :static="statusPreventCollision"
+              ref="gridItem"
+              @move="moveElementY(item)"
+              @resize="
+                resizeEvent;
+                onRemoveBreakLines();
+              "
+              :style="[
+                hoverElement === item.i ? activeSection : '',
+                selectedElement === item.i ? showElement : '',
+              ]"
+            >
+              <!-- <div
             v-if="!preview"
             @click="removeItem({ key: index })"
             style="position: absolute; bottom: 0px; left: 4px"
@@ -61,7 +66,7 @@
             <i class="fa fa-trash" aria-hidden="true"></i>
           </div> -->
 
-            <!-- <TextWidget
+              <!-- <TextWidget
             v-if="item.type == 'title'"
             :preview="preview"
             :contenteditable="contenteditable"
@@ -92,46 +97,50 @@
             :item="item"
             :itemIndex="index"
           ></ButtonWidget> -->
-            <label
-              v-show="hoverElement === item.i"
-              class="hint text-capitalize"
-              >{{ item.type }}</label
-            >
-            <ButtonWidget v-if="item.type == 'button'" :item="item" />
-            <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
-            <TextWidget v-if="item.type == 'text'" :item="item" />
-            <ImageWidget v-if="item.type == 'image'" :item="item" />
-            <MenuWidget v-if="item.type == 'menu'" :item="item" />
-            <VideoWidget v-if="item.type == 'video'" :item="item" />
-            <MapWidget v-if="item.type == 'map'" :item="item" />
-            <AudioWidget v-if="item.type == 'audio'" :item="item" />
-          </GridItem>
+              <label
+                v-show="hoverElement === item.i && selectedElement !== item.i"
+                class="hint text-capitalize"
+                >{{ item.type }}</label
+              >
+              <ButtonWidget v-if="item.type == 'button'" :item="item" />
+              <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
+              <TextWidget v-if="item.type == 'text'" :item="item" />
+              <ImageWidget v-if="item.type == 'image'" :item="item" />
+              <MenuWidget v-if="item.type == 'menu'" :item="item" />
+              <VideoWidget v-if="item.type == 'video'" :item="item" />
+              <MapWidget v-if="item.type == 'map'" :item="item" />
+              <AudioWidget v-if="item.type == 'audio'" :item="item" />
+            </GridItem>
 
-          <GridItem
-            v-if="item.type == 'form'"
-            :class="{ editMode: !preview, dropped: item.i === 'drop' }"
-            :x="item.x"
-            :y="item.y"
-            :w="item.w"
-            :h="item.h"
-            :i="item.i"
-            :minW="1"
-            :autoSize="true"
-            :is-resizable-vertical="false"
-            :static="statusPreventCollision"
-            ref="gridItem"
-            @move="moveElementY(item)"
-            @resize="resizeEvent"
-            :style="[hoverElement === item.i ? activeSection : '']"
-          >
-            <label
-              v-show="hoverElement === item.i"
-              class="hint text-capitalize"
-              >{{ item.type }}</label
+            <GridItem
+              v-if="item.type == 'form'"
+              :class="{ editMode: !preview, dropped: item.i === 'drop' }"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :minW="1"
+              :autoSize="true"
+              :is-resizable-vertical="false"
+              :static="statusPreventCollision"
+              ref="gridItem"
+              @move="moveElementY(item)"
+              @resize="resizeEvent"
+              :style="[
+                hoverElement === item.i ? activeSection : '',
+                selectedElement === item.i ? showElement : '',
+              ]"
             >
-            <FormWidget :item="item" />
-          </GridItem>
-        </div>
+              <label
+                v-show="hoverElement === item.i"
+                class="hint text-capitalize"
+                >{{ item.type }}</label
+              >
+              <FormWidget :item="item" />
+            </GridItem>
+          </div>
+        </template>
       </template>
     </GridLayout>
   </div>
@@ -184,7 +193,11 @@ export default {
       preview: true,
       contenteditable: true,
       statusMoveElement: false,
+      selectedElement: null,
       hoverElement: null,
+      showElement: {
+        zIndex: "9",
+      },
       activeSection: {
         border: "2px solid #357df9",
       },

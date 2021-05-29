@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="audio"
   >
-    Audio
+    <div class="widget-element">
+      <v-icon>mdi-volume-medium</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Audio</v-flex>
   </div>
 </template>
 

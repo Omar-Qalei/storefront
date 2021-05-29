@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="map"
   >
-    Map
+    <div class="widget-element">
+      <v-icon>mdi-map</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Map</v-flex>
   </div>
 </template>
 
@@ -24,7 +26,7 @@ export default {
     return {
       element: {
         type: "map",
-        width: 6,
+        width: 4,
         height: 10,
       },
     };

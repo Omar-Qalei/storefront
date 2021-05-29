@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="video"
   >
-    Video
+    <div class="widget-element">
+      <v-icon>mdi-youtube</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Video</v-flex>
   </div>
 </template>
 
@@ -24,8 +26,8 @@ export default {
     return {
       element: {
         type: "video",
-        width: 6,
-        height: 4,
+        width: 4,
+        height: 10,
       },
     };
   },

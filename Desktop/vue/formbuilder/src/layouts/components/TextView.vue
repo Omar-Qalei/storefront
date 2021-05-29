@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="text"
   >
-    Text
+    <div class="widget-element">
+      <v-icon>mdi-format-text</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Text</v-flex>
   </div>
 </template>
 
@@ -24,8 +26,8 @@ export default {
     return {
       element: {
         type: "text",
-        width: 2,
-        height: 2,
+        width: 3,
+        height: 3,
       },
     };
   },

@@ -29,6 +29,20 @@
       <v-btn icon small color="primary" @click.stop="onDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        text
+        ><v-icon class="mr-2">mdi-eye</v-icon>Preview</v-btn
+      >
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        dark
+        x-large
+      >
+        Publish Website
+      </v-btn>
     </div>
   </v-app-bar>
   <!-- </div> -->
@@ -64,6 +78,9 @@ export default {
 </script>
 
 <style scoped>
+.v-app-bar ::v-deep.v-toolbar__content {
+  padding-right: 0;
+}
 nav {
   -webkit-box-shadow: 0 10px 20px 0 rgb(0 0 0 / 5%);
   box-shadow: 0 10px 20px 0 rgb(0 0 0 / 5%);
@@ -90,7 +107,6 @@ nav {
   align-items: center;
 }
 .settings {
-  margin-right: 30px;
   align-items: center;
 }
 .separator {
@@ -101,5 +117,8 @@ nav {
 }
 .pages {
   font-size: 13px;
+}
+::v-deep.v-btn.fs-14 {
+  font-size: 14px;
 }
 </style>

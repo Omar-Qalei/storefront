@@ -1,6 +1,5 @@
 <template>
   <div
-    class="widget-element droppable-element"
     @drag="onDrag"
     @dragend="onDragend"
     @mouseup="onMoveElement(true)"
@@ -12,7 +11,10 @@
     unselectable="on"
     ref="button"
   >
-    Button
+    <div class="widget-element">
+      <v-icon>mdi-gesture-tap-button</v-icon>
+    </div>
+    <v-flex class="text-center widget-element-text">Button</v-flex>
   </div>
 </template>
 

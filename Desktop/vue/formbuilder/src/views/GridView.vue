@@ -39,6 +39,8 @@
           :class="{
             editMode: true,
             resizeSection: true,
+            holdSection:
+              selectedSection !== item.id && item.resources.length === 0,
           }"
           :autoSize="item.id === selectedSection && getIsAutoResize"
           :x="item.x"
@@ -91,6 +93,15 @@
               }"
             ></GridItem>
           </template>
+          <template v-if="item.resources.length === 0">
+            <v-row class="h-100" align="center" justify="center">
+              <v-col>
+                <p class="ma-0 text-center">
+                  This is a blank section, start adding to it.
+                </p>
+              </v-col>
+            </v-row>
+          </template>
           <label v-show="hoverElement === item.id" class="hint">Section</label>
           <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
           <SectionWidget
@@ -113,10 +124,11 @@
           <v-btn
             class="btn-add-section"
             dark
-            color="indigo"
+            color="#357df9"
             v-if="item.id === selectedSection"
             @click="addNewSection(item.selectedIndex)"
-            >Add Section</v-btn
+            ><v-icon class="icon-add-section mr-2">mdi-plus</v-icon>Add
+            Section</v-btn
           >
         </GridItem>
       </div>
@@ -348,6 +360,11 @@ export default {
   bottom: -1rem;
   margin-left: -4rem;
   z-index: 1;
+  border-radius: 20px;
+  font-size: 10px !important;
+}
+.icon-add-section {
+  font-size: 16px !important;
 }
 .placeholder {
   border: 1px solid #ccc;
@@ -374,5 +391,8 @@ export default {
   padding: 0 8px;
   color: #fff;
   background: #357df9;
+}
+.holdSection {
+  border: 1px dashed #9da3a9;
 }
 </style>
