@@ -26,3 +26,16 @@ button {
     text-align: center;
     cursor: move;
 }
+label.headline {
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.drag-label {
+    z-index: 1;
+}
+.drag-icon {
+    z-index: -1;
+}

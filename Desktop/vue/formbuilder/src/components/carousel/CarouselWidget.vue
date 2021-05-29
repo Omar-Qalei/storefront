@@ -38,16 +38,6 @@ export default {
 </script>
 
 <style scoped>
-.vue-grid-item:not(.vue-grid-placeholder) {
-  background: #ccc;
-  border: 1px solid black;
-}
-.vue-grid-item .resizing {
-  opacity: 0.9;
-}
-.vue-grid-item .static {
-  background: #cce;
-}
 .v-carousel {
   position: absolute !important;
   display: block !important;

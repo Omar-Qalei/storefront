@@ -1,19 +1,22 @@
 <template>
   <v-card>
-    <v-card-title class="headline grey lighten-2">
+    <label class="headline grey lighten-2">
       Map Settings
-    </v-card-title>
+      <label class="drag-label"
+        ><v-icon class="drag-icon">mdi-cursor-move</v-icon></label
+      >
+    </label>
     <v-card-text>
       <v-card class="overflow-y-auto elevation-0" max-height="495">
         <v-tabs color="deep-purple accent-4">
           <v-tab>Content</v-tab>
-          <v-tab>Design</v-tab>
+          <!-- <v-tab>Design</v-tab> -->
 
           <v-tab-item>
             <MapContent />
           </v-tab-item>
           <v-tab-item>
-            <MapDesign />
+            <!-- <MapDesign /> -->
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -30,12 +33,15 @@
 
 <script>
 import MapContent from "./MapContent";
-import MapDesign from "./MapDesign";
+// import MapDesign from "./MapDesign";
 import { mapGetters } from "vuex";
 
 export default {
   name: "MapDialog",
-  components: { MapContent, MapDesign },
+  components: {
+    MapContent,
+    // MapDesign
+  },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);
@@ -56,4 +62,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

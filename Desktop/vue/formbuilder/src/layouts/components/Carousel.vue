@@ -12,7 +12,7 @@
     unselectable="on"
     ref="carousel"
   >
-    Slide
+    Slider
   </div>
 </template>
 

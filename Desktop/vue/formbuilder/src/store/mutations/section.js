@@ -271,11 +271,16 @@ export const setUpdateRefs = (state, payload) => {
 export const setUpdateSectionLayout = (state, payload) => {
     let sectionId = state.currentSelectedSectionId ? state.currentSelectedSectionId : payload.sectionId;
     let gridHeight = payload.h;
+    let statusCompact = false;
     if (sectionId !== undefined) {
         let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
         if (state.sections[currentIndex].resize.h < gridHeight) {
+            statusCompact = true;
             state.sections[currentIndex].h = gridHeight;
-            state.sections = compact(state.sections);
+            if (statusCompact) {
+                state.sections = compact(state.sections);
+                statusCompact = false;
+            }
         }
     }
 }
@@ -291,6 +296,7 @@ export const setResizeSection = (state, payload) => {
 
 export const setSortSectionsLayout = (state) => {
     let sectionId = 0;
+    let statusCompact = false;
     if (sectionId !== undefined) {
         let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
         let maxGridHeight = 0;
@@ -300,11 +306,10 @@ export const setSortSectionsLayout = (state) => {
             }
         });
         if (state.sections[currentIndex].h < maxGridHeight) {
-            state.allowSorting = true;
             state.sections[currentIndex].h = maxGridHeight;
-            if (state.allowSorting) {
+            if (statusCompact) {
                 state.sections = compact(state.sections);
-                state.allowSorting = false;
+                statusCompact = false;
             }
         }
     }
@@ -423,6 +428,7 @@ export function getFirstCollision(layout, layoutItem) {
 
 export function sortLayoutItemsByRowCol(layout) {
     return [].concat(layout).sort(function (a, b) {
+        console.log(a.y === b.y && a.x === b.x);
         if (a.y === b.y && a.x === b.x) {
             return 0;
         }

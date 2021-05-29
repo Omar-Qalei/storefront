@@ -19,16 +19,30 @@
               </v-chip-group>
             </v-col>
           </v-row>
+
+          <!-- Background color -->
           <v-row v-if="selectedLinkTo === 0">
-            <v-col
-              cols="12"
-              class="backgroundSection"
-              :style="{
-                background: section.background,
-              }"
-            >
+            <v-col cols="12">
+              <v-flex id="colorPicker">
+                <!-- <v-color-picker
+                  dot-size="10"
+                  mode="hexa"
+                  flat
+                  :swatches="swatches"
+                  show-swatches
+                  swatches-max-height="200"
+                  :width.sync="width"
+                ></v-color-picker> -->
+                <ColorPickerExpandWidget
+                  v-if="width"
+                  :width="width"
+                  @colorElement="section.background = $event"
+                  :type="elementStatus"
+                  :color="section.background"
+                />
+              </v-flex>
             </v-col>
-            <v-col cols="9">
+            <!-- <v-col cols="9">
               <h2 class="body-1 font-weight-medium">
                 Background Color
               </h2>
@@ -39,41 +53,94 @@
                 :type="elementStatus"
                 :color="section.background"
               />
-            </v-col>
+            </v-col> -->
           </v-row>
+          <!-- Background color -->
+
+          <!-- Background gradient color -->
           <v-row v-if="selectedLinkTo === 1">
-            <v-col
-              cols="12"
-              class="backgroundSection"
-              :style="{
-                background: section.background,
-              }"
-            >
-            </v-col>
-            <v-col cols="4">
-              <h2 class="body-1 font-weight-medium">
+            <v-col cols="6">
+              <v-btn
+                class="text-capitalize"
+                text
+                @click="onShowPicker('firstColor')"
+              >
+                <v-avatar
+                  class="mr-2 elevation-2"
+                  size="25"
+                  :color="gradientFirstColor"
+                />
                 Select Color
-              </h2>
+              </v-btn>
             </v-col>
-            <v-col cols="2">
-              <ColorPickerWidget
+            <v-col cols="6">
+              <!-- <ColorPickerWidget
                 @colorElement="
                   gradientFirstColor = $event;
                   gradientColor();
                 "
                 :type="elementStatus"
                 :color="section.background"
-              />
+              /> -->
+              <v-btn
+                class="text-capitalize"
+                text
+                @click="onShowPicker('secondColor')"
+              >
+                <v-avatar
+                  class="mr-2 elevation-2"
+                  size="25"
+                  :color="gradientSecondColor"
+                />
+                Select Color
+              </v-btn>
             </v-col>
-            <v-col cols="2">
-              <ColorPickerWidget
+            <v-col cols="12">
+              <v-expand-transition>
+                <v-card v-show="showPickerColor">
+                  <v-flex id="colorPicker">
+                    <ColorPickerExpandWidget
+                      v-if="width"
+                      :width="width"
+                      @colorElement="
+                        selectedColor = $event;
+                        onChangeSelectedColor();
+                        gradientColor();
+                      "
+                      :type="elementStatus"
+                      :color="section.background"
+                    />
+                  </v-flex>
+                </v-card>
+              </v-expand-transition>
+            </v-col>
+            <v-col cols="6">
+              <!-- <ColorPickerWidget
+                @colorElement="
+                  gradientFirstColor = $event;
+                  gradientColor();
+                "
+                :type="elementStatus"
+                :color="section.background"
+              /> -->
+              <!-- <v-btn class="text-capitalize" text>
+                <v-avatar class="mr-2" size="15" :color="'blue'" />
+                Select Color
+              </v-btn> -->
+            </v-col>
+            <v-col cols="6">
+              <!-- <v-btn class="text-capitalize" text>
+                <v-avatar class="mr-2" size="15" :color="'blue'" />
+                Select Color
+              </v-btn> -->
+              <!-- <ColorPickerWidget
                 @colorElement="
                   gradientSecondColor = $event;
                   gradientColor();
                 "
                 :type="elementStatus"
                 :color="section.background"
-              />
+              /> -->
             </v-col>
             <v-col cols="12">
               <v-select
@@ -159,6 +226,9 @@
               ></v-text-field>
             </v-col>
           </v-row>
+          <!-- Background gradient color -->
+
+          <!-- Background Image -->
           <v-row v-if="selectedLinkTo === 2">
             <v-col
               cols="12"
@@ -182,12 +252,6 @@
                 </h2>
               </label>
             </v-col>
-            <!-- <v-col cols="12">
-              <v-switch
-                label="Use Parallax Effect"
-                v-model="isParallax"
-              ></v-switch>
-            </v-col> -->
             <v-col cols="12">
               <h2 class="body-1 font-weight-medium mb-2">
                 Background Image Size
@@ -241,6 +305,9 @@
               ></v-select>
             </v-col>
           </v-row>
+          <!-- Background Image -->
+
+          <!-- Background Video -->
           <v-row v-if="selectedLinkTo === 3">
             <v-col
               cols="12"
@@ -269,6 +336,7 @@
               </label>
             </v-col>
           </v-row>
+          <!-- Background Video -->
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -277,11 +345,12 @@
 
 <script>
 import { mapGetters } from "vuex";
-import ColorPickerWidget from "../ColorPickerWidget";
+import ColorPickerExpandWidget from "../ColorPickerExpandWidget";
+
 export default {
   name: "SectionContent",
   components: {
-    ColorPickerWidget,
+    ColorPickerExpandWidget,
   },
   data() {
     return {
@@ -294,10 +363,16 @@ export default {
       gradientStartPosition: 20,
       gradientEndPosition: 20,
       isParallax: false,
+      selectedColor: null,
+      selectedTypeColor: null,
       selectedBackgroundImageSize: 0,
       selectedBackgroundImagePosition: 0,
       selectedBackgroundImageRepeat: 0,
       selectedBackgroundImageBlend: 0,
+      dblSelectedFirstColor: 0,
+      dblSelectedSecondColor: 0,
+      width: null,
+      showPickerColor: false,
       tags: [
         { id: 0, title: "Color" },
         { id: 1, title: "Gradient" },
@@ -353,11 +428,11 @@ export default {
       backgroundVideo: null,
       section: {
         textAlign: "left",
-        border: "solid",
+        // border: "solid",
         background: "transparent",
         borderRadius: 0,
-        borderWidth: 0,
-        borderColor: "transparent",
+        // borderWidth: 0,
+        // borderColor: "transparent",
         backgroundSize: "",
         backgroundPosition: "",
         backgroundRepeat: "",
@@ -406,6 +481,42 @@ export default {
       console.log(event);
       this.backgroundVideo = "https://www.w3schools.com/howto/rain.mp4";
     },
+    onShowPicker: function(result) {
+      this.selectedTypeColor = result;
+      switch (result) {
+        case "firstColor":
+          this.dblSelectedSecondColor = 0;
+          this.dblSelectedFirstColor += 1;
+
+          if (this.dblSelectedFirstColor % 2 === 0) {
+            this.dblSelectedFirstColor = 0;
+            this.showPickerColor = false;
+          } else {
+            this.showPickerColor = true;
+          }
+          break;
+        case "secondColor":
+          this.dblSelectedFirstColor = 0;
+          this.dblSelectedSecondColor += 1;
+          if (this.dblSelectedSecondColor % 2 === 0) {
+            this.dblSelectedSecondColor = 0;
+            this.showPickerColor = false;
+          } else {
+            this.showPickerColor = true;
+          }
+          break;
+      }
+    },
+    onChangeSelectedColor: function() {
+      switch (this.selectedTypeColor) {
+        case "firstColor":
+          this.gradientFirstColor = this.selectedColor;
+          break;
+        case "secondColor":
+          this.gradientSecondColor = this.selectedColor;
+          break;
+      }
+    },
   },
   watch: {
     selectedLinkTo: function(oldValue, newValue) {
@@ -426,6 +537,11 @@ export default {
     gradientEndPosition: function() {
       this.gradientColor();
     },
+  },
+  mounted() {
+    this.width = Math.round(
+      document.getElementById("colorPicker").getBoundingClientRect().width
+    );
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
@@ -469,5 +585,8 @@ input[type="range"] {
 video {
   width: 100%;
   height: 100%;
+}
+::v-deep.v-color-picker canvas {
+  /* width: 300px !important; */
 }
 </style>

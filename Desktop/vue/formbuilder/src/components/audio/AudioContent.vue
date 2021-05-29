@@ -1,66 +1,26 @@
 <template>
   <v-container class="audio-content" fluid>
     <v-row class="pt-4">
-      <v-col cols="8">
-        <h2 class="body-1 font-weight-medium mb-2">
-          Audio Text
-        </h2>
-        <v-text-field
-          outlined
-          v-model="getSelectedWidgetById.properties.name"
-          hide-details
-        ></v-text-field>
-      </v-col>
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium mb-2">
-          Link to
+          Upload Audio
         </h2>
-        <v-chip-group
-          active-class="primary--text"
-          mandatory
-          v-model="selectedLinkTo"
-        >
-          <v-chip v-for="tag in tags" :key="tag.id">
-            {{ tag.title }}
-          </v-chip>
-        </v-chip-group>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium mb-2">
-          {{ tags[selectedLinkTo].title }}
-        </h2>
-        <v-select
-          v-if="selectedLinkTo === 0"
-          :items="pages"
-          v-model="getSelectedWidgetById.properties.page"
-          outlined
-        ></v-select>
-        <template v-if="selectedLinkTo === 1">
-          <v-text-field
-            placeholder="https://www.example.com"
-            v-model="getSelectedWidgetById.properties.url"
-            outlined
-            hide-details
-          ></v-text-field>
-          <v-switch
-            label="Open a new tab"
-            v-model="getSelectedWidgetById.properties.newTab"
-          ></v-switch>
-        </template>
-        <v-text-field
-          v-if="selectedLinkTo === 2"
-          placeholder="Ex. 079-501-218"
-          v-model="getSelectedWidgetById.properties.phone"
-          outlined
-          hide-details
-        ></v-text-field>
-        <v-text-field
-          v-if="selectedLinkTo === 3"
-          placeholder="example@example.com"
-          v-model="getSelectedWidgetById.properties.email"
-          outlined
-          hide-details
-        ></v-text-field>
+        <v-col cols="12" class="backgroundSection">
+          <audio v-if="audio" controls>
+            <source :src="audio" type="audio/mpeg" />
+            <!-- <source src="myAudio.ogg" type="audio/ogg"> -->
+            <p>
+              Your browser doesn't support HTML5 audio. Here is a
+              <a href="myAudio.mp4">link to the audio</a> instead.
+            </p>
+          </audio>
+          <label class="labelFile" v-else>
+            <input type="file" class="d-none" @change="uploadAudio($event)" />
+            <h2 class="body-1 font-weight-medium">
+              Add Audio
+            </h2>
+          </label>
+        </v-col>
       </v-col>
     </v-row>
   </v-container>
@@ -77,6 +37,7 @@ export default {
       selectedPage: null,
       selectedUrl: null,
       statusNewTab: false,
+      audio: null,
       tags: [
         { id: 0, title: "Page" },
         { id: 1, title: "URL" },
@@ -89,10 +50,37 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
+  methods: {
+    uploadAudio: function(event) {
+      console.log(event);
+      this.audio = "https://www.w3schools.com/html/horse.mp3";
+    },
+  },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.getSelectedWidgetById.properties.audio = this.audio;
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
+.backgroundSection {
+  height: 150px;
+  border-radius: 4px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  place-content: center;
+}
+.labelFile {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+</style>

@@ -68,6 +68,7 @@ export const onDrag = ({ commit, state }) => {
             style: null,
             elementHover: null,
             fields: [],
+            map: null,
         }
     }
     commit('setDrag', k);
@@ -82,6 +83,7 @@ export const onDragend = ({ commit, state }) => {
             style: null,
             elementHover: null,
             fields: [],
+            map: null,
         }
     }
     commit('setDragEnd', k)

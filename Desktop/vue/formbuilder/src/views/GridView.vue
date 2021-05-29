@@ -21,6 +21,8 @@
     <template v-for="(item, index) in getSections">
       <div
         :key="index"
+        @mouseleave="hoverElement = null"
+        @mouseover="onMouseOverElement(item)"
         @dragover="onMouseTouched({ i: item.i, indexSection: index })"
         @click="
           selectedSection = item.id;
@@ -33,9 +35,11 @@
         "
         @mouseup="displayPlaceholder = false"
       >
-        <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
         <GridItem
-          :class="{ editMode: true, resizeSection: true }"
+          :class="{
+            editMode: true,
+            resizeSection: true,
+          }"
           :autoSize="item.id === selectedSection && getIsAutoResize"
           :x="item.x"
           :y="item.y"
@@ -47,7 +51,8 @@
           :id="item.i"
           :ref="'section'"
           :style="[
-            selectedSection !== null ? activeSection : '',
+            selectedSection === item.id ? activeSection : '',
+            hoverElement === item.id ? activeSection : '',
             {
               width: getScreenSize.width,
             },
@@ -86,6 +91,8 @@
               }"
             ></GridItem>
           </template>
+          <label v-show="hoverElement === item.id" class="hint">Section</label>
+          <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -109,7 +116,7 @@
             color="indigo"
             v-if="item.id === selectedSection"
             @click="addNewSection(item.selectedIndex)"
-            >Add Section {{ item.h }}</v-btn
+            >Add Section</v-btn
           >
         </GridItem>
       </div>
@@ -141,7 +148,7 @@ export default {
       contenteditable: true,
       index: 0,
       activeSection: {
-        border: "0.5px solid black",
+        border: "2px solid #357df9",
       },
       sectionLayout: {
         position: "relative",
@@ -155,6 +162,7 @@ export default {
       currentSelectedSection: "",
       selectedSectionByI: null,
       dialog: false,
+      hoverElement: 0,
     };
   },
   methods: {
@@ -180,7 +188,6 @@ export default {
         gridHeight: event.gridHeight,
         margin: event.margin,
       });
-      console.log(event);
     },
     // i, newH, newW, newHPx, newWPx
     resizeEvent: function(i, newH) {
@@ -253,7 +260,7 @@ export default {
       }
       return placeholderGrids;
     },
-    resizeGrid(event) {
+    resizeGrid: function(event) {
       this.displayPlaceholder = event;
       // if (this.selectedSectionByI) {
       //   let h =
@@ -268,7 +275,7 @@ export default {
       //   document.getElementById(element.id).style.height = h + "px";
       // });
     },
-    onMoveGrid(event) {
+    onMoveGrid: function(event) {
       this.displayPlaceholder = event;
       // if (this.selectedSectionByI) {
       //   let h =
@@ -279,8 +286,11 @@ export default {
       //     h + "px";
       // }
     },
-    onMouseUpGrid(event) {
+    onMouseUpGrid: function(event) {
       this.displayPlaceholder = event;
+    },
+    onMouseOverElement: function(event) {
+      this.hoverElement = event.id;
     },
   },
   computed: {
@@ -291,6 +301,7 @@ export default {
       "getIsResizeable",
       "getIsAutoResize",
       "getSelectedWidgetById",
+      "getAllowSorting",
     ]),
   },
   created() {
@@ -320,8 +331,8 @@ export default {
   border-right: 0.5px solid black;
 } */
 .vue-grid-item.section {
-  /* border-left: 0.5px solid black;
-  border-right: 0.5px solid black; */
+  /* /* border-left: 0.5px solid black;  */
+  /* border: 0.5px solid black; */
 }
 /* .vue-grid-item.section {
   position: relative;
@@ -348,5 +359,20 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+}
+.hint {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  text-transform: none;
+  letter-spacing: 0;
+  position: absolute;
+  top: -9px;
+  left: 15px;
+  border-radius: 15px;
+  z-index: 0;
+  padding: 0 8px;
+  color: #fff;
+  background: #357df9;
 }
 </style>

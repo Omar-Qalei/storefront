@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-content" fluid>
     <v-row class="pt-4">
-      <v-col cols="8">
+      <!-- <v-col cols="8">
         <h2 class="body-1 font-weight-medium mb-2">
           Text
         </h2>
@@ -10,7 +10,7 @@
           v-model="getSelectedWidgetById.properties.name"
           hide-details
         ></v-text-field>
-      </v-col>
+      </v-col> -->
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium mb-2">
           Link to

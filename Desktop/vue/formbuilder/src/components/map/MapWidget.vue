@@ -2,8 +2,8 @@
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <GmapMap
-      :center="{ lat: 10, lng: 10 }"
-      :zoom="7"
+      :center="getDefaultLocation(item)"
+      :zoom="12"
       map-type-id="terrain"
       class="map"
     >
@@ -14,7 +14,7 @@
           :position="m.position"
           :clickable="true"
           :draggable="true"
-          @click="center = m.position"
+          @click="item.properties.map = m.position"
         />
       </template>
     </GmapMap>
@@ -29,6 +29,9 @@ export default {
   components: {
     SettingsWidget,
   },
+  props: {
+    item: {},
+  },
   data() {
     return {
       items: [
@@ -37,30 +40,34 @@ export default {
         { title: "Click Me" },
         { title: "Click Me 2" },
       ],
+      center: { lat: 45.508, lng: -73.587 },
+      currentPlace: null,
       markers: [],
+      places: [],
     };
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
-  props: {
-    item: {},
+  methods: {
+    getDefaultLocation(item) {
+      if (item.properties.map) return item.properties.map;
+      return { lat: 30.585164, lng: 36.238414 };
+    },
   },
   mounted() {},
+  updated() {
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   this.center = {
+    //     lat: position.coords.latitude,
+    //     lng: position.coords.longitude,
+    //   };
+    // });
+  },
 };
 </script>
 
 <style scoped>
-.vue-grid-item:not(.vue-grid-placeholder) {
-  background: #ccc;
-  border: 1px solid black;
-}
-.vue-grid-item .resizing {
-  opacity: 0.9;
-}
-.vue-grid-item .static {
-  background: #cce;
-}
 iframe {
   width: 100%;
   height: 100%;

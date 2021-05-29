@@ -21,12 +21,17 @@
       <template v-for="(item, index) in resources">
         <div
           :key="index"
+          @mouseleave="hoverElement = null"
+          @mouseover="onMouseOverElement(item)"
           @mousedown="
             onMouseDown;
             onMoveElement(index);
           "
           @click.stop="onSelectedWidgetById(item)"
-          @mouseup="onMouseUp"
+          @mouseup="
+            onMouseUp;
+            onCheckGridHeight();
+          "
         >
           <GridItem
             v-if="item.type != 'form'"
@@ -42,7 +47,11 @@
             :static="statusPreventCollision"
             ref="gridItem"
             @move="moveElementY(item)"
-            @resize="resizeEvent"
+            @resize="
+              resizeEvent;
+              onRemoveBreakLines();
+            "
+            :style="[hoverElement === item.i ? activeSection : '']"
           >
             <!-- <div
             v-if="!preview"
@@ -83,6 +92,11 @@
             :item="item"
             :itemIndex="index"
           ></ButtonWidget> -->
+            <label
+              v-show="hoverElement === item.i"
+              class="hint text-capitalize"
+              >{{ item.type }}</label
+            >
             <ButtonWidget v-if="item.type == 'button'" :item="item" />
             <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
             <TextWidget v-if="item.type == 'text'" :item="item" />
@@ -108,7 +122,13 @@
             ref="gridItem"
             @move="moveElementY(item)"
             @resize="resizeEvent"
+            :style="[hoverElement === item.i ? activeSection : '']"
           >
+            <label
+              v-show="hoverElement === item.i"
+              class="hint text-capitalize"
+              >{{ item.type }}</label
+            >
             <FormWidget :item="item" />
           </GridItem>
         </div>
@@ -164,6 +184,10 @@ export default {
       preview: true,
       contenteditable: true,
       statusMoveElement: false,
+      hoverElement: null,
+      activeSection: {
+        border: "2px solid #357df9",
+      },
     };
   },
   methods: {
@@ -173,6 +197,8 @@ export default {
       "onResizeSection",
       "onUpdateSectionLayoutGridResized",
       "onSelectedWidgetById",
+      "onRemoveBreakLines",
+      "onCheckGridHeight",
     ]),
     onMouseUp() {
       this.$emit("onDragElement", false);
@@ -224,6 +250,9 @@ export default {
       };
       this.$emit("resizeGrid", true);
       this.onUpdateSectionLayoutGridResized(data);
+    },
+    onMouseOverElement: function(event) {
+      this.hoverElement = event.i;
     },
   },
   computed: {
@@ -296,5 +325,21 @@ export default {
 }
 .dropped {
   display: none;
+}
+.hint {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  text-transform: none;
+  letter-spacing: 0;
+  position: absolute;
+  top: -9px;
+  left: 15px;
+  border-radius: 15px;
+  z-index: 0;
+  padding: 0 8px;
+  color: #fff;
+  background: #357df9;
+  z-index: 1;
 }
 </style>

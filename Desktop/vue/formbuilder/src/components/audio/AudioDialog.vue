@@ -1,20 +1,23 @@
 <template>
   <v-card>
-    <v-card-title class="headline grey lighten-2">
+    <label class="headline grey lighten-2">
       Audio Settings
-    </v-card-title>
+      <label class="drag-label"
+        ><v-icon class="drag-icon">mdi-cursor-move</v-icon></label
+      >
+    </label>
     <v-card-text>
       <v-card class="overflow-y-auto elevation-0" max-height="495">
         <v-tabs color="deep-purple accent-4">
           <v-tab>Content</v-tab>
-          <v-tab>Design</v-tab>
+          <!-- <v-tab>Design</v-tab> -->
 
           <v-tab-item>
             <AudioContent />
           </v-tab-item>
-          <v-tab-item>
+          <!-- <v-tab-item>
             <AudioDesign />
-          </v-tab-item>
+          </v-tab-item> -->
         </v-tabs>
       </v-card>
     </v-card-text>
@@ -30,12 +33,15 @@
 
 <script>
 import AudioContent from "./AudioContent";
-import AudioDesign from "./AudioDesign";
+// import AudioDesign from "./AudioDesign";
 import { mapGetters } from "vuex";
 
 export default {
   name: "AudioDialog",
-  components: { AudioContent, AudioDesign },
+  components: {
+    AudioContent,
+    //  AudioDesign
+  },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);
@@ -56,4 +62,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

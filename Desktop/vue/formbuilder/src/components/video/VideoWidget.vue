@@ -2,7 +2,8 @@
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <iframe
-      src="https://www.youtube.com/embed/y881t8ilMyc"
+      :src="getDefaultUrl(item) + item.properties.autoPlay"
+      allow="autoplay"
       frameborder="0"
       allowfullscreen
     ></iframe>
@@ -32,6 +33,12 @@ export default {
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
+  },
+  methods: {
+    getDefaultUrl(item) {
+      if (item.properties.url) return item.properties.url + "?autoplay=";
+      return "https://www.youtube.com/embed/XgUOSS30OQk?autoplay=";
+    },
   },
   mounted() {},
 };

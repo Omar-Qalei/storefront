@@ -1,7 +1,11 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <img src="https://i.imgur.com/x97x4tG.jpg" />
+    <img
+      :src="getDefaultImage(item)"
+      :alt="item.properties.alt"
+      :style="item.properties.style"
+    />
   </div>
 </template>
 
@@ -25,21 +29,17 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
+  methods: {
+    getDefaultImage(item) {
+      if (item.properties.image) return item.properties.image;
+      return "https://i.imgur.com/x97x4tG.jpg";
+    },
+  },
   mounted() {},
 };
 </script>
 
 <style scoped>
-.vue-grid-item:not(.vue-grid-placeholder) {
-  background: #ccc;
-  border: 1px solid black;
-}
-.vue-grid-item .resizing {
-  opacity: 0.9;
-}
-.vue-grid-item .static {
-  background: #cce;
-}
 .label {
   border: none;
   outline: none;
@@ -48,6 +48,6 @@ export default {
 img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: inherit;
 }
 </style>

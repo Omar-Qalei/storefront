@@ -1,8 +1,11 @@
 <template>
   <v-card>
-    <v-card-title class="headline grey lighten-2">
+    <label class="headline grey lighten-2">
       Button Settings
-    </v-card-title>
+      <label class="drag-label"
+        ><v-icon class="drag-icon">mdi-cursor-move</v-icon></label
+      >
+    </label>
     <v-card-text>
       <v-card class="overflow-y-auto elevation-0" max-height="495">
         <v-tabs color="deep-purple accent-4">
@@ -55,5 +58,4 @@ export default {
   },
 };
 </script>
-
-<style></style>
+<style scoped></style>

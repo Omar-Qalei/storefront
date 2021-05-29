@@ -7,16 +7,15 @@
     left
   >
     <template v-slot:activator="{ on, attrs }">
-      <div class="border">
-        <v-avatar
-          :color="currentColor ? currentColor.hexa : color"
-          v-bind="attrs"
-          v-on="on"
-          size="18"
-          @click="isColored = !isColored"
-          class="border"
-        ></v-avatar>
-      </div>
+      <v-avatar
+        :color="currentColor ? currentColor.hexa : color"
+        v-bind="attrs"
+        v-on="on"
+        size="25"
+        @click="isColored = !isColored"
+        class="elevation-2"
+        ><v-icon>mdi-palette</v-icon></v-avatar
+      >
     </template>
     <v-card>
       <v-card-text>
@@ -64,16 +63,6 @@ export default {
 </script>
 
 <style scoped>
-.border {
-  border: 1px solid black;
-  height: 32px;
-  min-width: 32px;
-  width: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-}
 .widget {
   position: absolute;
   width: 100%;

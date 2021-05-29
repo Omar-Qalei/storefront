@@ -3,64 +3,17 @@
     <v-row class="pt-4">
       <v-col cols="8">
         <h2 class="body-1 font-weight-medium mb-2">
-          Map Text
+          Address
         </h2>
-        <v-text-field
-          outlined
-          v-model="getSelectedWidgetById.properties.name"
-          hide-details
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium mb-2">
-          Link to
-        </h2>
-        <v-chip-group
-          active-class="primary--text"
-          mandatory
-          v-model="selectedLinkTo"
-        >
-          <v-chip v-for="tag in tags" :key="tag.id">
-            {{ tag.title }}
-          </v-chip>
-        </v-chip-group>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium mb-2">
-          {{ tags[selectedLinkTo].title }}
-        </h2>
-        <v-select
-          v-if="selectedLinkTo === 0"
-          :items="pages"
-          v-model="getSelectedWidgetById.properties.page"
-          outlined
-        ></v-select>
-        <template v-if="selectedLinkTo === 1">
-          <v-text-field
-            placeholder="https://www.example.com"
-            v-model="getSelectedWidgetById.properties.url"
-            outlined
-            hide-details
-          ></v-text-field>
-          <v-switch
-            label="Open a new tab"
-            v-model="getSelectedWidgetById.properties.newTab"
-          ></v-switch>
-        </template>
-        <v-text-field
-          v-if="selectedLinkTo === 2"
-          placeholder="Ex. 079-501-218"
-          v-model="getSelectedWidgetById.properties.phone"
-          outlined
-          hide-details
-        ></v-text-field>
-        <v-text-field
-          v-if="selectedLinkTo === 3"
-          placeholder="example@example.com"
-          v-model="getSelectedWidgetById.properties.email"
-          outlined
-          hide-details
-        ></v-text-field>
+        <GmapAutocomplete
+          @place_changed="value = $event"
+          ref="map"
+          :options="{
+            fields: ['geometry', 'formatted_address', 'address_components'],
+          }"
+          :value="selectedValue"
+        />
+        <!-- <v-text-field class="d-none" v-model="value"></v-text-field> -->
       </v-col>
     </v-row>
   </v-container>
@@ -72,27 +25,63 @@ export default {
   name: "MapContent",
   data() {
     return {
-      text: null,
-      selectedLinkTo: 0,
-      selectedPage: null,
-      selectedUrl: null,
-      statusNewTab: false,
-      tags: [
-        { id: 0, title: "Page" },
-        { id: 1, title: "URL" },
-        { id: 2, title: "Phone" },
-        { id: 3, title: "Email" },
-      ],
-      pages: ["Home", "About", "Services"],
+      center: { lat: 45.508, lng: -73.587 },
+      currentPlace: null,
+      markers: [],
+      places: [],
+      value: null,
     };
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
+    selectedValue: function() {
+      if (this.value && this.value !== undefined)
+        return this.value.formatted_address;
+      return null;
+    },
+  },
+  methods: {
+    addMarker: function() {
+      if (this.currentPlace) {
+        // this.markers.push({ position: marker });
+        // this.places.push(this.currentPlace);
+        this.currentPlace = null;
+      }
+    },
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+      });
+    },
+  },
+  mounted() {
+    this.geolocate();
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    if (this.value.geometry) {
+      const marker = {
+        lat: this.value.geometry.location.lat(),
+        lng: this.value.geometry.location.lng(),
+      };
+      this.getSelectedWidgetById.properties.map = marker;
+    }
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+input {
+  min-height: 56px;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 0, 0, 0.87);
+  outline: none;
+  border-radius: 4px;
+}
+input:focus {
+  border: 2px solid #6200ea;
+}
+</style>

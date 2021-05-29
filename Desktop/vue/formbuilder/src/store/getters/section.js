@@ -38,3 +38,7 @@ export const getIsResizeable = (state) => {
 export const getIsAutoResize = (state) => {
     return state.isAutoResize;
 };
+
+export const getAllowSorting = (state) => {
+    return state.allowSorting
+};

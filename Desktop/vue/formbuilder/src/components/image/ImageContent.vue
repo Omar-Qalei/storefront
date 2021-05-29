@@ -1,14 +1,28 @@
 <template>
   <v-container class="image-content" fluid>
     <v-row class="pt-4">
+      <v-col cols="12">
+        <h2 class="body-1 font-weight-medium mb-2">
+          Upload Image
+        </h2>
+        <v-col cols="12" class="backgroundSection">
+          <img v-if="image" :src="image" />
+          <label class="labelFile" v-else>
+            <input type="file" class="d-none" @change="uploadImage($event)" />
+            <h2 class="body-1 font-weight-medium">
+              Add Image
+            </h2>
+          </label>
+        </v-col>
+      </v-col>
       <v-col cols="8">
         <h2 class="body-1 font-weight-medium mb-2">
-          Image Text
+          Alt Text (SEO)
         </h2>
         <v-text-field
           outlined
-          v-model="getSelectedWidgetById.properties.name"
-          hide-details
+          v-model="getSelectedWidgetById.properties.alt"
+          hint="Use alt text to describe the image and help search engines understand your page content better."
         ></v-text-field>
       </v-col>
       <v-col cols="12">
@@ -77,6 +91,7 @@ export default {
       selectedPage: null,
       selectedUrl: null,
       statusNewTab: false,
+      image: null,
       tags: [
         { id: 0, title: "Page" },
         { id: 1, title: "URL" },
@@ -89,10 +104,34 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
+  methods: {
+    uploadImage: function(event) {
+      console.log(event);
+      this.image = "https://cdn.vuetifyjs.com/images/cards/server-room.jpg";
+    },
+  },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.getSelectedWidgetById.properties.image = this.image;
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
+.backgroundSection {
+  height: 150px;
+  border-radius: 4px;
+  border: 1px solid black;
+}
+.labelFile {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+</style>
