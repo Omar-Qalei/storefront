@@ -1,159 +1,35 @@
 <template>
   <v-container class="carousel-design" fluid>
-    <v-row class="pt-4">
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium">
-          Text Alignment
-        </h2>
-      </v-col>
-      <v-col cols="6">
-        <v-btn-toggle
-          return-object
-          v-model="selectedTextHorizontal"
-          shaped
-          mandatory
-        >
-          <v-btn v-for="text in textHorizontal" :key="text.id" :value="text.id">
-            <v-icon>{{ text.icon }}</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
-      <v-col cols="6">
-        <v-btn-toggle
-          return-object
-          v-model="selectedTextVertical"
-          shaped
-          mandatory
-        >
-          <v-btn v-for="text in textVertical" :key="text.id" :value="text.id">
-            <v-icon>{{ text.icon }}</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
-      <v-col cols="12">
-        <v-chip-group
-          v-model="elementStatus"
-          active-class="primary--text"
-          mandatory
-        >
-          <!--  v-model="selectedLinkTo" -->
-          <v-chip v-for="tag in tags" :key="tag.id" :value="tag.value">
-            {{ tag.title }}
-          </v-chip>
-        </v-chip-group>
-      </v-col>
-      <v-col cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Text Color
-        </h2>
-      </v-col>
-      <v-col cols="3">
-        <ColorPickerWidget
-          @colorElement="textColor = $event"
-          @colorElementHover="textColorHover = $event"
-          :type="elementStatus"
-          :color="textColor"
-        />
-        {{ textColor }} {{ textColorHover }}
-      </v-col>
-      <v-col cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Background Color
-        </h2>
-      </v-col>
-      <v-col cols="3">
-        <ColorPickerWidget
-          @colorElement="backgroundColor = $event"
-          @colorElementHover="backgroundColorHover = $event"
-          :type="elementStatus"
-          :color="backgroundColor"
-        />
-        {{ backgroundColor }} {{ backgroundColorHover }}
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium">
-          Carousel Border Radius
-        </h2>
-      </v-col>
-      <v-col cols="9" align-self="center">
-        <input v-model="borderRadius" type="range" min="0" max="100" />
-      </v-col>
-      <v-col cols="2">
-        <v-text-field
-          outlined
-          v-model="borderRadius"
-          hide-details
-          dense
-          label="PX"
-        ></v-text-field>
-      </v-col>
-      <!-- <v-col align-self="center" cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Carousel Border Radius Top Left
-        </h2>
-      </v-col>
-      <v-col cols="2">
-        <v-text-field
-          label="PX"
-          outlined
-          v-model="borderRadiusTopLeft"
-          hide-details
-          dense
-        ></v-text-field>
-      </v-col>
-      <v-col align-self="center" cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Carousel Border Radius Top Right
-        </h2>
-      </v-col>
-      <v-col cols="2">
-        <v-text-field
-          outlined
-          v-model="borderRadiusTopRight"
-          hide-details
-          dense
-          label="PX"
-        ></v-text-field>
-      </v-col>
-      <v-col align-self="center" cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Carousel Border Radius Bottom Left
-        </h2>
-      </v-col>
-      <v-col cols="2">
-        <v-text-field
-          outlined
-          v-model="borderRadiusBottomLeft"
-          hide-details
-          dense
-          label="PX"
-        ></v-text-field>
-      </v-col>
-      <v-col align-self="center" cols="9">
-        <h2 class="body-1 font-weight-medium">
-          Carousel Border Radius Bottom Right
-        </h2>
-      </v-col>
-      <v-col cols="2">
-        <v-text-field
-          outlined
-          v-model="borderRadiusBottomRight"
-          hide-details
-          dense
-          label="PX"
-        ></v-text-field>
-      </v-col> -->
-    </v-row>
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Title text</v-expansion-panel-header>
+        <v-expansion-panel-content><TitleText /></v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Body text</v-expansion-panel-header>
+        <v-expansion-panel-content><BodyText /></v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Button</v-expansion-panel-header>
+        <v-expansion-panel-content
+          ><ButtonCarousel
+        /></v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import ColorPickerWidget from "../ColorPickerWidget";
+import TitleText from "./design/TitleText";
+import BodyText from "./design/BodyText";
+import ButtonCarousel from "./design/ButtonCarousel";
 export default {
   name: "CarouselDesign",
   components: {
-    ColorPickerWidget,
+    TitleText,
+    BodyText,
+    ButtonCarousel,
   },
   data() {
     return {

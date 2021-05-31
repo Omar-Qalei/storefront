@@ -306,8 +306,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.w-100 {
-  width: 100%;
-}
-</style>
+<style scoped></style>

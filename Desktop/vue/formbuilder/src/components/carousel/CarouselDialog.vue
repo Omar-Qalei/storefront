@@ -38,7 +38,10 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "CarouselDialog",
-  components: { CarouselContent, CarouselDesign },
+  components: {
+    CarouselContent,
+    CarouselDesign,
+  },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);

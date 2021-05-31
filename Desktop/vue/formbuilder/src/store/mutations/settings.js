@@ -71,3 +71,11 @@ export const checkGridHeight = (state) => {
         }
     }
 }
+
+export const setShowChooseFilesDialog = (state, payload) => {
+    state.showChooseFilesDialog = payload;
+}
+
+export const setTypeChooseFileDialog = (state, payload) => {
+    state.typeChooseFileDialog = payload;
+}

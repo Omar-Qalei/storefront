@@ -5,3 +5,11 @@ export const getSelectedWidgetById = (state) => {
 export const getFormFields = (state) => {
     return state.selectedWidget.fields
 };
+
+export const getShowChooseFilesDialog = (state) => {
+    return state.showChooseFilesDialog
+};
+
+export const getTypeChooseFileDialog = (state) => {
+    return state.typeChooseFileDialog
+};

@@ -24,3 +24,11 @@ export const onCheckGridHeight = ({ commit }) => {
     commit('checkGridHeight')
     commit('setSortSectionsLayout')
 }
+
+export const onShowChooseFilesDialog = ({ commit }, payload) => {
+    commit('setShowChooseFilesDialog', payload)
+}
+
+export const onTypeChooseFileDialog = ({ commit }, payload) => {
+    commit('setTypeChooseFileDialog', payload)
+}
