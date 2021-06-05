@@ -8,6 +8,7 @@ export const fetchSections = ({ commit, state }, payload) => {
             status: false,
             h: 10,
         },
+        collides: true,
         properties: {
             name: state.element.type,
             style: null,
@@ -38,6 +39,7 @@ export const addNewSection = ({ commit, state }, payload) => {
             status: false,
             h: 10,
         },
+        collides: true,
         properties: {
             name: state.element.type,
             style: null,
@@ -130,4 +132,12 @@ export const onUpdateSectionLayoutResized = ({ commit }, payload) => {
 
 export const onResizeSectionScreen = ({ commit }, payload) => {
     commit('setResizeSectionScreen', payload)
+}
+
+export const onRearrangementResources = ({ commit }) => {
+    commit('rearrangementResources')
+}
+
+export const onCheckUpdateSectionLayoutResized = ({ commit }, payload) => {
+    commit('checkUpdateSectionLayoutResized', payload)
 }

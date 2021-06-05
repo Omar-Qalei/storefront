@@ -1,28 +1,18 @@
 <template>
   <v-flex class="home page">
-    <Navbar />
-    <Sidebar />
-    <Pages />
-    <div class="d-flex h-100">
-      <v-main>
-        <GridView></GridView>
-        <SettingsDialog from="modal" />
-      </v-main>
-    </div>
+    <PreviewPages></PreviewPages>
+    <SettingsDialog from="modal" />
   </v-flex>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import GridView from "./GridView";
+import PreviewPages from "./PreviewPages";
 import SettingsDialog from "../components/settings/SettingsDialog";
-import Navbar from "../layouts/Navbar";
-import Sidebar from "../layouts/Sidebar";
-import Pages from "../layouts/Pages";
 
 export default {
-  name: "Home",
-  components: { GridView, SettingsDialog, Navbar, Sidebar, Pages },
+  name: "Preview",
+  components: { PreviewPages, SettingsDialog },
   data() {
     return {
       dialog: true,

@@ -76,7 +76,7 @@
           </template>
         </v-select>
       </v-col>
-      <v-col cols="12">
+      <!-- <v-col cols="12">
         <h2 class="body-1 font-weight-medium">
           Text Font Family
         </h2>
@@ -90,7 +90,7 @@
           item-text="title"
           item-value="id"
         ></v-select>
-      </v-col>
+      </v-col> -->
       <v-col cols="9">
         <h2 class="body-1 font-weight-medium">
           Text Color
@@ -221,7 +221,7 @@ export default {
     ...mapActions([""]),
   },
   updated() {
-    this.getSelectedWidgetById.properties.style = {
+    const styles = {
       textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
       alignSelf: this.textVertical[this.selectedTextVertical].title,
       fontWeight: this.fontWeight,
@@ -230,8 +230,9 @@ export default {
       color: this.textColor,
       textTransform: this.letterCase,
       fontSize: this.fontSizes[this.selectedFontSize].value,
-      fontFamily: this.fontfamilies[this.selectedFontfamily].value,
+      // fontFamily: this.fontfamilies[this.selectedFontfamily].value,
     };
+    this.$emit("styles", styles);
   },
   destroyed() {
     this.textColorHover = null;

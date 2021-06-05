@@ -3,17 +3,21 @@
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-header>Title text</v-expansion-panel-header>
-        <v-expansion-panel-content><TitleText /></v-expansion-panel-content>
+        <v-expansion-panel-content
+          ><TitleText @styles="stylesTitleText($event)"
+        /></v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header>Body text</v-expansion-panel-header>
-        <v-expansion-panel-content><BodyText /></v-expansion-panel-content>
+        <v-expansion-panel-content
+          ><BodyText @styles="stylesBodyText($event)"
+        /></v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header>Button</v-expansion-panel-header>
         <v-expansion-panel-content
-          ><ButtonCarousel
-        /></v-expansion-panel-content>
+          ><ButtonCarousel @styles="stylesButtonText($event)" />
+        </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
   </v-container>
@@ -24,6 +28,7 @@ import { mapActions, mapGetters } from "vuex";
 import TitleText from "./design/TitleText";
 import BodyText from "./design/BodyText";
 import ButtonCarousel from "./design/ButtonCarousel";
+
 export default {
   name: "CarouselDesign",
   components: {
@@ -48,6 +53,7 @@ export default {
       textColorHover: null,
       backgroundColorHover: null,
       elementStatus: "element",
+      styles: {},
       textHorizontal: [
         { id: 0, title: "flex-start", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
@@ -62,7 +68,6 @@ export default {
         { id: 0, title: "Carousel", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
@@ -70,19 +75,34 @@ export default {
   },
   methods: {
     ...mapActions([""]),
+    stylesTitleText: function(event) {
+      this.$set(this.styles, "title", event);
+    },
+    stylesBodyText: function(event) {
+      this.$set(this.styles, "body", event);
+    },
+    stylesButtonText: function(event) {
+      this.$set(this.styles, "button", event);
+    },
+  },
+  watch: {
+    styles: function(value) {
+      this.$set(this.getSelectedWidgetById.properties.style, "elements", value);
+    },
   },
   updated() {
-    this.getSelectedWidgetById.properties.style = {
-      justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,
-      alignItems: this.textVertical[this.selectedTextVertical].title,
-      borderRadius: this.borderRadius + "px",
-      color: this.textColor,
-      backgroundColor: this.backgroundColor,
-    };
-    this.getSelectedWidgetById.properties.elementHover = {
-      color: this.textColorHover,
-      backgroundColor: this.backgroundColorHover,
-    };
+    console.log(this.styles);
+    // this.getSelectedWidgetById.properties.style = {
+    //   justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,
+    //   alignItems: this.textVertical[this.selectedTextVertical].title,
+    //   borderRadius: this.borderRadius + "px",
+    //   color: this.textColor,
+    //   backgroundColor: this.backgroundColor,
+    // };
+    // this.getSelectedWidgetById.properties.elementHover = {
+    //   color: this.textColorHover,
+    //   backgroundColor: this.backgroundColorHover,
+    // };
   },
   destroyed() {
     this.textColorHover = null;

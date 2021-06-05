@@ -532,7 +532,11 @@ export default {
     this.carousel.backgroundBlendMode = this.backgroundImageBlend[
       this.selectedBackgroundImageBlend
     ].type;
-    this.getSelectedWidgetById.properties.style = this.carousel;
+    this.$set(
+      this.getSelectedWidgetById.properties.style,
+      "carousel",
+      this.carousel
+    );
     this.getSelectedWidgetById.properties.backgroundVideo = this.backgroundVideo;
   },
 };

@@ -33,7 +33,10 @@
           currentSelectedSection = item.id;
           selectedSectionByI = item.i;
         "
-        @mouseup="displayPlaceholder = false"
+        @mouseup="
+          displayPlaceholder = false;
+          onCheckUpdateSectionLayoutResized({ sectionId: item.id });
+        "
       >
         <GridItem
           :class="{
@@ -62,6 +65,7 @@
           ]"
           @resize="resizeEvent"
         >
+          <!-- {{ index }} {{ item.id }} -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
               <video autoplay muted loop id="myVideo">
@@ -189,6 +193,7 @@ export default {
       "onResizeSection",
       "onUpdateSectionLayoutResized",
       "onSelectedWidgetById",
+      "onCheckUpdateSectionLayoutResized",
     ]),
     onDragElement(event) {
       this.statusSection = event;

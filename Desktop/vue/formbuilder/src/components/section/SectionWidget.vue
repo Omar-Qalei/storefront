@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-vue">
+  <div class="grid-vue" @click="selectedElement = null">
     <GridLayout
       :layout="resources"
       :col-num="cols"
@@ -24,12 +24,15 @@
             :key="index"
             @mouseleave="hoverElement = null"
             @mouseover="onMouseOverElement(item)"
-            @click="selectedElement = item.i"
+            @click="
+              selectedElement = item.i;
+              onCheckWidget($event, item);
+            "
             @mousedown="
               onMouseDown;
               onMoveElement(index);
             "
-            @click.stop="onSelectedWidgetById(item)"
+            @dblclick="selectedElement = null"
             @mouseup="
               onMouseUp;
               onCheckGridHeight();
@@ -266,6 +269,12 @@ export default {
     },
     onMouseOverElement: function(event) {
       this.hoverElement = event.i;
+    },
+    onCheckWidget: function(event, item) {
+      if (this.statusSection) {
+        event.stopPropagation();
+        this.onSelectedWidgetById(item);
+      }
     },
   },
   computed: {

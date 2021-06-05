@@ -269,7 +269,8 @@ export const setUpdateRefs = (state, payload) => {
 }
 
 export const setUpdateSectionLayout = (state, payload) => {
-    let sectionId = state.currentSelectedSectionId ? state.currentSelectedSectionId : payload.sectionId;
+    // state.currentSelectedSectionId !== null ? state.currentSelectedSectionId : 
+    let sectionId = payload.sectionId;
     let gridHeight = payload.h;
     let statusCompact = false;
     if (sectionId !== undefined) {
@@ -315,6 +316,26 @@ export const setSortSectionsLayout = (state) => {
     }
 }
 
+// Action for check update section height on resize
+export const checkUpdateSectionLayoutResized = (state, payload) => {
+    console.log('mouseUp')
+    const sectionId = payload.sectionId;
+    if (sectionId !== undefined) {
+        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let maxGridHeight = 0;
+        state.sections[currentIndex].resources.map(element => {
+            if ((element.y + element.h) > maxGridHeight) {
+                maxGridHeight = element.y + element.h;
+            }
+        });
+        if (state.sections[currentIndex].h <= maxGridHeight) {
+            state.sections[currentIndex].resize.h = maxGridHeight;
+            state.sections[currentIndex].h = maxGridHeight;
+            state.sections = compact(state.sections);
+        }
+    }
+}
+
 // Action for update section height on resize
 export const setUpdateSectionLayoutResized = (state, payload) => {
     const sectionId = payload.sectionId;
@@ -348,10 +369,18 @@ export const setUpdateSectionLayoutGridResized = (state, payload) => {
 
 export const setResizeSectionScreen = (state, payload) => {
     state.screenSize = payload;
+    rearrangementResources(state);
+}
+
+export const rearrangementResources = (state) => {
+    // 
+    state.sections.map(element => {
+        element.resources = compactResources(element.resources);
+    });
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------//
-//------------------------------------------------------------Helpers------------------------------------------------------------//
+//------------------------------------------------------------Helpers Sections------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------//
 export function getAllCollisions(layout, layoutItem) {
     return layout.filter((l) => collides(l, layoutItem));
@@ -378,7 +407,7 @@ export function collides(l1, l2) {
 export function compact(layout) {
 
     // Statics go in the compareWith array right away so items flow around them.
-    const compareWith = getStatics(layout);
+    // const compareWith = getStatics(layout);
     // We go through the items by row and column.
     const sorted = sortLayoutItemsByRowCol(layout);
     // Holding for new items.
@@ -387,13 +416,13 @@ export function compact(layout) {
     for (let i = 0, len = sorted.length; i < len; i++) {
         let l = sorted[i];
         // Don't move static elements
-        if (!l.static) {
-            l = compactItem(compareWith, l);
+        // if (!l.static) {
+        //     l = compactItem(compareWith, l);
 
-            // Add to comparison array. We only collide with items before this one.
-            // Statics are already in this array.
-            // compareWith.push(l);
-        }
+        //     // Add to comparison array. We only collide with items before this one.
+        //     // Statics are already in this array.
+        //     // compareWith.push(l);
+        // }
         // Add to output array to make sure they still come out in the right order.
         out[layout.indexOf(l)] = l;
 
@@ -403,15 +432,44 @@ export function compact(layout) {
     return out;
 }
 
+export function compactResources(layout) {
+
+    // Statics go in the compareWith array right away so items flow around them.
+    // const compareWith = getStatics(layout);
+    // We go through the items by row and column.
+    const sorted = sortLayoutItemsByRowCol(layout);
+    // Holding for new items.
+    const out = Array(layout.length);
+
+    for (let i = 0, len = sorted.length; i < len; i++) {
+        let l = sorted[i];
+        // Don't move static elements
+        // if (!l.static) {
+        l = compactItem(layout, l);
+
+        // Add to comparison array. We only collide with items before this one.
+        // Statics are already in this array.
+        // compareWith.push(l);
+        // }
+        // Add to output array to make sure they still come out in the right order.
+        out[layout.indexOf(l)] = l;
+
+        // Clear moved flag, if it exists.
+        // l.moved = false;
+    }
+    console.log(out);
+    return out;
+}
 // /**
 //  * Compact an item in the layout. Overlap
 //  */
 export function compactItem(compareWith, l) {
     //   if (verticalCompact) {
     //     // Move the element up as far as it can go without colliding.
-    //     while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-    //       l.y--;
-    //     }
+    // console.log('compactItem:', !getFirstCollision(compareWith, l), compareWith.type, l.type);
+    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+        l.y--;
+    }
     //   }
     // Move it down, and keep moving it down if it's colliding.
     let collides;
@@ -421,7 +479,9 @@ export function compactItem(compareWith, l) {
     return l;
 }
 export function getFirstCollision(layout, layoutItem) {
+    // console.log('getFirstCollision:', layout, layoutItem.type);
     for (let i = 0, len = layout.length; i < len; i++) {
+        console.log('collides:', collides(layout[i], layoutItem, layout[i].type, layoutItem.type));
         if (collides(layout[i], layoutItem)) return layout[i];
     }
 }
@@ -445,3 +505,98 @@ export function getStatics(layout) {
     //return [];
     return layout.filter((l) => l.static);
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------Helpers Resources------------------------------------------------------------//
+//-------------------------------------------------------------------------------------------------------------------------------//
+
+// export function getAllCollisionsResources(layout, layoutItem) {
+//     return layout.filter((l) => collides(l, layoutItem));
+// }
+
+// export function getLayoutItemResources(layout, id) {
+//     for (let i = 0, len = layout.length; i < len; i++) {
+//         if (layout[i].i === id) return layout[i];
+//     }
+// }
+
+// export function collidesResources(l1, l2) {
+//     if (l1 === l2) return false; // same element
+//     if (l1.x + l1.w <= l2.x) return false; // l1 is left of l2
+//     if (l1.x >= l2.x + l2.w) return false; // l1 is right of l2
+//     if (l1.y + l1.h <= l2.y) return false; // l1 is above l2
+//     if (l1.y >= l2.y + l2.h) return false; // l1 is below l2
+
+//     // If want to margin between element set true
+//     return true;
+// }
+
+// // Overlap  ++ 
+// export function compactResources(layout) {
+
+//     // Statics go in the compareWith array right away so items flow around them.
+//     // const compareWith = getStatics(layout);
+//     // We go through the items by row and column.
+//     const sorted = sortLayoutItemsByRowColResources(layout);
+//     // Holding for new items.
+//     const out = Array(layout.length);
+
+//     console.log(sorted);
+//     for (let i = 0, len = sorted.length; i < len; i++) {
+//         let l = sorted[i];
+//         // Don't move static elements
+//         // if (!l.static) {
+//         l = compactItemResources(layout, l);
+
+//         // Add to comparison array. We only collide with items before this one.
+//         // Statics are already in this array.
+//         // compareWith.push(l);
+//         // }
+//         // Add to output array to make sure they still come out in the right order.
+//         out[layout.indexOf(l)] = l;
+
+//         // Clear moved flag, if it exists.
+//         l.moved = false;
+//     }
+//     return out;
+// }
+
+// // /**
+// //  * Compact an item in the layout. Overlap
+// //  */
+// export function compactItemResources(compareWith, l) {
+//     //   if (verticalCompact) {
+//     //     // Move the element up as far as it can go without colliding.
+//     console.log(l.y, l.type);
+//     while (l.y > 0 && !getFirstCollisionResources(compareWith, l)) {
+//         l.y--;
+//     }
+//     //   }
+//     // Move it down, and keep moving it down if it's colliding.
+//     let collides;
+//     // console.log((collides = getFirstCollision(compareWith, l)));
+//     while ((collides = getFirstCollisionResources(compareWith, l))) {
+//         l.y = collides.y + collides.h;
+//     }
+//     return l;
+// }
+
+// export function getFirstCollisionResources(layout, layoutItem) {
+//     for (let i = 0, len = layout.length; i < len; i++) {
+//         if (collidesResources(layout[i], layoutItem)) return layout[i];
+//     }
+// }
+
+// export function sortLayoutItemsByRowColResources(layout) {
+//     return [].concat(layout).sort(function (a, b) {
+//         if (a.y === b.y && a.x === b.x) {
+//             return 0;
+//         }
+
+//         if (a.y > b.y || (a.y === b.y && a.x > b.x)) {
+//             return 1;
+//         }
+
+//         return -1;
+//     });
+// }

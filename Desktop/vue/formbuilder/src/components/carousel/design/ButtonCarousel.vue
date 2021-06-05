@@ -113,9 +113,9 @@ export default {
       backgroundColorHover: null,
       elementStatus: "element",
       textHorizontal: [
-        { id: 0, title: "flex-start", icon: "mdi-format-align-left" },
+        { id: 0, title: "start", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
-        { id: 2, title: "flex-end", icon: "mdi-format-align-right" },
+        { id: 2, title: "end", icon: "mdi-format-align-right" },
       ],
       textVertical: [
         { id: 0, title: "flex-start", icon: "mdi-format-align-top" },
@@ -136,8 +136,8 @@ export default {
     ...mapActions([""]),
   },
   updated() {
-    this.getSelectedWidgetById.properties.style = {
-      justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,
+    const styles = {
+      textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
       alignItems: this.textVertical[this.selectedTextVertical].title,
       borderRadius: this.borderRadius + "px",
       color: this.textColor,
@@ -147,6 +147,7 @@ export default {
       color: this.textColorHover,
       backgroundColor: this.backgroundColorHover,
     };
+    this.$emit("styles", styles);
   },
   destroyed() {
     this.textColorHover = null;

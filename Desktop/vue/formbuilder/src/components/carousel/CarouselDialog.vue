@@ -59,6 +59,9 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
+  created() {
+    this.$set(this.getSelectedWidgetById.properties, "style", {});
+  },
 };
 </script>
 

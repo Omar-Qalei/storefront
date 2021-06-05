@@ -1,11 +1,34 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <v-carousel v-model="model">
-      <v-carousel-item v-for="(color, i) in colors" :key="color">
-        <v-sheet :color="color" height="100%" tile>
+    <v-carousel
+      v-model="model"
+      :style="carouselStyle()"
+      :hide-delimiters="getDefalutAllowDots()"
+      :show-arrows="getDefalutAllowArrows()"
+      :cycle="getDefalutAllowLoop()"
+    >
+      <v-carousel-item
+        v-for="(element, index) in getDefalutSlides()"
+        :key="index"
+      >
+        <v-sheet class="pa-4" color="transparent" height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">
-            <div class="display-3">Slide {{ i + 1 }}</div>
+            <v-col cols="12">
+              <div :style="titleTextStyle()">{{ element.title }}</div>
+              <div :style="bodyTextStyle()">
+                {{ element.body }}
+              </div>
+              <div class="mt-4" :style="{ textAlign: buttonStyle().textAlign }">
+                <v-btn
+                  :style="[buttonStyle(), hover ? onHover() : '']"
+                  @mouseover="hover = true"
+                  @mouseleave="hover = false"
+                >
+                  {{ element.textButton }}
+                </v-btn>
+              </div>
+            </v-col>
           </v-row>
         </v-sheet>
       </v-carousel-item>
@@ -25,6 +48,7 @@ export default {
     return {
       model: 0,
       colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
+      hover: false,
     };
   },
   props: {
@@ -32,6 +56,99 @@ export default {
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
+  },
+  methods: {
+    carouselStyle: function() {
+      if (this.item.properties.style) {
+        return this.item.properties.style.carousel
+          ? this.item.properties.style.carousel
+          : "";
+      } else {
+        return {
+          backgroundColor: "#1e1e1e",
+        };
+      }
+    },
+    titleTextStyle: function() {
+      if (this.item.properties.style) {
+        if (this.item.properties.style.elements) {
+          return this.item.properties.style.elements.title
+            ? this.item.properties.style.elements.title
+            : "";
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
+    },
+    bodyTextStyle: function() {
+      if (this.item.properties.style) {
+        if (this.item.properties.style.elements) {
+          return this.item.properties.style.elements.body
+            ? this.item.properties.style.elements.body
+            : "";
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
+    },
+    buttonStyle: function() {
+      if (this.item.properties.style) {
+        if (this.item.properties.style.elements) {
+          return this.item.properties.style.elements.button
+            ? this.item.properties.style.elements.button
+            : "";
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
+    },
+    onHover: function() {
+      if (this.item.properties.elementHover) {
+        if (this.item.properties.elementHover !== undefined) {
+          return this.item.properties.elementHover;
+        }
+      } else {
+        return "";
+      }
+    },
+    getDefalutSlides() {
+      if (this.item.properties.fields) return this.item.properties.fields;
+      return [
+        {
+          icon: "mdi-play-box-outline",
+          title: "Slide",
+          textButton: "Click Now",
+          body: "Click now",
+          type: "carousel",
+        },
+        {
+          icon: "mdi-play-box-outline",
+          title: "Slide",
+          textButton: "Click Now",
+          body: "Click now",
+          type: "carousel",
+        },
+      ];
+    },
+    getDefalutAllowArrows() {
+      if (!this.item.properties.allowArrow)
+        return this.item.properties.allowArrow;
+      return true;
+    },
+    getDefalutAllowDots() {
+      if (this.item.properties.allowDots) return this.item.properties.allowDots;
+      return false;
+    },
+    getDefalutAllowLoop() {
+      if (this.item.properties.allowLoop) return this.item.properties.allowLoop;
+      return false;
+    },
   },
   mounted() {},
 };
@@ -48,6 +165,13 @@ export default {
 .widget {
   position: absolute;
   width: 100%;
+  height: 100%;
+}
+::v-deep.v-btn {
+  text-transform: inherit;
+}
+.v-btn ::v-deep.v-btn__content {
+  align-items: inherit;
   height: 100%;
 }
 </style>

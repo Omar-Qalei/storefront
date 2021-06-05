@@ -17,10 +17,15 @@
                       <v-btn x-small icon color="primary">
                         <v-icon color="primary">mdi mdi-drag</v-icon>
                       </v-btn>
-                      {{ item.text }}
+                      {{ item.title }}
                     </h2>
                     <v-spacer></v-spacer>
-                    <v-btn x-small icon color="primary" @click="slide = 2">
+                    <v-btn
+                      x-small
+                      icon
+                      color="primary"
+                      @click="onSelectedSlide(index)"
+                    >
                       <v-icon color="primary">mdi mdi-cog-outline</v-icon>
                     </v-btn>
                     <v-btn
@@ -48,21 +53,43 @@
               >
             </v-col>
           </v-row>
+          <v-row class="px-4">
+            <v-col cols="12">
+              <v-checkbox
+                v-model="allowLoop"
+                label="Allow Loop"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="allowArrow"
+                label="Allow Arrows"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="allowDots"
+                label="Allow Dots"
+                hide-details
+              ></v-checkbox>
+            </v-col>
+          </v-row>
         </v-stepper-content>
         <!-- Add Slide -->
 
         <!-- Slide Setting -->
         <v-stepper-content class="pa-0" step="2">
-          <!-- <v-btn color="primary" @click="slide = 1">
-            Back
-          </v-btn> -->
+          <v-btn text color="primary" @click="goBack">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
           <v-expansion-panels class="pa-2 pt-4" v-model="panels">
             <v-expansion-panel>
               <v-expansion-panel-header>
                 Text
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <CarouselText />
+                <CarouselText
+                  v-if="selectedSlideIndex !== null"
+                  :index="selectedSlideIndex"
+                />
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel>
@@ -98,34 +125,26 @@ export default {
     return {
       slide: 1,
       panels: 0,
-      text: null,
-      selectedLinkTo: 0,
-      selectedPage: null,
-      selectedUrl: null,
-      statusNewTab: false,
+      selectedSlideIndex: null,
+      allowLoop: false,
+      allowArrow: true,
+      allowDots: true,
       list: [
         {
           icon: "mdi-play-box-outline",
-          text: "Slide",
-          label: "",
-          placerholder: "",
+          title: "Slide",
+          textButton: "",
+          body: "",
           type: "carousel",
         },
         {
           icon: "mdi-play-box-outline",
-          text: "Slide",
-          label: "",
-          placerholder: "",
+          title: "Slide",
+          textButton: "",
+          body: "",
           type: "carousel",
         },
       ],
-      tags: [
-        { id: 0, title: "Page" },
-        { id: 1, title: "URL" },
-        { id: 2, title: "Phone" },
-        { id: 3, title: "Email" },
-      ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
@@ -135,9 +154,9 @@ export default {
     onAddSlide: function() {
       this.list.push({
         icon: "mdi-play-box-outline",
-        text: "Slide",
-        label: "",
-        placerholder: "",
+        title: "Slide",
+        textButton: "",
+        body: "",
         type: "carousel",
       });
     },
@@ -148,9 +167,26 @@ export default {
       const index = this.list.findIndex((element) => element.i === item.i);
       this.list.splice(index, 1);
     },
+    onSelectedSlide: function(index) {
+      this.slide = 2;
+      this.selectedSlideIndex = index;
+    },
+    goBack: function() {
+      this.slide = 1;
+      this.selectedSlideIndex = null;
+    },
+  },
+  created() {
+    this.getSelectedWidgetById.properties.fields = this.list;
+    this.$set(this.getSelectedWidgetById.properties, "allowLoop", false);
+    this.$set(this.getSelectedWidgetById.properties, "allowArrow", true);
+    this.$set(this.getSelectedWidgetById.properties, "allowDots", false);
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.getSelectedWidgetById.properties.fields = this.list;
+    this.getSelectedWidgetById.properties.allowLoop = this.allowLoop;
+    this.getSelectedWidgetById.properties.allowArrow = this.allowArrow;
+    this.getSelectedWidgetById.properties.allowDots = this.allowDots;
   },
 };
 </script>

@@ -13,7 +13,9 @@
       <a
         class="link-icon"
         @click="
-          onResizeSectionScreen({ width: '320px', cols: 1, responsive: true })
+          onResizeSectionScreen({ width: '320px', cols: 1, responsive: true });
+          onRearrangementResources();
+          onSortSectionsLayout();
         "
       >
         <span class="mdi mdi-cellphone-cog"></span>
@@ -33,6 +35,7 @@
         class="text-capitalize font-weight-light fs-14"
         color="primary"
         text
+        to="/preview"
         ><v-icon class="mr-2">mdi-eye</v-icon>Preview</v-btn
       >
       <v-btn
@@ -58,7 +61,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["onDrawer", "onDrawerPages", "onResizeSectionScreen"]),
+    ...mapActions([
+      "onDrawer",
+      "onDrawerPages",
+      "onResizeSectionScreen",
+      "onRearrangementResources",
+      "onSortSectionsLayout",
+    ]),
   },
   computed: {
     ...mapGetters(["getSelectedPage", "getPages"]),
