@@ -5,10 +5,16 @@
         <h2 class="body-1 font-weight-medium mb-2">
           Upload Image
         </h2>
-        <v-col cols="12" class="backgroundSection">
+        <v-col
+          cols="12"
+          class="backgroundSection"
+          @click="
+            onShowChooseFilesDialog(true);
+            onTypeChooseFileDialog('image');
+          "
+        >
           <img v-if="image" :src="image" />
           <label class="labelFile" v-else>
-            <input type="file" class="d-none" @change="uploadImage($event)" />
             <h2 class="body-1 font-weight-medium">
               Add Image
             </h2>
@@ -45,7 +51,9 @@
         </h2>
         <v-select
           v-if="selectedLinkTo === 0"
-          :items="pages"
+          :items="getPages"
+          item-text="name"
+          return-object
           v-model="getSelectedWidgetById.properties.page"
           outlined
         ></v-select>
@@ -77,13 +85,21 @@
         ></v-text-field>
       </v-col>
     </v-row>
+
+    <!-- Choose Files -->
+    <ChooseFilesWidget
+      @onSelectedImage="onSelectedImage($event)"
+      :type="'image'"
+    />
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import ChooseFilesWidget from "../options/ChooseFilesWidget";
 export default {
   name: "ImageContent",
+  components: { ChooseFilesWidget },
   data() {
     return {
       text: null,
@@ -98,17 +114,23 @@ export default {
         { id: 2, title: "Phone" },
         { id: 3, title: "Email" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages"]),
   },
   methods: {
-    uploadImage: function(event) {
-      console.log(event);
-      this.image = "https://cdn.vuetifyjs.com/images/cards/server-room.jpg";
+    ...mapActions(["onShowChooseFilesDialog", "onTypeChooseFileDialog"]),
+    onSelectedImage: function(event) {
+      this.image = event;
     },
+  },
+  created() {
+    this.onTypeChooseFileDialog("image");
+    if (this.getSelectedWidgetById.properties.selectedLinkTo)
+      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+    if (this.getSelectedWidgetById.properties.image)
+      this.image = this.getSelectedWidgetById.properties.image;
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;

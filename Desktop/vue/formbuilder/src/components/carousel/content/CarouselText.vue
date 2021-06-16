@@ -43,7 +43,7 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
-  mounted() {
+  created() {
     if (this.getSelectedWidgetById.properties.fields[this.index]) {
       this.title = this.getSelectedWidgetById.properties.fields[
         this.index

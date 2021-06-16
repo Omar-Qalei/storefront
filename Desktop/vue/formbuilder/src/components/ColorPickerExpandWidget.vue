@@ -7,6 +7,7 @@
     show-swatches
     swatches-max-height="200"
     :width.sync="width"
+    value="hexa"
     v-model="currentColor"
   ></v-color-picker>
 </template>
@@ -16,7 +17,7 @@ export default {
   name: "ColorPickerExpandWidget",
   data() {
     return {
-      currentColor: null,
+      currentColor: "#FF0000",
       isColored: false,
       swatches: [
         ["#FF0000", "#AA0000", "#550000"],
@@ -36,17 +37,17 @@ export default {
     currentColor: function(value) {
       switch (this.type) {
         case "element":
-          this.$emit("colorElement", value.hexa);
+          this.$emit("colorElement", value);
           break;
 
         case "hover":
-          this.$emit("colorElementHover", value.hexa);
+          this.$emit("colorElementHover", value);
           break;
       }
     },
   },
   created() {
-    console.log(this.currentColor);
+    if (this.color) this.currentColor = this.color;
   },
 };
 </script>

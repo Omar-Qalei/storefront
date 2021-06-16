@@ -36,6 +36,7 @@
         @mouseup="
           displayPlaceholder = false;
           onCheckUpdateSectionLayoutResized({ sectionId: item.id });
+          onUpdatePage();
         "
       >
         <GridItem
@@ -65,7 +66,6 @@
           ]"
           @resize="resizeEvent"
         >
-          <!-- {{ index }} {{ item.id }} -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
               <video autoplay muted loop id="myVideo">
@@ -148,6 +148,8 @@ import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapActions, mapGetters } from "vuex";
 import SectionWidget from "../components/section/SectionWidget";
 import SettingsWidget from "../components/settings/SettingsWidget";
+import { SiteService } from "../services/site/site";
+
 export default {
   name: "GridView",
   components: {
@@ -179,6 +181,8 @@ export default {
       selectedSectionByI: null,
       dialog: false,
       hoverElement: 0,
+      siteId: null,
+      pageId: null,
     };
   },
   methods: {
@@ -195,10 +199,10 @@ export default {
       "onSelectedWidgetById",
       "onCheckUpdateSectionLayoutResized",
     ]),
-    onDragElement(event) {
+    onDragElement: function(event) {
       this.statusSection = event;
     },
-    onMoveElementY(event) {
+    onMoveElementY: function(event) {
       this.updateSectionLayout({
         sectionId: this.selectedSection,
         h: event.max,
@@ -309,6 +313,31 @@ export default {
     onMouseOverElement: function(event) {
       this.hoverElement = event.id;
     },
+    getQueryStringParams: function() {
+      if (this.$route.query.siteId) {
+        this.siteId = +this.$route.query.siteId;
+      }
+    },
+    onUpdatePage: function() {
+      const data = JSON.stringify(this.getSections);
+      if (this.getScreenSize.screen === "web")
+        SiteService.addSitePageResourceWeb(this.siteId, this.pageId, data)
+          .then(() => {
+            console.log("Web posted");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+      if (this.getScreenSize.screen === "mobile")
+        SiteService.addSitePageResourceMobile(this.siteId, this.pageId, data)
+          .then(() => {
+            console.log("Mobile posted");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    },
   },
   computed: {
     ...mapGetters([
@@ -319,11 +348,25 @@ export default {
       "getIsAutoResize",
       "getSelectedWidgetById",
       "getAllowSorting",
+      "getSelectedPage",
+      "getPages",
     ]),
   },
   created() {
+    this.getQueryStringParams();
     this.fetchResources();
     this.onSelectedSection({ index: 0, id: 0 });
+  },
+  watch: {
+    getSelectedPage: function(pageId) {
+      this.pageId = pageId;
+    },
+
+    getPages: function(pages) {
+      if (pages.length > 0) {
+        this.pageId = pages[0].id;
+      }
+    },
   },
   updated() {
     this.onUpdateRefs(this.$refs["section"]);
@@ -339,22 +382,6 @@ export default {
 };
 </script>
 <style scoped>
-.vue-grid-layout {
-  /* background: #eee; */
-}
-/* .vue-grid-item.section:first-child {
-  border-top: 0.5px solid black;
-  border-left: 0.5px solid black;
-  border-right: 0.5px solid black;
-} */
-.vue-grid-item.section {
-  /* /* border-left: 0.5px solid black;  */
-  /* border: 0.5px solid black; */
-}
-/* .vue-grid-item.section {
-  position: relative;
-  min-height: 10rem;
-} */
 #content {
   position: absolute;
   z-index: 0;

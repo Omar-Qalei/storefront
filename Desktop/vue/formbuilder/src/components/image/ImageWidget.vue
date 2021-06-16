@@ -4,7 +4,7 @@
     <img
       :src="getDefaultImage(item)"
       :alt="item.properties.alt"
-      :style="item.properties.style"
+      :style="item.properties.style ? item.properties.style : style"
     />
   </div>
 </template>
@@ -21,6 +21,9 @@ export default {
     return {
       // height: Number,
       // width: Number,
+      style: {
+        objectFit: "cover",
+      },
     };
   },
   props: {
@@ -32,9 +35,10 @@ export default {
   methods: {
     getDefaultImage(item) {
       if (item.properties.image) return item.properties.image;
-      return "https://i.imgur.com/x97x4tG.jpg";
+      return "https://zrassets.s3.eu-north-1.amazonaws.com/bed-and-breakfast/images/amenities.jpg";
     },
   },
+  created() {},
   mounted() {},
 };
 </script>

@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      text: null,
+      selectedElementType: null,
       selectedTextHorizontal: 1,
       selectedTextVertical: 1,
       borderRadius: 4,
@@ -46,8 +46,6 @@ export default {
       borderRadiusTopRight: 0,
       borderRadiusBottomLeft: 0,
       borderRadiusBottomRight: 0,
-      selectedUrl: null,
-      statusNewTab: false,
       textColor: "#000000de",
       backgroundColor: "#f5f5f5",
       textColorHover: null,
@@ -76,22 +74,97 @@ export default {
   methods: {
     ...mapActions([""]),
     stylesTitleText: function(event) {
-      this.$set(this.styles, "title", event);
+      this.selectedElementType = "title";
+      if (
+        this.getSelectedWidgetById.properties.style.elements.title === undefined
+      ) {
+        this.$set(
+          this.getSelectedWidgetById.properties.style.elements,
+          "title",
+          event
+        );
+      } else {
+        this.getSelectedWidgetById.properties.style.elements.title = event;
+      }
     },
     stylesBodyText: function(event) {
-      this.$set(this.styles, "body", event);
+      this.selectedElementType = "body";
+      if (
+        this.getSelectedWidgetById.properties.style.elements.body === undefined
+      ) {
+        this.$set(
+          this.getSelectedWidgetById.properties.style.elements,
+          "body",
+          event
+        );
+      } else {
+        this.getSelectedWidgetById.properties.style.elements.body = event;
+      }
     },
     stylesButtonText: function(event) {
-      this.$set(this.styles, "button", event);
+      this.selectedElementType = "button";
+      if (
+        this.getSelectedWidgetById.properties.style.elements.button ===
+        undefined
+      ) {
+        this.$set(
+          this.getSelectedWidgetById.properties.style.elements,
+          "button",
+          event
+        );
+      } else {
+        this.getSelectedWidgetById.properties.style.elements.button = event;
+      }
     },
   },
   watch: {
-    styles: function(value) {
-      this.$set(this.getSelectedWidgetById.properties.style, "elements", value);
+    styles: function(oldValue, newValue) {
+      console.log("styles", oldValue, newValue);
+      // if (this.getSelectedWidgetById.properties.style.elements === undefined) {
+      //   this.$set(
+      //     this.getSelectedWidgetById.properties.style,
+      //     "elements",
+      //     value
+      //   );
+      // } else {
+      //   switch (this.selectedElementType) {
+      //     case "title":
+      //       this.getSelectedWidgetById.properties.style.elements.title =
+      //         value.title;
+      //       break;
+      //     case "body":
+      //       this.getSelectedWidgetById.properties.style.elements.body =
+      //         value.body;
+      //       break;
+      //     case "button":
+      //       console.log(value);
+      //       this.getSelectedWidgetById.properties.style.elements.button =
+      //         value.button;
+      //       break;
+      //   }
+      // }
     },
   },
+  created() {
+    if (this.getSelectedWidgetById.properties.style.elements === null) {
+      this.$set(
+        this.getSelectedWidgetById.properties.style.elements,
+        "title",
+        {}
+      );
+      this.$set(
+        this.getSelectedWidgetById.properties.style.elements,
+        "body",
+        {}
+      );
+      this.$set(
+        this.getSelectedWidgetById.properties.style.elements,
+        "button",
+        {}
+      );
+    }
+  },
   updated() {
-    console.log(this.styles);
     // this.getSelectedWidgetById.properties.style = {
     //   justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,
     //   alignItems: this.textVertical[this.selectedTextVertical].title,

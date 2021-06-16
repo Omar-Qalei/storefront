@@ -36,7 +36,6 @@
           active-class="primary--text"
           mandatory
         >
-          <!--  v-model="selectedLinkTo" -->
           <v-chip v-for="tag in tags" :key="tag.id" :value="tag.value">
             {{ tag.title }}
           </v-chip>
@@ -150,25 +149,25 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ColorPickerWidget from "../ColorPickerWidget";
+import StylesTransform from "../../mixins/styles";
+
 export default {
   name: "ButtonDesign",
+  mixins: [StylesTransform],
   components: {
     ColorPickerWidget,
   },
   data() {
     return {
-      text: null,
       selectedTextHorizontal: 1,
       selectedTextVertical: 1,
-      borderRadius: 4,
+      borderRadius: 30,
       borderRadiusTopLeft: 0,
       borderRadiusTopRight: 0,
       borderRadiusBottomLeft: 0,
       borderRadiusBottomRight: 0,
-      selectedUrl: null,
-      statusNewTab: false,
-      textColor: "#000000de",
-      backgroundColor: "#f5f5f5",
+      textColor: "#FFFFFFFF",
+      backgroundColor: "#4E00BBFF",
       textColorHover: null,
       backgroundColorHover: null,
       elementStatus: "element",
@@ -186,7 +185,6 @@ export default {
         { id: 0, title: "Button", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
@@ -194,6 +192,39 @@ export default {
   },
   methods: {
     ...mapActions([""]),
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.style) {
+      this.selectedTextHorizontal = this.findIndex(
+        { list: this.textHorizontal, value: "title" },
+        this.getSelectedWidgetById.properties.style.justifyContent
+      );
+      this.selectedTextVertical = this.findIndex(
+        { list: this.textVertical, value: "title" },
+        this.getSelectedWidgetById.properties.style.alignItems
+      );
+      this.borderRadius = this.convertPxToNumber(
+        this.getSelectedWidgetById.properties.style.borderRadius
+      );
+      this.textColor = this.getSelectedWidgetById.properties.style.color;
+      this.backgroundColor = this.getSelectedWidgetById.properties.style.backgroundColor;
+      this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
+      this.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
+    }
+    console.log(this.getSelectedWidgetById.properties.style);
+    if (this.getSelectedWidgetById.properties.style === null) {
+      this.getSelectedWidgetById.properties.style = {
+        justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,
+        alignItems: this.textVertical[this.selectedTextVertical].title,
+        borderRadius: this.borderRadius + "px",
+        color: this.textColor,
+        backgroundColor: this.backgroundColor,
+      };
+      this.getSelectedWidgetById.properties.elementHover = {
+        color: this.textColorHover,
+        backgroundColor: this.backgroundColorHover,
+      };
+    }
   },
   updated() {
     this.getSelectedWidgetById.properties.style = {

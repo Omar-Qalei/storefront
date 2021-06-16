@@ -36,7 +36,13 @@
                     >
                       <v-icon color="primary">mdi mdi-content-duplicate</v-icon>
                     </v-btn>
-                    <v-btn x-small icon color="primary" @click="onRemove(item)">
+                    <v-btn
+                      x-small
+                      icon
+                      color="primary"
+                      @click="onRemove(item)"
+                      :disabled="list.length <= 2"
+                    >
                       <v-icon color="primary">mdi mdi-delete-outline</v-icon>
                     </v-btn>
                   </v-card-actions>
@@ -67,7 +73,7 @@
               ></v-checkbox>
               <v-checkbox
                 v-model="allowDots"
-                label="Allow Dots"
+                label="Disable Dots"
                 hide-details
               ></v-checkbox>
             </v-col>
@@ -100,6 +106,14 @@
                 <CarouselBackground />
               </v-expansion-panel-content>
             </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header id="colorPicker">
+                Button
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <CarouselButton />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
           </v-expansion-panels>
         </v-stepper-content>
         <!-- Slide Setting -->
@@ -113,6 +127,7 @@ import { mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import CarouselBackground from "./content/CarouselBackground";
 import CarouselText from "./content/CarouselText";
+import CarouselButton from "./content/CarouselButton";
 
 export default {
   name: "CarouselContent",
@@ -120,6 +135,7 @@ export default {
     draggable,
     CarouselBackground,
     CarouselText,
+    CarouselButton,
   },
   data() {
     return {
@@ -128,7 +144,7 @@ export default {
       selectedSlideIndex: null,
       allowLoop: false,
       allowArrow: true,
-      allowDots: true,
+      allowDots: false,
       list: [
         {
           icon: "mdi-play-box-outline",
@@ -177,10 +193,23 @@ export default {
     },
   },
   created() {
-    this.getSelectedWidgetById.properties.fields = this.list;
-    this.$set(this.getSelectedWidgetById.properties, "allowLoop", false);
-    this.$set(this.getSelectedWidgetById.properties, "allowArrow", true);
-    this.$set(this.getSelectedWidgetById.properties, "allowDots", false);
+    this.list = this.getSelectedWidgetById.properties.fields;
+
+    if (this.getSelectedWidgetById.properties.allowLoop)
+      this.allowLoop = this.getSelectedWidgetById.properties.allowLoop;
+
+    if (this.getSelectedWidgetById.properties.allowArrow)
+      this.allowArrow = this.getSelectedWidgetById.properties.allowArrow;
+
+    if (this.getSelectedWidgetById.properties.allowDots)
+      this.allowDots = this.getSelectedWidgetById.properties.allowDots;
+
+    if (this.getSelectedWidgetById.properties.allowLoop === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowLoop", false);
+    if (this.getSelectedWidgetById.properties.allowArrow === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowArrow", true);
+    if (this.getSelectedWidgetById.properties.allowDots === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowDots", false);
   },
   updated() {
     this.getSelectedWidgetById.properties.fields = this.list;

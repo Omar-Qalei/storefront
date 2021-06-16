@@ -149,57 +149,64 @@
           </template>
         </v-select>
       </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium">
-          Gradient Direction
-        </h2>
-      </v-col>
-      <v-col cols="9" align-self="center">
-        <input v-model="gradientDirection" type="range" min="0" max="360" />
-      </v-col>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          v-model="gradientDirection"
-          hide-details
-          dense
-          label="PX"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium">
-          Start Position
-        </h2>
-      </v-col>
-      <v-col cols="9" align-self="center">
-        <input v-model="gradientStartPosition" type="range" min="0" max="100" />
-      </v-col>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          v-model="gradientStartPosition"
-          hide-details
-          dense
-          label="%"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium">
-          End Position
-        </h2>
-      </v-col>
-      <v-col cols="9" align-self="center">
-        <input v-model="gradientEndPosition" type="range" min="0" max="100" />
-      </v-col>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          v-model="gradientEndPosition"
-          hide-details
-          dense
-          label="%"
-        ></v-text-field>
-      </v-col>
+      <template v-if="selectedBackgroundGradientType === 0">
+        <v-col cols="12">
+          <h2 class="body-1 font-weight-medium">
+            Gradient Direction
+          </h2>
+        </v-col>
+        <v-col cols="9" align-self="center">
+          <input v-model="gradientDirection" type="range" min="0" max="360" />
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            outlined
+            v-model="gradientDirection"
+            hide-details
+            dense
+            label="PX"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12">
+          <h2 class="body-1 font-weight-medium">
+            Start Position
+          </h2>
+        </v-col>
+        <v-col cols="9" align-self="center">
+          <input
+            v-model="gradientStartPosition"
+            type="range"
+            min="0"
+            max="100"
+          />
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            outlined
+            v-model="gradientStartPosition"
+            hide-details
+            dense
+            label="%"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12">
+          <h2 class="body-1 font-weight-medium">
+            End Position
+          </h2>
+        </v-col>
+        <v-col cols="9" align-self="center">
+          <input v-model="gradientEndPosition" type="range" min="0" max="100" />
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            outlined
+            v-model="gradientEndPosition"
+            hide-details
+            dense
+            label="%"
+          ></v-text-field>
+        </v-col>
+      </template>
     </v-row>
     <!-- Background gradient color -->
 
@@ -317,9 +324,11 @@
 import { mapGetters, mapActions } from "vuex";
 import ColorPickerExpandWidget from "../../ColorPickerExpandWidget";
 import ChooseFilesWidget from "../../options/ChooseFilesWidget";
+import StylesTransform from "../../../mixins/styles";
 
 export default {
   name: "CarouselBackground",
+  mixins: [StylesTransform],
   components: {
     ColorPickerExpandWidget,
     ChooseFilesWidget,
@@ -398,10 +407,11 @@ export default {
         { id: 15, title: "Luminosity", type: "luminosity" },
       ],
       backgroundVideo: null,
+      backgroundImage: null,
       carousel: {
-        textAlign: "left",
+        // textAlign: "left",
         // border: "solid",
-        background: "transparent",
+        background: "",
         borderRadius: 0,
         // borderWidth: 0,
         // borderColor: "transparent",
@@ -419,6 +429,11 @@ export default {
   methods: {
     ...mapActions(["onShowChooseFilesDialog", "onTypeChooseFileDialog"]),
     gradientColor: function() {
+      this.$set(
+        this.getSelectedWidgetById.properties,
+        "selectedBackgroundGradientType",
+        this.selectedBackgroundGradientType
+      );
       switch (this.selectedBackgroundGradientType) {
         case 0:
           this.carousel.background =
@@ -433,7 +448,6 @@ export default {
             " " +
             this.gradientEndPosition +
             "%)";
-          console.log(this.carousel.background);
           break;
         case 1:
           this.carousel.background =
@@ -488,8 +502,59 @@ export default {
       this.carousel.background = event;
     },
     onSelectedVideo: function(event) {
-      console.log(event);
       this.backgroundVideo = event;
+    },
+    onCheckTypeBackground: function(background) {
+      this.carousel.background = background;
+      let str = background;
+      if (str.charAt(0) === "#") {
+        this.carousel.background = background;
+      } else {
+        str = str.split("(");
+        switch (str[0]) {
+          case "linear-gradient":
+            this.onDecodeBackgroundGradient(background);
+            break;
+          case "radial-gradient":
+            this.onDecodeBackgroundGradient(background);
+            break;
+          case "url":
+            console.log(background);
+            this.backgroundImage = background;
+            break;
+        }
+      }
+    },
+    onDecodeBackgroundGradient: function(background) {
+      let str = background;
+      let firstColor,
+        secondColor,
+        gradientDirection,
+        firstColorPercent,
+        secondColorPercent;
+      str = str.split("(").toString();
+      str = str.split(")").toString();
+      str = str.split(",");
+      switch (str[0]) {
+        case "linear-gradient":
+          gradientDirection = +str[1].toString().split("deg")[0];
+          firstColor = str[2].toString().split(" ")[0];
+          firstColorPercent = str[2].toString().split(" ")[1];
+          secondColor = str[3].toString().split(" ")[0];
+          secondColorPercent = str[3].toString().split(" ")[1];
+          this.gradientDirection = gradientDirection;
+          this.gradientFirstColor = firstColor;
+          this.gradientStartPosition = firstColorPercent;
+          this.gradientSecondColor = secondColor;
+          this.gradientEndPosition = secondColorPercent;
+          break;
+        case "radial-gradient":
+          firstColor = str[1].toString().split(" ")[0];
+          secondColor = str[2].toString().split(" ")[0];
+          this.gradientFirstColor = firstColor;
+          this.gradientSecondColor = secondColor;
+          break;
+      }
     },
   },
   watch: {
@@ -502,6 +567,11 @@ export default {
       ) {
         this.carousel.background = "";
       }
+      console.log(this.tags[newValue].type !== "backgroundVideo");
+      if (this.tags[newValue].type !== "backgroundVideo")
+        this.getSelectedWidgetById.properties.backgroundVideo = null;
+
+      console.log(this.carousel);
     },
     gradientDirection: function() {
       this.gradientColor();
@@ -512,6 +582,49 @@ export default {
     gradientEndPosition: function() {
       this.gradientColor();
     },
+    backgroundImage: function(val) {
+      this.carousel.background = val;
+    },
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.style.carousel) {
+      if (this.getSelectedWidgetById.properties.selectedLinkTo)
+        this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+      if (this.getSelectedWidgetById.properties.selectedBackgroundGradientType)
+        this.selectedBackgroundGradientType = this.getSelectedWidgetById.properties.selectedBackgroundGradientType;
+      if (this.getSelectedWidgetById.properties.style.carousel.background)
+        this.onCheckTypeBackground(
+          this.getSelectedWidgetById.properties.style.carousel.background
+        );
+      if (this.getSelectedWidgetById.properties.style.carousel.backgroundSize)
+        this.selectedBackgroundImageSize = this.findIndex(
+          { list: this.backgroundImageSize, value: "type" },
+          this.getSelectedWidgetById.properties.style.carousel.backgroundSize
+        );
+      if (
+        this.getSelectedWidgetById.properties.style.carousel.backgroundPosition
+      )
+        this.selectedBackgroundImagePosition = this.findIndex(
+          { list: this.backgroundImagePosition, value: "type" },
+          this.getSelectedWidgetById.properties.style.carousel
+            .backgroundPosition
+        );
+      if (this.getSelectedWidgetById.properties.style.carousel.backgroundRepeat)
+        this.selectedBackgroundImageRepeat = this.findIndex(
+          { list: this.backgroundImageRepeat, value: "type" },
+          this.getSelectedWidgetById.properties.style.carousel.backgroundRepeat
+        );
+      if (
+        this.getSelectedWidgetById.properties.style.carousel.backgroundBlendMode
+      )
+        this.selectedBackgroundImageBlend = this.findIndex(
+          { list: this.backgroundImageBlend, value: "type" },
+          this.getSelectedWidgetById.properties.style.carousel
+            .backgroundBlendMode
+        );
+      if (this.getSelectedWidgetById.properties.backgroundVideo)
+        this.backgroundVideo = this.getSelectedWidgetById.properties.backgroundVideo;
+    }
   },
   mounted() {
     this.width = Math.round(
@@ -519,25 +632,23 @@ export default {
     );
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
-    this.carousel.backgroundSize = this.backgroundImageSize[
-      this.selectedBackgroundImageSize
-    ].type;
-    this.carousel.backgroundPosition = this.backgroundImagePosition[
-      this.selectedBackgroundImagePosition
-    ].type;
-    this.carousel.backgroundRepeat = this.backgroundImageRepeat[
-      this.selectedBackgroundImageRepeat
-    ].type;
-    this.carousel.backgroundBlendMode = this.backgroundImageBlend[
-      this.selectedBackgroundImageBlend
-    ].type;
-    this.$set(
-      this.getSelectedWidgetById.properties.style,
-      "carousel",
-      this.carousel
-    );
-    this.getSelectedWidgetById.properties.backgroundVideo = this.backgroundVideo;
+    if (this.getSelectedWidgetById.properties.style !== null) {
+      this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+      this.carousel.backgroundSize = this.backgroundImageSize[
+        this.selectedBackgroundImageSize
+      ].type;
+      this.carousel.backgroundPosition = this.backgroundImagePosition[
+        this.selectedBackgroundImagePosition
+      ].type;
+      this.carousel.backgroundRepeat = this.backgroundImageRepeat[
+        this.selectedBackgroundImageRepeat
+      ].type;
+      this.carousel.backgroundBlendMode = this.backgroundImageBlend[
+        this.selectedBackgroundImageBlend
+      ].type;
+      this.getSelectedWidgetById.properties.style.carousel = this.carousel;
+      this.getSelectedWidgetById.properties.backgroundVideo = this.backgroundVideo;
+    }
   },
 };
 </script>

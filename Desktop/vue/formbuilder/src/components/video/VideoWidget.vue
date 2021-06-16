@@ -1,12 +1,13 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <iframe
+    <iframe :src="getDefaultUrl(item)" frameborder="0" allowfullscreen></iframe>
+    <!-- <iframe
       :src="getDefaultUrl(item) + item.properties.autoPlay"
       allow="autoplay"
       frameborder="0"
       allowfullscreen
-    ></iframe>
+    ></iframe> -->
   </div>
 </template>
 
@@ -35,9 +36,22 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
-    getDefaultUrl(item) {
-      if (item.properties.url) return item.properties.url + "?autoplay=";
-      return "https://www.youtube.com/embed/XgUOSS30OQk?autoplay=";
+    getDefaultUrl: function(item) {
+      // return item.properties.url + "?autoplay="
+      if (item.properties.url) {
+        const videoId = this.getId(item.properties.url);
+        return this.convertToEmbedded(videoId);
+      }
+      return "https://www.youtube.com/embed/tbnzAVRZ9Xc";
+    },
+    convertToEmbedded: function(videoId) {
+      const iframeMarkup = "https://www.youtube.com/embed/" + videoId;
+      return iframeMarkup;
+    },
+    getId: function(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      return match && match[2].length === 11 ? match[2] : null;
     },
   },
   mounted() {},

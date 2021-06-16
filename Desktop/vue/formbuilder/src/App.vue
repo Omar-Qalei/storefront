@@ -5,18 +5,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
 export default {
   name: "App",
-  methods: {
-    ...mapActions({
-      fetchPages: "fetchPages",
-    }),
-  },
-  created() {
-    this.fetchPages();
-  },
 };
 </script>
 

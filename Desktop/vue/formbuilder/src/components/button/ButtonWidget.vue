@@ -7,7 +7,7 @@
       draggable="true"
       unselectable="on"
       :style="[
-        item.properties.style ? item.properties.style : '',
+        item.properties.style ? item.properties.style : style,
         onHover(item.properties.elementHover),
       ]"
       :id="item.i + 'button'"
@@ -86,6 +86,7 @@ export default {
     return {
       hover: false,
       selectedLinkTo: null,
+      style: {},
     };
   },
   props: {
@@ -125,6 +126,18 @@ export default {
         window.location.href = "mailto:" + email;
       }
     },
+  },
+  created() {
+    console.log(this.item.properties);
+    if (this.item.properties.style === null) {
+      this.style = {
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "30px",
+        color: "#FFFFFFFF",
+        backgroundColor: "#4E00BBFF",
+      };
+    }
   },
   updated() {
     if (this.getSelectedWidgetById.properties?.selectedLinkTo) {

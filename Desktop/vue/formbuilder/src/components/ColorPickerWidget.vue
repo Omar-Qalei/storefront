@@ -8,7 +8,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-avatar
-        :color="currentColor ? currentColor.hexa : color"
+        :color="currentColor ? currentColor : color"
         v-bind="attrs"
         v-on="on"
         size="25"
@@ -24,6 +24,7 @@
           dot-size="10"
           mode="hexa"
           swatches-max-height="200"
+          value="hexa"
         ></v-color-picker>
       </v-card-text>
     </v-card>
@@ -47,17 +48,17 @@ export default {
     currentColor: function(value) {
       switch (this.type) {
         case "element":
-          this.$emit("colorElement", value.hexa);
+          this.$emit("colorElement", value);
           break;
 
         case "hover":
-          this.$emit("colorElementHover", value.hexa);
+          this.$emit("colorElementHover", value);
           break;
       }
     },
   },
   created() {
-    console.log(this.currentColor);
+    if (this.color) this.currentColor = this.color;
   },
 };
 </script>

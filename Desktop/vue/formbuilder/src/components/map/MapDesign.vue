@@ -186,7 +186,6 @@ export default {
         { id: 0, title: "Map", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {

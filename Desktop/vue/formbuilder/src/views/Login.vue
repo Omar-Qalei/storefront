@@ -118,29 +118,42 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { LoginService } from "../services/login/login";
+
 export default {
   name: "Login",
-  data: () => ({
-    valid: true,
-    password: "",
-    show1: false,
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      (v) =>
-        (v && v.length <= 10) || "Password must be less than 10 characters",
-    ],
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
-    checkbox: false,
-  }),
+  data() {
+    return {
+      valid: true,
+      password: "123123",
+      show1: false,
+      passwordRules: [
+        (v) => !!v || "Password is required",
+        (v) =>
+          (v && v.length <= 10) || "Password must be less than 10 characters",
+      ],
+      email: "ashraf@mail.com",
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
+      checkbox: true,
+    };
+  },
   methods: {
+    ...mapActions(["onCheckUser"]),
     submit() {
       this.$refs.form.validate();
       if (this.$refs.form.validate(true)) {
-        this.$router.push({ path: "/dashboards/analytical" });
+        this.$router.push({ path: "/" });
+        const data = {
+          email: this.email,
+          password: this.password,
+        };
+        LoginService.login(data).then((result) => {
+          this.onCheckUser(result);
+        });
       }
     },
   },

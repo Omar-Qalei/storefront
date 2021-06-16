@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "form",
-        width: 4,
+        width: 3,
         height: 12,
       },
     };

@@ -13,9 +13,15 @@
       <a
         class="link-icon"
         @click="
-          onResizeSectionScreen({ width: '320px', cols: 1, responsive: true });
+          onResizeSectionScreen({
+            width: '320px',
+            cols: 1,
+            responsive: true,
+            screen: 'mobile',
+          });
           onRearrangementResources();
           onSortSectionsLayout();
+          getSitePageResources();
         "
       >
         <span class="mdi mdi-cellphone-cog"></span>
@@ -23,7 +29,13 @@
       <a
         class="link-icon"
         @click="
-          onResizeSectionScreen({ width: '100%', cols: 12, responsive: false })
+          getSitePageResources();
+          onResizeSectionScreen({
+            width: '100%',
+            cols: 12,
+            responsive: false,
+            screen: 'web',
+          });
         "
       >
         <span class="mdi mdi-monitor"></span>
@@ -53,11 +65,15 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { SiteService } from "../../services/site/site";
+
 export default {
   name: "Navbar",
   data: function() {
     return {
       title: null,
+      siteId: null,
+      pageId: null,
     };
   },
   methods: {
@@ -67,21 +83,47 @@ export default {
       "onResizeSectionScreen",
       "onRearrangementResources",
       "onSortSectionsLayout",
+      "fetchSections",
     ]),
+    getQueryStringParams: function() {
+      if (this.$route.query.siteId) {
+        this.siteId = +this.$route.query.siteId;
+      }
+    },
+    getSitePageResources: function() {
+      SiteService.getSitePageResources(this.siteId, this.pageId)
+        .then((result) => {
+          const data = result.data.data;
+          if (data && data.web && this.getScreenSize.screen === "web")
+            this.fetchSections(JSON.parse(data.web));
+
+          if (data && data.mobile && this.getScreenSize.screen === "mobile")
+            this.fetchSections(JSON.parse(data.mobile));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   computed: {
-    ...mapGetters(["getSelectedPage", "getPages"]),
+    ...mapGetters(["getSelectedPage", "getPages", "getScreenSize"]),
   },
   watch: {
-    getSelectedPage(value) {
-      this.title = this.getPages.find((item) => item.id === value).title;
+    getSelectedPage: function(pageId) {
+      this.pageId = pageId;
+
+      if (this.getPages.length > 0)
+        this.title = this.getPages.find((item) => item.id === pageId).name;
     },
-    getPages(value) {
-      console.log(value);
+    getPages: function(pages) {
+      if (this.getPages.length > 0) {
+        this.pageId = pages[0].id;
+        this.title = this.getPages.find((item) => item.id === pages[0].id).name;
+      }
     },
   },
-  mounted() {
-    this.title = this.getPages.find((item) => item.id === 1).title;
+  created() {
+    this.getQueryStringParams();
   },
 };
 </script>

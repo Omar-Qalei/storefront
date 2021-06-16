@@ -25,11 +25,12 @@ export default {
   name: "MapContent",
   data() {
     return {
-      center: { lat: 45.508, lng: -73.587 },
+      center: { lat: 51.5167849, lng: -0.1340803 },
       currentPlace: null,
       markers: [],
       places: [],
       value: null,
+      address: "1 Rathbone Square, London W1T 1FB, UK",
     };
   },
   computed: {
@@ -37,7 +38,7 @@ export default {
     selectedValue: function() {
       if (this.value && this.value !== undefined)
         return this.value.formatted_address;
-      return null;
+      return this.address;
     },
   },
   methods: {
@@ -60,12 +61,18 @@ export default {
   mounted() {
     this.geolocate();
   },
+  created() {
+    if (this.getSelectedWidgetById.properties.address)
+      this.address = this.getSelectedWidgetById.properties.address;
+  },
   updated() {
     if (this.value.geometry) {
       const marker = {
         lat: this.value.geometry.location.lat(),
         lng: this.value.geometry.location.lng(),
       };
+      console.log(marker);
+      this.getSelectedWidgetById.properties.address = this.value.formatted_address;
       this.getSelectedWidgetById.properties.map = marker;
     }
   },

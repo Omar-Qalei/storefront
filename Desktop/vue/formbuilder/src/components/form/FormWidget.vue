@@ -1,5 +1,5 @@
 <template>
-  <div class="widget">
+  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <form :style="formStyle" id="form">
       <h2
@@ -81,6 +81,11 @@ export default {
   },
   data() {
     return {
+      hover: false,
+      defaultElementHover: {
+        color: "#FFFFFFFF",
+        backgroundColor: "#A05CFFFF",
+      },
       name: "",
       email: "",
       select: null,
@@ -112,6 +117,25 @@ export default {
           type: "phone",
         },
       ],
+      form: {
+        textAlign: "center",
+        border: "solid",
+        borderWidth: "10px",
+        borderColor: "transparent",
+        backgroundColor: "#EBEBEBFF",
+        borderRadius: "21px",
+      },
+      field: {
+        fontSize: "16px",
+        color: "#000000de",
+        backgroundColor: "#FFFFFFFF",
+        borderRadius: "40px",
+      },
+      button: {
+        color: "#FFFFFFFF",
+        backgroundColor: "#4E00BBFF",
+        borderRadius: "16px",
+      },
     };
   },
   computed: {
@@ -148,27 +172,27 @@ export default {
         console.log(this.item.properties.style.form);
         return this.item.properties.style.form
           ? this.item.properties.style.form
-          : "";
+          : this.form;
       } else {
-        return "";
+        return this.form;
       }
     },
     fieldStyle: function() {
       if (this.item.properties.style) {
         return this.item.properties.style.field
           ? this.item.properties.style.field
-          : "";
+          : this.field;
       } else {
-        return "";
+        return this.field;
       }
     },
     buttonStyle: function() {
       if (this.item.properties.style) {
         return this.item.properties.style.button
           ? this.item.properties.style.button
-          : "";
+          : this.button;
       } else {
-        return "";
+        return this.button;
       }
     },
   },
@@ -195,6 +219,20 @@ export default {
       // this.item.y = out.height;
       // return out.height;
     },
+    onHover: function(elementHover) {
+      if (this.hover) {
+        if (elementHover !== undefined) {
+          return elementHover;
+        } else {
+          return {};
+        }
+      } else {
+        return "";
+      }
+    },
+  },
+  created() {
+    this.item.properties.hideFormName = true;
   },
   updated() {
     this.calcHeight();

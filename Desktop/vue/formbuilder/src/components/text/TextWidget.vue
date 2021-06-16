@@ -3,19 +3,19 @@
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
     <div
       class="d-flex"
-      :style="[item.properties.style, onHover(item.properties.elementHover)]"
+      :style="[
+        item.properties.style ? item.properties.style : style,
+        onHover(item.properties.elementHover),
+      ]"
     >
-      <v-flex
-        :style="[item.properties.style, onHover(item.properties.elementHover)]"
-      >
-        <textarea
-          class="label"
-          v-model="item.properties.name"
-          contenteditable="true"
-          :id="item.i"
-          @keydown="onTextHeight"
-        ></textarea>
-        <!-- <v-textarea
+      <textarea
+        class="label"
+        v-model="item.properties.text"
+        contenteditable="true"
+        :id="item.i"
+        @keydown="onTextHeight"
+      ></textarea>
+      <!-- <v-textarea
           @keydown="calcHeight"
           @keydown.enter="calcHeight('enter')"
           v-model="item.properties.name"
@@ -27,7 +27,6 @@
           hide-details
           rows="1"
         ></v-textarea> -->
-      </v-flex>
     </div>
   </div>
 </template>
@@ -43,6 +42,7 @@ export default {
   data() {
     return {
       hover: false,
+      style: {},
     };
   },
   props: {
@@ -95,6 +95,13 @@ export default {
       // }
     },
   },
+  created() {
+    if (this.item.properties.style === null) {
+      this.style = {
+        fontSize: "56px",
+      };
+    }
+  },
   updated() {
     this.onTextHeight();
     // this.calcHeight();
@@ -108,6 +115,7 @@ export default {
   border: none;
   outline: none;
   width: 100%;
+  background: transparent !important;
 }
 .widget,
 .d-flex {

@@ -27,7 +27,7 @@ export default {
       element: {
         type: "text",
         width: 3,
-        height: 3,
+        height: 8,
       },
     };
   },

@@ -39,9 +39,9 @@
           <v-col cols="6">
             <Map />
           </v-col>
-          <v-col cols="6">
+          <!-- <v-col cols="6">
             <Audio />
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-navigation-drawer>
     </div>
@@ -50,15 +50,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Button from "./components/Button";
-import Carousel from "./components/Carousel";
-import TextView from "./components/TextView";
-import ImageView from "./components/ImageView";
-import Form from "./components/Form";
-import Video from "./components/Video";
-import Menu from "./components/Menu";
-import Map from "./components/Map";
-import Audio from "./components/Audio";
+import Button from "../components/Button";
+import Carousel from "../components/Carousel";
+import TextView from "../components/TextView";
+import ImageView from "../components/ImageView";
+import Form from "../components/Form";
+import Video from "../components/Video";
+import Menu from "../components/Menu";
+import Map from "../components/Map";
+// import Audio from "../components/Audio";
 
 export default {
   name: "Sidebar",
@@ -71,7 +71,7 @@ export default {
     Video,
     Menu,
     Map,
-    Audio,
+    // Audio,
   },
   data: function() {
     return {

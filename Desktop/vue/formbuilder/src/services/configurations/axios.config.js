@@ -1,16 +1,11 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-    baseURL: '',
+    baseURL: 'https://wimmly.com/api/v1/',
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
     },
 });
 
-httpClient.interceptors.request.use(req => {
-    req.headers.authorization = "Bearer" + "token"
-    return req;
-});
-
 export default httpClient;
-

@@ -24,15 +24,6 @@
           <v-row v-if="selectedLinkTo === 0">
             <v-col cols="12">
               <v-flex id="colorPicker">
-                <!-- <v-color-picker
-                  dot-size="10"
-                  mode="hexa"
-                  flat
-                  :swatches="swatches"
-                  show-swatches
-                  swatches-max-height="200"
-                  :width.sync="width"
-                ></v-color-picker> -->
                 <ColorPickerExpandWidget
                   v-if="width"
                   :width="width"
@@ -42,18 +33,6 @@
                 />
               </v-flex>
             </v-col>
-            <!-- <v-col cols="9">
-              <h2 class="body-1 font-weight-medium">
-                Background Color
-              </h2>
-            </v-col>
-            <v-col cols="3">
-              <ColorPickerWidget
-                @colorElement="section.background = $event"
-                :type="elementStatus"
-                :color="section.background"
-              />
-            </v-col> -->
           </v-row>
           <!-- Background color -->
 
@@ -74,14 +53,6 @@
               </v-btn>
             </v-col>
             <v-col cols="6">
-              <!-- <ColorPickerWidget
-                @colorElement="
-                  gradientFirstColor = $event;
-                  gradientColor();
-                "
-                :type="elementStatus"
-                :color="section.background"
-              /> -->
               <v-btn
                 class="text-capitalize"
                 text
@@ -114,34 +85,6 @@
                 </v-card>
               </v-expand-transition>
             </v-col>
-            <v-col cols="6">
-              <!-- <ColorPickerWidget
-                @colorElement="
-                  gradientFirstColor = $event;
-                  gradientColor();
-                "
-                :type="elementStatus"
-                :color="section.background"
-              /> -->
-              <!-- <v-btn class="text-capitalize" text>
-                <v-avatar class="mr-2" size="15" :color="'blue'" />
-                Select Color
-              </v-btn> -->
-            </v-col>
-            <v-col cols="6">
-              <!-- <v-btn class="text-capitalize" text>
-                <v-avatar class="mr-2" size="15" :color="'blue'" />
-                Select Color
-              </v-btn> -->
-              <!-- <ColorPickerWidget
-                @colorElement="
-                  gradientSecondColor = $event;
-                  gradientColor();
-                "
-                :type="elementStatus"
-                :color="section.background"
-              /> -->
-            </v-col>
             <v-col cols="12">
               <v-select
                 :items="backgroundGradientTypes"
@@ -159,72 +102,74 @@
                 </template>
               </v-select>
             </v-col>
-            <v-col cols="12">
-              <h2 class="body-1 font-weight-medium">
-                Gradient Direction
-              </h2>
-            </v-col>
-            <v-col cols="9" align-self="center">
-              <input
-                v-model="gradientDirection"
-                type="range"
-                min="0"
-                max="360"
-              />
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                outlined
-                v-model="gradientDirection"
-                hide-details
-                dense
-                label="PX"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <h2 class="body-1 font-weight-medium">
-                Start Position
-              </h2>
-            </v-col>
-            <v-col cols="9" align-self="center">
-              <input
-                v-model="gradientStartPosition"
-                type="range"
-                min="0"
-                max="100"
-              />
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                outlined
-                v-model="gradientStartPosition"
-                hide-details
-                dense
-                label="%"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <h2 class="body-1 font-weight-medium">
-                End Position
-              </h2>
-            </v-col>
-            <v-col cols="9" align-self="center">
-              <input
-                v-model="gradientEndPosition"
-                type="range"
-                min="0"
-                max="100"
-              />
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                outlined
-                v-model="gradientEndPosition"
-                hide-details
-                dense
-                label="%"
-              ></v-text-field>
-            </v-col>
+            <template v-if="selectedBackgroundGradientType === 0">
+              <v-col cols="12">
+                <h2 class="body-1 font-weight-medium">
+                  Gradient Direction
+                </h2>
+              </v-col>
+              <v-col cols="9" align-self="center">
+                <input
+                  v-model="gradientDirection"
+                  type="range"
+                  min="0"
+                  max="360"
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  outlined
+                  v-model="gradientDirection"
+                  hide-details
+                  dense
+                  label="PX"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <h2 class="body-1 font-weight-medium">
+                  Start Position
+                </h2>
+              </v-col>
+              <v-col cols="9" align-self="center">
+                <input
+                  v-model="gradientStartPosition"
+                  type="range"
+                  min="0"
+                  max="100"
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  outlined
+                  v-model="gradientStartPosition"
+                  hide-details
+                  dense
+                  label="%"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <h2 class="body-1 font-weight-medium">
+                  End Position
+                </h2>
+              </v-col>
+              <v-col cols="9" align-self="center">
+                <input
+                  v-model="gradientEndPosition"
+                  type="range"
+                  min="0"
+                  max="100"
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  outlined
+                  v-model="gradientEndPosition"
+                  hide-details
+                  dense
+                  label="%"
+                ></v-text-field>
+              </v-col>
+            </template>
           </v-row>
           <!-- Background gradient color -->
 
@@ -232,7 +177,7 @@
           <v-row v-if="selectedLinkTo === 2">
             <v-col
               cols="12"
-              class="backgroundSection"
+              class="backgroundElement"
               :style="{
                 background: section.background,
                 backgroundSize: section.backgroundSize,
@@ -240,14 +185,13 @@
                 backgroundRepeat: section.backgroundRepeat,
                 backgroundBlendMode: section.backgroundBlendMode,
               }"
+              @click="onShowChooseFilesDialog(true)"
             >
-              <label class="labelFile" v-if="!section.background">
-                <input
-                  type="file"
-                  class="d-none"
-                  @change="backgroundImage($event)"
-                />
-                <h2 class="body-1 font-weight-medium">
+              <label class="labelFile">
+                <h2
+                  class="body-1 font-weight-medium"
+                  v-if="!section.background"
+                >
                   Add Background Image
                 </h2>
               </label>
@@ -311,7 +255,7 @@
           <v-row v-if="selectedLinkTo === 3">
             <v-col
               cols="12"
-              class="backgroundSection"
+              class="backgroundElement"
               :style="{
                 background: section.background,
               }"
@@ -340,20 +284,32 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <!-- Choose Files -->
+    <ChooseFilesWidget
+      @onSelectedImage="onSelectedImage($event)"
+      @onSelectedVideo="onSelectedVideo($event)"
+    />
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import ColorPickerExpandWidget from "../ColorPickerExpandWidget";
+import ChooseFilesWidget from "../options/ChooseFilesWidget";
+import StylesTransform from "../../mixins/styles";
 
 export default {
   name: "SectionContent",
+  mixins: [StylesTransform],
   components: {
     ColorPickerExpandWidget,
+    ChooseFilesWidget,
   },
   data() {
     return {
+      // We will be remove it
+      afterCreated: false,
       panels: 0,
       elementStatus: "element",
       gradientDirection: 45,
@@ -376,8 +332,8 @@ export default {
       tags: [
         { id: 0, title: "Color" },
         { id: 1, title: "Gradient" },
-        { id: 2, title: "Image" },
-        { id: 3, title: "Video" },
+        { id: 2, title: "Image", type: "backgroundImage" },
+        { id: 3, title: "Video", type: "backgroundVideo" },
       ],
       backgroundGradientTypes: [
         { id: 0, title: "Linear Gradient", type: "linearGradient" },
@@ -426,10 +382,11 @@ export default {
         { id: 15, title: "Luminosity", type: "luminosity" },
       ],
       backgroundVideo: null,
+      backgroundImage: null,
       section: {
         textAlign: "left",
         // border: "solid",
-        background: "transparent",
+        background: null,
         borderRadius: 0,
         // borderWidth: 0,
         // borderColor: "transparent",
@@ -445,6 +402,7 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
+    ...mapActions(["onShowChooseFilesDialog", "onTypeChooseFileDialog"]),
     gradientColor: function() {
       switch (this.selectedBackgroundGradientType) {
         case 0:
@@ -460,7 +418,6 @@ export default {
             " " +
             this.gradientEndPosition +
             "%)";
-          console.log(this.section.background);
           break;
         case 1:
           this.section.background =
@@ -472,14 +429,8 @@ export default {
           break;
       }
     },
-    backgroundImage: function(event) {
-      console.log(event);
-      this.section.background =
-        "url(https://cdn.vuetifyjs.com/images/cards/server-room.jpg)";
-    },
     uploadBackgroundVideo: function(event) {
       console.log(event);
-      this.backgroundVideo = "https://www.w3schools.com/howto/rain.mp4";
     },
     onShowPicker: function(result) {
       this.selectedTypeColor = result;
@@ -517,16 +468,77 @@ export default {
           break;
       }
     },
+    onSelectedImage: function(event) {
+      this.section.background = event;
+    },
+    onSelectedVideo: function(event) {
+      this.backgroundVideo = event;
+    },
+    onCheckTypeBackground: function(background) {
+      this.section.background = background;
+      let str = background;
+      if (str.charAt(0) === "#") {
+        this.section.background = background;
+      } else {
+        str = str.split("(");
+        switch (str[0]) {
+          case "linear-gradient":
+            this.onDecodeBackgroundGradient(background);
+            break;
+          case "radial-gradient":
+            this.onDecodeBackgroundGradient(background);
+            break;
+          case "url":
+            this.backgroundImage = background;
+            break;
+        }
+      }
+    },
+    onDecodeBackgroundGradient: function(background) {
+      let str = background;
+      let firstColor,
+        secondColor,
+        gradientDirection,
+        firstColorPercent,
+        secondColorPercent;
+      str = str.split("(").toString();
+      str = str.split(")").toString();
+      str = str.split(",");
+      switch (str[0]) {
+        case "linear-gradient":
+          gradientDirection = +str[1].toString().split("deg")[0];
+          firstColor = str[2].toString().split(" ")[0];
+          firstColorPercent = str[2].toString().split(" ")[1];
+          secondColor = str[3].toString().split(" ")[0];
+          secondColorPercent = str[3].toString().split(" ")[1];
+          this.gradientDirection = gradientDirection;
+          this.gradientFirstColor = firstColor;
+          this.gradientStartPosition = firstColorPercent;
+          this.gradientSecondColor = secondColor;
+          this.gradientEndPosition = secondColorPercent;
+          break;
+        case "radial-gradient":
+          firstColor = str[1].toString().split(" ")[0];
+          secondColor = str[2].toString().split(" ")[0];
+          this.gradientFirstColor = firstColor;
+          this.gradientSecondColor = secondColor;
+          break;
+      }
+    },
   },
   watch: {
-    selectedLinkTo: function(oldValue, newValue) {
+    selectedLinkTo: function(newValue, oldValue) {
+      this.onTypeChooseFileDialog(this.tags[newValue].type);
       if (
-        oldValue !== undefined &&
-        oldValue !== newValue &&
-        newValue !== undefined
+        this.afterCreated &&
+        newValue !== undefined &&
+        newValue !== oldValue &&
+        oldValue !== undefined
       ) {
         this.section.background = "";
       }
+      if (this.tags[newValue].type !== "backgroundVideo")
+        this.getSelectedWidgetById.properties.backgroundVideo = null;
     },
     gradientDirection: function() {
       this.gradientColor();
@@ -537,14 +549,65 @@ export default {
     gradientEndPosition: function() {
       this.gradientColor();
     },
+    backgroundImage: function(val) {
+      this.section.background = val;
+    },
+  },
+  created() {
+    this.afterCreated = false;
+    if (this.getSelectedWidgetById.properties.style) {
+      if (this.getSelectedWidgetById.properties.style.background)
+        this.onCheckTypeBackground(
+          this.getSelectedWidgetById.properties.style.background
+        );
+      if (
+        this.getSelectedWidgetById.properties.style
+          .selectedBackgroundGradientType
+      )
+        this.selectedBackgroundGradientType = this.findIndex(
+          { list: this.backgroundGradientTypes, value: "type" },
+          this.getSelectedWidgetById.properties.style
+            .selectedBackgroundGradientType
+        );
+      if (this.getSelectedWidgetById.properties.style.backgroundSize)
+        this.selectedBackgroundImageSize = this.findIndex(
+          { list: this.backgroundImageSize, value: "type" },
+          this.getSelectedWidgetById.properties.style.backgroundSize
+        );
+      if (this.getSelectedWidgetById.properties.style.backgroundPosition)
+        this.selectedBackgroundImagePosition = this.findIndex(
+          { list: this.backgroundImagePosition, value: "type" },
+          this.getSelectedWidgetById.properties.style.backgroundPosition
+        );
+      if (this.getSelectedWidgetById.properties.style.backgroundRepeat)
+        this.selectedBackgroundImageRepeat = this.findIndex(
+          { list: this.backgroundImageRepeat, value: "type" },
+          this.getSelectedWidgetById.properties.style.backgroundRepeat
+        );
+      if (this.getSelectedWidgetById.properties.style.backgroundBlendMode)
+        this.selectedBackgroundImageBlend = this.findIndex(
+          { list: this.backgroundImageBlend, value: "type" },
+          this.getSelectedWidgetById.properties.style.backgroundBlendMode
+        );
+    }
+    if (this.getSelectedWidgetById.properties.backgroundVideo)
+      this.backgroundVideo = this.getSelectedWidgetById.properties.backgroundVideo;
   },
   mounted() {
     this.width = Math.round(
       document.getElementById("colorPicker").getBoundingClientRect().width
     );
+    if (this.getSelectedWidgetById.properties.selectedLinkTo)
+      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+  },
+  beforeUpdate() {
+    this.afterCreated = true;
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.section.selectedBackgroundGradientType = this.backgroundGradientTypes[
+      this.selectedBackgroundGradientType
+    ].type;
     this.section.backgroundSize = this.backgroundImageSize[
       this.selectedBackgroundImageSize
     ].type;
@@ -564,7 +627,7 @@ export default {
 </script>
 
 <style scoped>
-.backgroundSection {
+.backgroundElement {
   height: 150px;
   border-radius: 4px;
   border: 1px solid black;

@@ -44,11 +44,10 @@ export default {
         { id: 2, title: "Phone" },
         { id: 3, title: "Email" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages"]),
   },
   methods: {
     uploadAudio: function(event) {

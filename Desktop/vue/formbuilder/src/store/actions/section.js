@@ -16,7 +16,7 @@ export const fetchSections = ({ commit, state }, payload) => {
             backgroundVideo: null
         },
     }
-    if (payload === undefined) {
+    if (!payload.length) {
         commit('setSections', [k])
     } else {
         commit('setSections', payload)
@@ -71,6 +71,7 @@ export const onDrag = ({ commit, state }) => {
             elementHover: null,
             fields: [],
             map: null,
+            text: 'Write your text here'
         }
     }
     commit('setDrag', k);
@@ -86,6 +87,7 @@ export const onDragend = ({ commit, state }) => {
             elementHover: null,
             fields: [],
             map: null,
+            text: 'Write your text here'
         }
     }
     commit('setDragEnd', k)

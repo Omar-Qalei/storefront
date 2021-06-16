@@ -12,16 +12,11 @@
               </h2>
             </v-col>
             <v-col cols="6">
-              <v-btn-toggle
-                return-object
-                v-model="form.textAlign"
-                shaped
-                mandatory
-              >
+              <v-btn-toggle v-model="form.textAlign" shaped mandatory>
                 <v-btn
                   v-for="text in textAlignments"
                   :key="text.id"
-                  :value="text.title"
+                  :value="text.id"
                 >
                   <v-icon>{{ text.icon }}</v-icon>
                 </v-btn>
@@ -281,41 +276,41 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ColorPickerWidget from "../ColorPickerWidget";
+import StylesTransform from "../../mixins/styles";
+
 export default {
   name: "FormDesign",
+  mixins: [StylesTransform],
   components: {
     ColorPickerWidget,
   },
   data() {
     return {
       panels: 0,
-      text: null,
       borderRadiusTopLeft: 0,
       borderRadiusTopRight: 0,
       borderRadiusBottomLeft: 0,
       borderRadiusBottomRight: 0,
-      selectedUrl: null,
-      statusNewTab: false,
       form: {
-        textAlign: "left",
+        textAlign: 1,
         border: "solid",
-        backgroundColor: "transparent",
-        borderRadius: 0,
-        borderWidth: 0,
+        backgroundColor: "#EBEBEBFF",
+        borderRadius: 21,
+        borderWidth: 10,
         borderColor: "transparent",
       },
       field: {
         fontSize: 16,
         color: "#000000de",
-        backgroundColor: "transparent",
-        borderRadius: 4,
+        backgroundColor: "#FFFFFFFF",
+        borderRadius: 40,
       },
       button: {
-        textColor: "#000000de",
-        backgroundColor: "#f5f5f5",
-        textColorHover: null,
-        backgroundColorHover: null,
-        borderRadius: 4,
+        textColor: "#FFFFFFFF",
+        backgroundColor: "#4E00BBFF",
+        textColorHover: "#FFFFFFFF",
+        backgroundColorHover: "#A05CFFFF",
+        borderRadius: 16,
         selectedTextHorizontal: 1,
         selectedTextVertical: 1,
       },
@@ -339,7 +334,6 @@ export default {
         { id: 0, title: "Button", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
@@ -350,13 +344,62 @@ export default {
   },
   created() {
     if (this.getSelectedWidgetById.properties.style === null) {
-      this.getSelectedWidgetById.properties.style = {};
+      this.getSelectedWidgetById.properties.style = {
+        form: this.form,
+        field: this.field,
+        button: this.button,
+      };
+      this.$set(this.getSelectedWidgetById.properties.style, "form", null);
+    } else {
+      if (this.getSelectedWidgetById.properties.style.form) {
+        this.form.textAlign = this.findIndex(
+          { list: this.textAlignments, value: "title" },
+          this.getSelectedWidgetById.properties.style.form.textAlign
+        );
+        this.form.borderRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.form.borderRadius
+        );
+        this.form.borderWidth = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.form.borderWidth
+        );
+        this.form.borderColor = this.getSelectedWidgetById.properties.style.form.borderColor;
+        this.form.backgroundColor = this.getSelectedWidgetById.properties.style.form.backgroundColor;
+      }
+      // Fields
+      if (this.getSelectedWidgetById.properties.style.field) {
+        this.field.fontSize = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.field.fontSize
+        );
+        this.field.borderRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.field.borderRadius
+        );
+        this.field.color = this.getSelectedWidgetById.properties.style.field.color;
+        this.field.backgroundColor = this.getSelectedWidgetById.properties.style.field.backgroundColor;
+      }
+      // Button
+      if (this.getSelectedWidgetById.properties.style.button) {
+        this.button.selectedTextHorizontal = this.findIndex(
+          { list: this.textHorizontal, value: "title" },
+          this.getSelectedWidgetById.properties.style.button.justifyContent
+        );
+        this.button.selectedTextVertical = this.findIndex(
+          { list: this.textVertical, value: "title" },
+          this.getSelectedWidgetById.properties.style.button.alignItems
+        );
+        this.button.borderRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.button.borderRadius
+        );
+        this.button.textColor = this.getSelectedWidgetById.properties.style.button.color;
+        this.button.backgroundColor = this.getSelectedWidgetById.properties.style.button.backgroundColor;
+        this.button.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
+        this.button.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
+      }
     }
   },
   updated() {
     this.getSelectedWidgetById.properties.style = {
       form: {
-        textAlign: this.form.textAlign,
+        textAlign: this.textHorizontal[this.form.textAlign].title,
         border: this.form.border,
         backgroundColor: this.form.backgroundColor,
         borderRadius: this.form.borderRadius + "px",

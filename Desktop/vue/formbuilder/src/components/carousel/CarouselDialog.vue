@@ -60,7 +60,11 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   created() {
-    this.$set(this.getSelectedWidgetById.properties, "style", {});
+    if (this.getSelectedWidgetById.properties.style === null) {
+      this.getSelectedWidgetById.properties.style = {};
+      this.$set(this.getSelectedWidgetById.properties.style, "carousel", {});
+      this.$set(this.getSelectedWidgetById.properties.style, "elements", {});
+    }
   },
 };
 </script>

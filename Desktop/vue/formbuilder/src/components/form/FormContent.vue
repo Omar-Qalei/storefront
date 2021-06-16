@@ -12,7 +12,7 @@
         ></v-text-field>
         <v-checkbox
           hide-details
-          v-model="getSelectedWidgetById.properties.hideFormName"
+          v-model="hideFormName"
           label="Hide Form Name"
         ></v-checkbox>
       </v-col>
@@ -47,7 +47,9 @@
         </h2>
         <v-select
           v-if="selectedLinkTo === 0"
-          :items="pages"
+          :items="getPages"
+          item-text="name"
+          return-object
           v-model="getSelectedWidgetById.properties.page"
           outlined
         ></v-select>
@@ -128,6 +130,7 @@
                       @input="handleInputLabel($event, index)"
                       @mousedown="inputIndex = index"
                       :key="index"
+                      :value="item.label"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -141,14 +144,16 @@
                       :placeholder="'Enter your ' + item.type"
                       hide-details
                       :key="index"
+                      :value="item.placerholder"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-switch
-                      @input="handleInputIsRequired($event, index)"
+                      @change="handleInputIsRequired($event, index)"
                       @mousedown="inputIndex = index"
                       label="Field is required"
                       hide-details
+                      v-model="item.isRequired"
                     ></v-switch>
                   </v-col>
                   <v-col cols="12">
@@ -180,6 +185,7 @@ export default {
       selectedLinkTo: 0,
       selectedPage: null,
       selectedUrl: null,
+      hideFormName: true,
       statusNewTab: false,
       inputIndex: null,
       height: 0,
@@ -188,7 +194,6 @@ export default {
         { id: 1, title: "URL" },
         { id: 2, title: "Show Message" },
       ],
-      pages: ["Home", "About", "Services"],
       selectedField: {},
       fields: [
         {
@@ -236,7 +241,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages"]),
   },
   methods: {
     ...mapActions([
@@ -255,11 +260,8 @@ export default {
       }
     },
     handleInputIsRequired: function(result, index) {
-      console.log(result);
       if (this.fieldsList[index].id === this.inputIndex) {
-        this.fieldsList[this.inputIndex].isRequired = !this.fieldsList[
-          this.inputIndex
-        ].isRequired;
+        this.fieldsList[this.inputIndex].isRequired = result;
       }
     },
     onAddField: function() {
@@ -297,10 +299,17 @@ export default {
     },
   },
   created() {
-    this.getSelectedWidgetById.properties.fields = [];
+    this.getSelectedWidgetById.properties.hideFormName = this.hideFormName;
+    if (this.getSelectedWidgetById.properties.selectedLinkTo)
+      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+    if (this.getSelectedWidgetById.properties.hideFormName)
+      this.hideFormName = this.getSelectedWidgetById.properties.hideFormName;
+    if (this.getSelectedWidgetById.properties.fields)
+      this.fieldsList = this.getSelectedWidgetById.properties.fields;
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.getSelectedWidgetById.properties.hideFormName = this.hideFormName;
     this.getSelectedWidgetById.properties.fields = this.fieldsList;
   },
 };

@@ -1,45 +1,37 @@
 <template>
   <v-flex class="home page">
-    <Navbar />
     <Sidebar />
-    <Pages />
     <div class="d-flex h-100">
       <v-main>
-        <GridView></GridView>
-        <SettingsDialog from="modal" />
+        <Navbar class="navbar" />
+        <!-- <Contacts /> -->
+        <Sites />
       </v-main>
     </div>
   </v-flex>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import GridView from "./GridView";
-import SettingsDialog from "../components/settings/SettingsDialog";
-import Navbar from "../layouts/Navbar";
-import Sidebar from "../layouts/Sidebar";
-import Pages from "../layouts/Pages";
+// import { mapActions } from "vuex";
+import Sites from "./sites/Sites";
+// import Contacts from "./contacts/Contacts.vue";
+import Navbar from "../layouts/home/Navbar";
+import Sidebar from "../layouts/home/Sidebar";
 
 export default {
   name: "Home",
-  components: { GridView, SettingsDialog, Navbar, Sidebar, Pages },
+  components: { Sidebar, Navbar, Sites },
   data() {
-    return {
-      dialog: true,
-    };
-  },
-  methods: {
-    ...mapActions({
-      fetchSections: "fetchSections",
-    }),
-  },
-  created() {
-    this.fetchSections();
+    return {};
   },
 };
 </script>
 <style scoped>
 .page {
   padding: 0 45px 45px;
+  background-color: #f5fafe;
+}
+.navbar {
+  top: -36px;
 }
 </style>

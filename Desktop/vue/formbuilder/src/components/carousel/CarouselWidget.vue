@@ -1,14 +1,21 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
+    <!-- {{ item.properties.style }} -->
     <v-carousel
       v-model="model"
-      :style="carouselStyle()"
       :hide-delimiters="getDefalutAllowDots()"
       :show-arrows="getDefalutAllowArrows()"
       :cycle="getDefalutAllowLoop()"
     >
+      <template v-if="item.properties.style">
+        <video v-show="item.properties.style.carousel.background === ''">
+          <source :src="item.properties.backgroundVideo" type="video/mp4" />
+        </video>
+      </template>
+      {{ carouselStyle() }}
       <v-carousel-item
+        :style="carouselStyle()"
         v-for="(element, index) in getDefalutSlides()"
         :key="index"
       >
@@ -49,6 +56,9 @@ export default {
       model: 0,
       colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
       hover: false,
+      carousel: {
+        background: "#009695FF",
+      },
     };
   },
   props: {
@@ -62,11 +72,9 @@ export default {
       if (this.item.properties.style) {
         return this.item.properties.style.carousel
           ? this.item.properties.style.carousel
-          : "";
+          : this.carousel;
       } else {
-        return {
-          backgroundColor: "#1e1e1e",
-        };
+        return this.carousel;
       }
     },
     titleTextStyle: function() {
@@ -118,7 +126,8 @@ export default {
       }
     },
     getDefalutSlides() {
-      if (this.item.properties.fields) return this.item.properties.fields;
+      if (this.item.properties.fields.length)
+        return this.item.properties.fields;
       return [
         {
           icon: "mdi-play-box-outline",
@@ -150,11 +159,14 @@ export default {
       return false;
     },
   },
-  mounted() {},
 };
 </script>
 
 <style scoped>
+video {
+  width: 100%;
+  height: 100%;
+}
 .v-carousel {
   position: absolute !important;
   display: block !important;

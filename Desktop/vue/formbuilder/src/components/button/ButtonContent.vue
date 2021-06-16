@@ -31,8 +31,10 @@
         </h2>
         <v-select
           v-if="selectedLinkTo === 0"
-          :items="pages"
+          :items="getPages"
           v-model="getSelectedWidgetById.properties.page"
+          item-text="name"
+          return-object
           outlined
         ></v-select>
         <template v-if="selectedLinkTo === 1">
@@ -83,11 +85,14 @@ export default {
         { id: 2, title: "Phone" },
         { id: 3, title: "Email" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages"]),
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.selectedLinkTo)
+      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;

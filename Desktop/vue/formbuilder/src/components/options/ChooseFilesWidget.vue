@@ -42,10 +42,21 @@
                 show-size
                 truncate-length="15"
                 label="Upload File"
+                small-chips
+                @change="onUpload($event)"
+                accept="image/jpeg, image/png, image/jpg, image/gif, image/svg"
               ></v-file-input>
             </v-row>
             <v-row>
-              <v-col v-for="n in 9" :key="n" class="d-flex child-flex" cols="2">
+              <v-col class="d-flex child-flex" v-show="!files.length">
+                <div class="title">No Files Found.</div>
+              </v-col>
+              <v-col
+                v-for="n in files.length"
+                :key="n"
+                class="d-flex child-flex"
+                cols="2"
+              >
                 <v-img
                   @click="
                     selectedFile = {
@@ -80,17 +91,24 @@
         <v-tab-item>
           <v-card-text>
             <v-row>
-              <v-col v-for="n in 9" :key="n" class="d-flex child-flex" cols="2">
+              <v-col
+                v-for="n in 100"
+                :key="n"
+                class="d-flex child-flex"
+                cols="2"
+              >
                 <v-img
                   @click="
-                    selectedFile = `https://picsum.photos/500/300?image=${n *
-                      5 +
-                      10}`
+                    selectedFile = {
+                      id: n,
+                      file: `https://picsum.photos/500/300?image=${n * 5 + 10}`,
+                    }
                   "
                   :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
                   :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
                   aspect-ratio="1"
                   class="grey lighten-2"
+                  :class="{ selectedBox: selectedFile.id === n }"
                 >
                   <template v-slot:placeholder>
                     <v-row
@@ -118,10 +136,15 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { MediaService } from "../../services/media/media";
 export default {
   name: "ChooseFilesWidget",
+  props: {
+    type: String,
+  },
   data() {
     return {
+      files: [],
       notifications: false,
       sound: true,
       widgets: false,
@@ -168,12 +191,30 @@ export default {
     },
     getTypeChooseFileDialog: function(value) {
       this.selectedType = value;
+      console.log(this.selectedType);
     },
   },
   methods: {
     ...mapActions(["onShowChooseFilesDialog"]),
     onSave: function() {
       var element;
+      if (this.type) {
+        switch (this.type) {
+          case "image":
+            element = this.selectedFile.file;
+            this.$emit("onSelectedImage", element);
+            break;
+          case "backgroundImage":
+            element = `url('${this.selectedFile.file}')`;
+            this.$emit("onSelectedImage", element);
+            break;
+
+          case "backgroundVideo":
+            element = "https://www.w3schools.com/howto/rain.mp4";
+            this.$emit("onSelectedVideo", element);
+            break;
+        }
+      }
       switch (this.selectedType) {
         case "backgroundImage":
           element = `url('${this.selectedFile.file}')`;
@@ -187,6 +228,27 @@ export default {
       }
       this.dialog = false;
     },
+    getImages: function() {
+      console.log("getImages");
+      MediaService.getImages()
+        .then((event) => {
+          const result = event.data.data;
+          this.files = result;
+          console.log("getImages", result);
+        })
+        .catch((error) => console.log(error));
+    },
+    onUpload: function(event) {
+      MediaService.addImages(event)
+        .then((result) => {
+          console.log("result", result);
+          this.getImages();
+        })
+        .catch((error) => console.log(error));
+    },
+  },
+  mounted() {
+    this.getImages();
   },
 };
 </script>

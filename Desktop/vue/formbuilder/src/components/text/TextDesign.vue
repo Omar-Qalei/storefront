@@ -18,26 +18,19 @@
           </v-btn>
         </v-btn-toggle>
       </v-col>
-      <v-col cols="6">
-        <v-btn-toggle
-          return-object
-          v-model="selectedTextVertical"
-          shaped
-          mandatory
-        >
-          <v-btn v-for="text in textVertical" :key="text.id" :value="text.id">
-            <v-icon>{{ text.icon }}</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium">
           Text Type
         </h2>
       </v-col>
       <v-col cols="6">
-        <v-btn-toggle v-model="selectedTextType" shaped multiple>
-          <v-btn v-for="text in textTypes" :key="text.id" :value="text">
+        <v-btn-toggle
+          v-model="selectedTextType"
+          shaped
+          multiple
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-btn v-for="text in textTypes" :key="text.id" :value="text.id">
             <v-icon>{{ text.icon }}</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -48,7 +41,7 @@
           active-class="primary--text"
           mandatory
         >
-          <v-chip v-for="tag in letterCases" :key="tag.id" :value="tag.value">
+          <v-chip v-for="tag in letterCases" :key="tag.id" :value="tag.id">
             {{ tag.title }}
           </v-chip>
         </v-chip-group>
@@ -195,8 +188,11 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ColorPickerWidget from "../ColorPickerWidget";
+import StylesTransform from "../../mixins/styles";
+
 export default {
   name: "TextDesign",
+  mixins: [StylesTransform],
   components: {
     ColorPickerWidget,
   },
@@ -204,18 +200,15 @@ export default {
     return {
       text: null,
       selectedTextHorizontal: 1,
-      selectedTextVertical: 1,
       selectedTextType: [],
-      selectedFontSize: 0,
+      selectedFontSize: 3,
       borderRadius: 4,
       borderRadiusTopLeft: 0,
       borderRadiusTopRight: 0,
       borderRadiusBottomLeft: 0,
       borderRadiusBottomRight: 0,
-      selectedUrl: null,
-      statusNewTab: false,
       textColor: "#000000de",
-      backgroundColor: "",
+      backgroundColor: "transparent",
       textColorHover: null,
       backgroundColorHover: null,
       elementStatus: "element",
@@ -224,11 +217,6 @@ export default {
         { id: 0, title: "left", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
         { id: 2, title: "right", icon: "mdi-format-align-right" },
-      ],
-      textVertical: [
-        { id: 0, title: "flex-start", icon: "mdi-format-align-top" },
-        { id: 1, title: "center", icon: "mdi-format-align-middle" },
-        { id: 2, title: "flex-end", icon: "mdi-format-align-bottom" },
       ],
       textTypes: [
         { id: 0, title: "bold", icon: "mdi-format-bold" },
@@ -271,42 +259,36 @@ export default {
         { id: 0, title: "Text", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
     fontWeight: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "bold"
+        (element) => element === this.textTypes[0].id
       );
       if (index > -1) {
-        return this.selectedTextType.find((element) => element.title === "bold")
-          .title;
+        return this.textTypes[0].title;
       } else {
         return "";
       }
     },
     fontStyle: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "italic"
+        (element) => element === this.textTypes[1].id
       );
       if (index > -1) {
-        return this.selectedTextType.find(
-          (element) => element.title === "italic"
-        ).title;
+        return this.textTypes[1].title;
       } else {
         return "";
       }
     },
     textDecoration: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "underline"
+        (element) => element === this.textTypes[2].id
       );
       if (index > -1) {
-        return this.selectedTextType.find(
-          (element) => element.title === "underline"
-        ).title;
+        return this.textTypes[2].title;
       } else {
         return "";
       }
@@ -315,22 +297,66 @@ export default {
   methods: {
     ...mapActions([""]),
   },
+  created() {
+    console.log(this.getSelectedWidgetById.properties.style);
+    if (this.getSelectedWidgetById.properties.style) {
+      this.selectedTextHorizontal = this.findIndex(
+        { list: this.textHorizontal, value: "title" },
+        this.getSelectedWidgetById.properties.style.textAlign
+      );
+      this.selectedFontSize = this.findIndex(
+        { list: this.fontSizes, value: "value" },
+        this.getSelectedWidgetById.properties.style.fontSize
+      );
+      this.borderRadius = this.convertPxToNumber(
+        this.getSelectedWidgetById.properties.style.borderRadius
+      );
+      this.textColor = this.getSelectedWidgetById.properties.style.color;
+      this.backgroundColor = this.getSelectedWidgetById.properties.style.backgroundColor;
+      this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
+      this.letterCase = this.findIndex(
+        { list: this.letterCases, value: "value" },
+        this.getSelectedWidgetById.properties.style.textTransform
+      );
+      this.selectedTextType = [];
+      if (this.getSelectedWidgetById.properties.style.fontWeight !== "")
+        this.selectedTextType.push(
+          this.findIndex(
+            { list: this.textTypes, value: "title" },
+            this.getSelectedWidgetById.properties.style.fontWeight
+          )
+        );
+
+      if (this.getSelectedWidgetById.properties.style.fontStyle !== "")
+        this.selectedTextType.push(
+          this.findIndex(
+            { list: this.textTypes, value: "title" },
+            this.getSelectedWidgetById.properties.style.fontStyle
+          )
+        );
+      if (this.getSelectedWidgetById.properties.style.textDecoration !== "")
+        this.selectedTextType.push(
+          this.findIndex(
+            { list: this.textTypes, value: "title" },
+            this.getSelectedWidgetById.properties.style.textDecoration
+          )
+        );
+    }
+  },
   updated() {
     this.getSelectedWidgetById.properties.style = {
       textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-      alignSelf: this.textVertical[this.selectedTextVertical].title,
       fontWeight: this.fontWeight,
       fontStyle: this.fontStyle,
       textDecoration: this.textDecoration,
       borderRadius: this.borderRadius + "px",
       color: this.textColor,
       backgroundColor: this.backgroundColor,
-      textTransform: this.letterCase,
+      textTransform: this.letterCases[this.letterCase].value,
       fontSize: this.fontSizes[this.selectedFontSize].value,
     };
     this.getSelectedWidgetById.properties.elementHover = {
       color: this.textColorHover,
-      // backgroundColor: this.backgroundColorHover,
     };
   },
   destroyed() {
@@ -343,5 +369,6 @@ export default {
 <style scoped>
 input[type="range"] {
   width: 100%;
+  height: 100%;
 }
 </style>

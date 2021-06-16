@@ -11,7 +11,7 @@
           :items="ImagePositions"
           v-model="selectedObjectFit"
           item-text="title"
-          item-value="value"
+          item-value="id"
           outlined
         ></v-select>
       </v-col>
@@ -23,7 +23,7 @@
       </v-col>
       <v-col cols="12">
         <v-chip-group
-          v-model="selectedImagePosition"
+          v-model="selectedBorderRadiusTo"
           active-class="primary--text"
           mandatory
         >
@@ -32,7 +32,7 @@
           </v-chip>
         </v-chip-group>
       </v-col>
-      <template v-if="selectedImagePosition === 0">
+      <template v-if="selectedBorderRadiusTo === 0">
         <v-col cols="9" align-self="center">
           <input v-model="borderRadius" type="range" min="0" max="100" />
         </v-col>
@@ -109,24 +109,25 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
+import StylesTransform from "../../mixins/styles";
 export default {
   name: "ImageDesign",
-  components: {},
+  mixins: [StylesTransform],
   data() {
     return {
-      selectedObjectFit: "fill",
+      selectedObjectFit: 1,
       borderRadius: 4,
       borderTopLeftRadius: 4,
       borderTopRightRadius: 4,
       borderBottomLeftRadius: 4,
       borderBottomRightRadius: 4,
-      selectedImagePosition: 0,
+      selectedBorderRadiusTo: 0,
       ImagePositions: [
-        { id: 0, title: "Fill", value: "fill" },
-        { id: 1, title: "Cover", value: "cover" },
-        { id: 2, title: "Contain", value: "contain" },
-        { id: 3, title: "Actual Size", value: "none" },
+        { id: 0, title: "Fill", type: "fill" },
+        { id: 1, title: "Cover", type: "cover" },
+        { id: 2, title: "Contain", type: "contain" },
+        { id: 3, title: "Actual Size", type: "none" },
       ],
       tags: [
         { id: 0, title: "All", value: "all" },
@@ -137,27 +138,57 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
-  methods: {
-    ...mapActions([""]),
-  },
-  watch: {
-    selectedImagePosition: function(value) {
-      switch (value) {
-        case 0:
-          this.borderRadius = 4;
-          break;
-        case 1:
-          this.borderTopLeftRadius = 4;
-          this.borderTopRightRadius = 4;
-          this.borderBottomLeftRadius = 4;
-          this.borderBottomRightRadius = 4;
-          break;
-      }
-    },
+  // watch: {
+  //   selectedBorderRadiusTo: function(value) {
+  //     switch (value) {
+  //       case 0:
+  //         this.borderRadius = 4;
+  //         break;
+  //       case 1:
+  //         this.borderTopLeftRadius = 4;
+  //         this.borderTopRightRadius = 4;
+  //         this.borderBottomLeftRadius = 4;
+  //         this.borderBottomRightRadius = 4;
+  //         break;
+  //     }
+  //   },
+  // },
+  created() {
+    if (this.getSelectedWidgetById.properties.style) {
+      if (this.getSelectedWidgetById.properties.selectedBorderRadiusTo)
+        this.selectedBorderRadiusTo = this.getSelectedWidgetById.properties.selectedBorderRadiusTo;
+      if (this.getSelectedWidgetById.properties.style.objectFit)
+        this.selectedObjectFit = this.findIndex(
+          { list: this.ImagePositions, value: "type" },
+          this.getSelectedWidgetById.properties.style.objectFit
+        );
+
+      if (this.getSelectedWidgetById.properties.style.borderRadius)
+        this.borderRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.borderRadius
+        );
+      if (this.getSelectedWidgetById.properties.style.borderTopLeftRadius)
+        this.borderTopLeftRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.borderTopLeftRadius
+        );
+      if (this.getSelectedWidgetById.properties.style.borderTopRightRadius)
+        this.borderTopRightRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.borderTopRightRadius
+        );
+      if (this.getSelectedWidgetById.properties.style.borderBottomLeftRadius)
+        this.borderBottomLeftRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.borderBottomLeftRadius
+        );
+      if (this.getSelectedWidgetById.properties.style.borderBottomRightRadius)
+        this.borderBottomRightRadius = this.convertPxToNumber(
+          this.getSelectedWidgetById.properties.style.borderBottomRightRadius
+        );
+    }
   },
   updated() {
+    this.getSelectedWidgetById.properties.selectedBorderRadiusTo = this.selectedBorderRadiusTo;
     this.getSelectedWidgetById.properties.style = {
-      objectFit: this.selectedObjectFit,
+      objectFit: this.ImagePositions[this.selectedObjectFit].type,
       borderRadius: this.borderRadius + "px",
       borderTopLeftRadius: this.borderTopLeftRadius + "px",
       borderTopRightRadius: this.borderTopRightRadius + "px",

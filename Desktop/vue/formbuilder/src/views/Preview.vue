@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+// import { mapActions } from "vuex";
 import PreviewPages from "./PreviewPages";
 import SettingsDialog from "../components/settings/SettingsDialog";
 
@@ -18,14 +18,14 @@ export default {
       dialog: true,
     };
   },
-  methods: {
-    ...mapActions({
-      fetchSections: "fetchSections",
-    }),
-  },
-  created() {
-    this.fetchSections();
-  },
+  // methods: {
+  //   ...mapActions({
+  //     fetchSections: "fetchSections",
+  //   }),
+  // },
+  // created() {
+  //   this.fetchSections();
+  // },
 };
 </script>
 <style scoped>

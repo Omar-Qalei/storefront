@@ -1,6 +1,7 @@
 export default {
     sections: {},
     resources: {},
+    pages: [],
     mouseXY: { x: null, y: null },
     dragPos: { x: null, y: null, w: 1, h: 1, i: null },
     properties: { refGridLayout: null, colNum: 0 },
@@ -14,7 +15,7 @@ export default {
     currentSelectedSectionId: null, // for vertify if current equal selected Section by id
     currentSelectedSectionIndex: null, // for vertify if current equal selected Section by index
     resizeSection: false, // stop resize section from drag
-    screenSize: { width: '100%', cols: 12 },
+    screenSize: { width: '100%', cols: 12, screen: 'web' },
     isResizeable: false, // for resize sections
     isAutoResize: true, // prevent change height Section on draging
     allowSorting: true,

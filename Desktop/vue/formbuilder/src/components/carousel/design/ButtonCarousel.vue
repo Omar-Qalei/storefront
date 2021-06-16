@@ -94,8 +94,11 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ColorPickerWidget from "../../ColorPickerWidget";
+import StylesTransform from "../../../mixins/styles";
+
 export default {
   name: "ButtonCarousel",
+  mixins: [StylesTransform],
   components: {
     ColorPickerWidget,
   },
@@ -126,14 +129,39 @@ export default {
         { id: 0, title: "Button", value: "element" },
         { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
-      pages: ["Home", "About", "Services"],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages"]),
   },
   methods: {
     ...mapActions([""]),
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.style) {
+      if (this.getSelectedWidgetById.properties.style.elements) {
+        if (this.getSelectedWidgetById.properties.style.elements.button) {
+          this.selectedTextHorizontal = this.findIndex(
+            { list: this.textHorizontal, value: "title" },
+            this.getSelectedWidgetById.properties.style.elements.button
+              .justifyContent
+          );
+          this.selectedTextVertical = this.findIndex(
+            { list: this.textVertical, value: "title" },
+            this.getSelectedWidgetById.properties.style.elements.button
+              .alignItems
+          );
+          this.borderRadius = this.convertPxToNumber(
+            this.getSelectedWidgetById.properties.style.elements.button
+              .borderRadius
+          );
+          this.textColor = this.getSelectedWidgetById.properties.style.elements.button.color;
+          this.backgroundColor = this.getSelectedWidgetById.properties.style.elements.button.backgroundColor;
+          this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
+          this.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
+        }
+      }
+    }
   },
   updated() {
     const styles = {

@@ -3,7 +3,7 @@
     <v-row class="pt-4">
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium mb-2">
-          Video URL
+          Video Youtube URL
         </h2>
         <v-text-field
           outlined
@@ -33,6 +33,8 @@ export default {
   },
   created() {
     this.getSelectedWidgetById.properties.name = "";
+    if (this.getSelectedWidgetById.properties.autoPlay)
+      this.autoPlay = this.getSelectedWidgetById.properties.autoPlay;
   },
   updated() {
     this.getSelectedWidgetById.properties.autoPlay = this.autoPlay ? 1 : 0;

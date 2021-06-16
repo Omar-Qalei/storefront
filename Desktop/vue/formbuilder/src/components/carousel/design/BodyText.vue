@@ -18,7 +18,7 @@
           </v-btn>
         </v-btn-toggle>
       </v-col>
-      <v-col cols="6">
+      <!-- <v-col cols="6">
         <v-btn-toggle
           return-object
           v-model="selectedTextVertical"
@@ -29,15 +29,20 @@
             <v-icon>{{ text.icon }}</v-icon>
           </v-btn>
         </v-btn-toggle>
-      </v-col>
+      </v-col> -->
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium">
           Text Type
         </h2>
       </v-col>
       <v-col cols="6">
-        <v-btn-toggle v-model="selectedTextType" shaped multiple>
-          <v-btn v-for="text in textTypes" :key="text.id" :value="text">
+        <v-btn-toggle
+          v-model="selectedTextType"
+          shaped
+          multiple
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-btn v-for="text in textTypes" :key="text.id" :value="text.id">
             <v-icon>{{ text.icon }}</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -48,7 +53,7 @@
           active-class="primary--text"
           mandatory
         >
-          <v-chip v-for="tag in letterCases" :key="tag.id" :value="tag.value">
+          <v-chip v-for="tag in letterCases" :key="tag.id" :value="tag.id">
             {{ tag.title }}
           </v-chip>
         </v-chip-group>
@@ -111,8 +116,11 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ColorPickerWidget from "../../ColorPickerWidget";
+import StylesTransform from "../../../mixins/styles";
+
 export default {
   name: "BodyText",
+  mixins: [StylesTransform],
   components: {
     ColorPickerWidget,
   },
@@ -183,35 +191,30 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
     fontWeight: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "bold"
+        (element) => element === this.textTypes[0].id
       );
       if (index > -1) {
-        return this.selectedTextType.find((element) => element.title === "bold")
-          .title;
+        return this.textTypes[0].title;
       } else {
         return "";
       }
     },
     fontStyle: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "italic"
+        (element) => element === this.textTypes[1].id
       );
       if (index > -1) {
-        return this.selectedTextType.find(
-          (element) => element.title === "italic"
-        ).title;
+        return this.textTypes[1].title;
       } else {
         return "";
       }
     },
     textDecoration: function() {
       const index = this.selectedTextType.findIndex(
-        (element) => element.title === "underline"
+        (element) => element === this.textTypes[2].id
       );
       if (index > -1) {
-        return this.selectedTextType.find(
-          (element) => element.title === "underline"
-        ).title;
+        return this.textTypes[2].title;
       } else {
         return "";
       }
@@ -219,6 +222,68 @@ export default {
   },
   methods: {
     ...mapActions([""]),
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.style) {
+      if (this.getSelectedWidgetById.properties.style.elements) {
+        if (this.getSelectedWidgetById.properties.style.elements.body) {
+          this.selectedTextHorizontal = this.findIndex(
+            { list: this.textHorizontal, value: "title" },
+            this.getSelectedWidgetById.properties.style.elements.body.textAlign
+          );
+          // this.selectedTextVertical = this.findIndex(
+          //   { list: this.textVertical, value: "title" },
+          //   this.getSelectedWidgetById.properties.style.elements.body.alignSelf
+          // );
+          this.selectedFontSize = this.findIndex(
+            {
+              list: this.fontSizes,
+              value: "value",
+            },
+            this.getSelectedWidgetById.properties.style.elements.body.fontSize
+          );
+          this.textColor = this.getSelectedWidgetById.properties.style.elements.body.color;
+          this.letterCase = this.findIndex(
+            { list: this.letterCases, value: "value" },
+            this.getSelectedWidgetById.properties.style.elements.body
+              .textTransform
+          );
+          if (
+            this.getSelectedWidgetById.properties.style.elements.body
+              .fontWeight !== ""
+          )
+            this.selectedTextType.push(
+              this.findIndex(
+                { list: this.textTypes, value: "title" },
+                this.getSelectedWidgetById.properties.style.elements.body
+                  .fontWeight
+              )
+            );
+          if (
+            this.getSelectedWidgetById.properties.style.elements.body
+              .fontStyle !== ""
+          )
+            this.selectedTextType.push(
+              this.findIndex(
+                { list: this.textTypes, value: "title" },
+                this.getSelectedWidgetById.properties.style.elements.body
+                  .fontStyle
+              )
+            );
+          if (
+            this.getSelectedWidgetById.properties.style.elements.body
+              .textDecoration !== ""
+          )
+            this.selectedTextType.push(
+              this.findIndex(
+                { list: this.textTypes, value: "title" },
+                this.getSelectedWidgetById.properties.style.elements.body
+                  .textDecoration
+              )
+            );
+        }
+      }
+    }
   },
   updated() {
     const styles = {
@@ -228,7 +293,7 @@ export default {
       fontStyle: this.fontStyle,
       textDecoration: this.textDecoration,
       color: this.textColor,
-      textTransform: this.letterCase,
+      textTransform: this.letterCases[this.letterCase].value,
       fontSize: this.fontSizes[this.selectedFontSize].value,
       // fontFamily: this.fontfamilies[this.selectedFontfamily].value,
     };

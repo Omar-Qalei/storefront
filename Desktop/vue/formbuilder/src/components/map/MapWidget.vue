@@ -40,7 +40,7 @@ export default {
         { title: "Click Me" },
         { title: "Click Me 2" },
       ],
-      center: { lat: 45.508, lng: -73.587 },
+      center: { lat: 51.5167849, lng: -0.1340803 },
       currentPlace: null,
       markers: [],
       places: [],
@@ -52,7 +52,7 @@ export default {
   methods: {
     getDefaultLocation(item) {
       if (item.properties.map) return item.properties.map;
-      return { lat: 30.585164, lng: 36.238414 };
+      return { lat: 51.5167849, lng: -0.1340803 };
     },
   },
   mounted() {},
