@@ -144,7 +144,7 @@ export default {
           this.selectedTextHorizontal = this.findIndex(
             { list: this.textHorizontal, value: "title" },
             this.getSelectedWidgetById.properties.style.elements.button
-              .justifyContent
+              .textAlign
           );
           this.selectedTextVertical = this.findIndex(
             { list: this.textVertical, value: "title" },
@@ -155,8 +155,6 @@ export default {
             this.getSelectedWidgetById.properties.style.elements.button
               .borderRadius
           );
-          this.textColor = this.getSelectedWidgetById.properties.style.elements.button.color;
-          this.backgroundColor = this.getSelectedWidgetById.properties.style.elements.button.backgroundColor;
           this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
           this.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
         }

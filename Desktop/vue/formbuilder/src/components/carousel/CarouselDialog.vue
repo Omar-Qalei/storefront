@@ -62,8 +62,42 @@ export default {
   created() {
     if (this.getSelectedWidgetById.properties.style === null) {
       this.getSelectedWidgetById.properties.style = {};
-      this.$set(this.getSelectedWidgetById.properties.style, "carousel", {});
-      this.$set(this.getSelectedWidgetById.properties.style, "elements", {});
+      this.$set(this.getSelectedWidgetById.properties.style, "carousel", {
+        background: "#009695FF",
+      });
+      this.$set(this.getSelectedWidgetById.properties.style, "elements", {
+        title: {
+          textAlign: "center",
+          alignSelf: "center",
+          fontWeight: "",
+          fontStyle: "",
+          textDecoration: "",
+          color: "#FFFFFFFF",
+          textTransform: "none",
+          fontSize: "56px",
+        },
+        body: {
+          textAlign: "center",
+          alignSelf: "center",
+          fontWeight: "",
+          fontStyle: "",
+          textDecoration: "",
+          color: "#FFFFFFFF",
+          textTransform: "none",
+          fontSize: "18px",
+        },
+        button: {
+          textAlign: "center",
+          alignItems: "center",
+          borderRadius: "20px",
+          color: "#000000de",
+          backgroundColor: "#f5f5f5",
+        },
+      });
+      this.getSelectedWidgetById.properties.elementHover = {
+        color: "#000000de",
+        backgroundColor: "#f5f5f5",
+      };
     }
   },
 };

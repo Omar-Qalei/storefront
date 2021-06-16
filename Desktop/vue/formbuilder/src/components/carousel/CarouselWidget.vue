@@ -13,7 +13,6 @@
           <source :src="item.properties.backgroundVideo" type="video/mp4" />
         </video>
       </template>
-      {{ carouselStyle() }}
       <v-carousel-item
         :style="carouselStyle()"
         v-for="(element, index) in getDefalutSlides()"
@@ -54,10 +53,53 @@ export default {
   data() {
     return {
       model: 0,
+      fields: [
+        {
+          icon: "mdi-play-box-outline",
+          title: "Slide one Title",
+          textButton: "Learn more",
+          body: "Write your text here and add as many slides as you want...",
+          type: "carousel",
+        },
+        {
+          icon: "mdi-play-box-outline",
+          title: "Slide Two Title",
+          textButton: "Learn more",
+          body: "Write your text here and add as many slides as you want...",
+          type: "carousel",
+        },
+      ],
       colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
       hover: false,
       carousel: {
         background: "#009695FF",
+      },
+      title: {
+        textAlign: "center",
+        alignSelf: "center",
+        fontWeight: "",
+        fontStyle: "",
+        textDecoration: "",
+        color: "#FFFFFFFF",
+        textTransform: "none",
+        fontSize: "56px",
+      },
+      body: {
+        textAlign: "center",
+        alignSelf: "center",
+        fontWeight: "",
+        fontStyle: "",
+        textDecoration: "",
+        color: "#FFFFFFFF",
+        textTransform: "none",
+        fontSize: "18px",
+      },
+      button: {
+        textAlign: "center",
+        alignItems: "center",
+        borderRadius: "20px",
+        color: "#000000de",
+        backgroundColor: "#f5f5f5",
       },
     };
   },
@@ -82,12 +124,12 @@ export default {
         if (this.item.properties.style.elements) {
           return this.item.properties.style.elements.title
             ? this.item.properties.style.elements.title
-            : "";
+            : this.title;
         } else {
-          return "";
+          return this.title;
         }
       } else {
-        return "";
+        return this.title;
       }
     },
     bodyTextStyle: function() {
@@ -95,12 +137,12 @@ export default {
         if (this.item.properties.style.elements) {
           return this.item.properties.style.elements.body
             ? this.item.properties.style.elements.body
-            : "";
+            : this.body;
         } else {
-          return "";
+          return this.body;
         }
       } else {
-        return "";
+        return this.body;
       }
     },
     buttonStyle: function() {
@@ -108,12 +150,12 @@ export default {
         if (this.item.properties.style.elements) {
           return this.item.properties.style.elements.button
             ? this.item.properties.style.elements.button
-            : "";
+            : this.button;
         } else {
-          return "";
+          return this.button;
         }
       } else {
-        return "";
+        return this.button;
       }
     },
     onHover: function() {
@@ -128,22 +170,7 @@ export default {
     getDefalutSlides() {
       if (this.item.properties.fields.length)
         return this.item.properties.fields;
-      return [
-        {
-          icon: "mdi-play-box-outline",
-          title: "Slide",
-          textButton: "Click Now",
-          body: "Click now",
-          type: "carousel",
-        },
-        {
-          icon: "mdi-play-box-outline",
-          title: "Slide",
-          textButton: "Click Now",
-          body: "Click now",
-          type: "carousel",
-        },
-      ];
+      return this.fields;
     },
     getDefalutAllowArrows() {
       if (!this.item.properties.allowArrow)
@@ -156,7 +183,7 @@ export default {
     },
     getDefalutAllowLoop() {
       if (this.item.properties.allowLoop) return this.item.properties.allowLoop;
-      return false;
+      return true;
     },
   },
 };

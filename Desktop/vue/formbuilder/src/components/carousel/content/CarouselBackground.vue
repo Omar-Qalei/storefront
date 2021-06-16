@@ -338,8 +338,8 @@ export default {
       panels: 0,
       elementStatus: "element",
       gradientDirection: 45,
-      gradientFirstColor: "#FFF",
-      gradientSecondColor: "#FFF",
+      gradientFirstColor: "#009695FF",
+      gradientSecondColor: "#009695FF",
       selectedBackgroundGradientType: 0,
       gradientStartPosition: 20,
       gradientEndPosition: 20,
@@ -411,7 +411,7 @@ export default {
       carousel: {
         // textAlign: "left",
         // border: "solid",
-        background: "",
+        background: "#009695FF",
         borderRadius: 0,
         // borderWidth: 0,
         // borderColor: "transparent",
@@ -567,7 +567,6 @@ export default {
       ) {
         this.carousel.background = "";
       }
-      console.log(this.tags[newValue].type !== "backgroundVideo");
       if (this.tags[newValue].type !== "backgroundVideo")
         this.getSelectedWidgetById.properties.backgroundVideo = null;
 

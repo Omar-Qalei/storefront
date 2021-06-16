@@ -142,22 +142,22 @@ export default {
       slide: 1,
       panels: 0,
       selectedSlideIndex: null,
-      allowLoop: false,
+      allowLoop: true,
       allowArrow: true,
       allowDots: false,
       list: [
         {
           icon: "mdi-play-box-outline",
-          title: "Slide",
-          textButton: "",
-          body: "",
+          title: "Slide one Title",
+          textButton: "Learn more",
+          body: "Write your text here and add as many slides as you want...",
           type: "carousel",
         },
         {
           icon: "mdi-play-box-outline",
-          title: "Slide",
-          textButton: "",
-          body: "",
+          title: "Slide Two Title",
+          textButton: "Learn more",
+          body: "Write your text here and add as many slides as you want...",
           type: "carousel",
         },
       ],
@@ -171,8 +171,8 @@ export default {
       this.list.push({
         icon: "mdi-play-box-outline",
         title: "Slide",
-        textButton: "",
-        body: "",
+        textButton: "Learn more",
+        body: "Write your text here and add as many slides as you want...",
         type: "carousel",
       });
     },
@@ -193,7 +193,8 @@ export default {
     },
   },
   created() {
-    this.list = this.getSelectedWidgetById.properties.fields;
+    if (this.getSelectedWidgetById.properties.fields.length)
+      this.list = this.getSelectedWidgetById.properties.fields;
 
     if (this.getSelectedWidgetById.properties.allowLoop)
       this.allowLoop = this.getSelectedWidgetById.properties.allowLoop;
