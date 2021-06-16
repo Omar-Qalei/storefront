@@ -196,7 +196,7 @@ export default {
     if (this.getSelectedWidgetById.properties.fields.length)
       this.list = this.getSelectedWidgetById.properties.fields;
 
-    if (this.getSelectedWidgetById.properties.allowLoop)
+    if (!this.getSelectedWidgetById.properties.allowLoop)
       this.allowLoop = this.getSelectedWidgetById.properties.allowLoop;
 
     if (this.getSelectedWidgetById.properties.allowArrow)
@@ -205,12 +205,11 @@ export default {
     if (this.getSelectedWidgetById.properties.allowDots)
       this.allowDots = this.getSelectedWidgetById.properties.allowDots;
 
-    if (this.getSelectedWidgetById.properties.allowLoop === undefined)
-      this.$set(this.getSelectedWidgetById.properties, "allowLoop", false);
-    if (this.getSelectedWidgetById.properties.allowArrow === undefined)
-      this.$set(this.getSelectedWidgetById.properties, "allowArrow", true);
-    if (this.getSelectedWidgetById.properties.allowDots === undefined)
-      this.$set(this.getSelectedWidgetById.properties, "allowDots", false);
+    console.log(
+      "allowLoop",
+      this.getSelectedWidgetById.properties.allowLoop,
+      this.allowLoop
+    );
   },
   updated() {
     this.getSelectedWidgetById.properties.fields = this.list;

@@ -1,7 +1,6 @@
 <template>
   <div class="widget">
     <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
-    <!-- {{ item.properties.style }} -->
     <v-carousel
       v-model="model"
       :hide-delimiters="getDefalutAllowDots()"
@@ -182,9 +181,19 @@ export default {
       return false;
     },
     getDefalutAllowLoop() {
-      if (this.item.properties.allowLoop) return this.item.properties.allowLoop;
+      // console.log("properties", this.item.properties.allowLoop);
+      if (!this.item.properties.allowLoop)
+        return this.item.properties.allowLoop;
       return true;
     },
+  },
+  created() {
+    // if (this.getSelectedWidgetById.properties.allowLoop)
+    //   this.allowLoop = this.getSelectedWidgetById.properties.allowLoop;
+    // if (this.getSelectedWidgetById.properties.allowArrow)
+    //   this.allowArrow = this.getSelectedWidgetById.properties.allowArrow;
+    // if (this.getSelectedWidgetById.properties.allowDots)
+    //   this.allowDots = this.getSelectedWidgetById.properties.allowDots;
   },
 };
 </script>

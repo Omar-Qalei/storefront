@@ -60,6 +60,12 @@ export default {
     ...mapGetters(["getSelectedWidgetById"]),
   },
   created() {
+    if (this.getSelectedWidgetById.properties.allowLoop === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowLoop", true);
+    if (this.getSelectedWidgetById.properties.allowArrow === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowArrow", true);
+    if (this.getSelectedWidgetById.properties.allowDots === undefined)
+      this.$set(this.getSelectedWidgetById.properties, "allowDots", false);
     if (this.getSelectedWidgetById.properties.style === null) {
       this.getSelectedWidgetById.properties.style = {};
       this.$set(this.getSelectedWidgetById.properties.style, "carousel", {
