@@ -1,10 +1,5 @@
 <template>
   <div class="widget">
-    <SettingsWidget
-      :show="item.i === getSelectedWidgetById.i"
-      :item="item"
-      :sectionId="sectionId"
-    ></SettingsWidget>
     <v-carousel
       v-model="model"
       :hide-delimiters="getDefalutAllowDots()"
@@ -46,13 +41,8 @@
 </template>
 
 <script>
-import SettingsWidget from "../settings/SettingsWidget";
-import { mapGetters } from "vuex";
 export default {
   name: "CarouselWidget",
-  components: {
-    SettingsWidget,
-  },
   data() {
     return {
       model: 0,
@@ -108,10 +98,6 @@ export default {
   },
   props: {
     item: {},
-    sectionId: Number,
-  },
-  computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
     carouselStyle: function() {
@@ -186,19 +172,10 @@ export default {
       return false;
     },
     getDefalutAllowLoop() {
-      // console.log("properties", this.item.properties.allowLoop);
       if (!this.item.properties.allowLoop)
         return this.item.properties.allowLoop;
       return true;
     },
-  },
-  created() {
-    // if (this.getSelectedWidgetById.properties.allowLoop)
-    //   this.allowLoop = this.getSelectedWidgetById.properties.allowLoop;
-    // if (this.getSelectedWidgetById.properties.allowArrow)
-    //   this.allowArrow = this.getSelectedWidgetById.properties.allowArrow;
-    // if (this.getSelectedWidgetById.properties.allowDots)
-    //   this.allowDots = this.getSelectedWidgetById.properties.allowDots;
   },
 };
 </script>
@@ -211,7 +188,7 @@ video {
 .v-carousel {
   position: absolute !important;
   display: block !important;
-  z-index: -1 !important;
+  z-index: 1 !important;
   width: 100% !important;
   height: 100% !important;
 }

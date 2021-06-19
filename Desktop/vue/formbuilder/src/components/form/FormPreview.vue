@@ -1,10 +1,5 @@
 <template>
   <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    <SettingsWidget
-      :show="item.i === getSelectedWidgetById.i"
-      :item="item"
-      :sectionId="sectionId"
-    ></SettingsWidget>
     <form :style="formStyle" id="form">
       <h2
         class="h5 font-weight-medium mb-2"
@@ -34,10 +29,9 @@
           class="mt-4"
           v-for="(field, index) in fields"
           :key="index + 'disabled'"
-          v-model="name"
+          v-model="field.value"
           :error-messages="nameErrors"
           :label="field.label"
-          :disabled="true"
           hide-details
           :placeholder="field.placeholder"
           :required="field.isRequired"
@@ -61,15 +55,10 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-import { mapGetters } from "vuex";
-import SettingsWidget from "../settings/SettingsWidget";
 
 export default {
   mixins: [validationMixin],
   name: "FormWidget",
-  components: {
-    SettingsWidget,
-  },
   validations: {
     name: { required, maxLength: maxLength(10) },
     email: { required, email },
@@ -144,7 +133,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
     checkboxErrors() {
       const errors = [];
       if (!this.$v.checkbox.$dirty) return errors;
@@ -258,12 +246,11 @@ export default {
 .widget {
   width: 100%;
   height: 100%;
+  z-index: 0;
 }
 form {
-  z-index: -1;
-  position: absolute !important;
+  z-index: 1;
   display: block !important;
-  z-index: -1 !important;
   width: 100% !important;
 }
 .widget .v-text-field ::v-deep.v-label {

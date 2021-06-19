@@ -1,6 +1,10 @@
 <template>
   <div class="widget">
-    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
+    <SettingsWidget
+      :show="item.i === getSelectedWidgetById.i"
+      :item="item"
+      :sectionId="sectionId"
+    ></SettingsWidget>
     <audio controls>
       <source :src="getDefaultImage(item)" type="audio/mpeg" />
       <!-- <source src="myAudio.ogg" type="audio/ogg"> -->
@@ -28,6 +32,7 @@ export default {
   },
   props: {
     item: {},
+    sectionId: Number,
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),

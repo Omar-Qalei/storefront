@@ -54,6 +54,13 @@
                   >
                     Explore
                   </v-btn>
+                  <v-btn
+                    color="red lighten-2"
+                    text
+                    @click="removeSite(item.id)"
+                  >
+                    Remove
+                  </v-btn>
 
                   <v-spacer></v-spacer>
 
@@ -161,7 +168,6 @@ export default {
     getSites: function() {
       SiteService.getSites()
         .then((result) => {
-          console.log(result);
           const data = result.data.data;
           this.websites = data;
         })
@@ -171,7 +177,6 @@ export default {
       SiteService.getSitePages(this.siteId)
         .then((result) => {
           const data = result.data.data;
-          console.log(data);
           this.fetchPages(data);
         })
         .catch((error) => {
@@ -186,12 +191,21 @@ export default {
       SiteService.addSite(data)
         .then((event) => {
           const result = event.data.data;
-          console.log(event);
           this.siteId = result.id;
           if (this.siteId) {
-            this.$router.push("/formBuilder");
+            this.$router.push({
+              path: "formBuilder",
+              query: { siteId: this.siteId },
+            });
             this.getSiteById();
           }
+        })
+        .catch((result) => console.log(result));
+    },
+    removeSite: function(siteId) {
+      SiteService.removeSite(siteId)
+        .then(() => {
+          this.getSites();
         })
         .catch((result) => console.log(result));
     },

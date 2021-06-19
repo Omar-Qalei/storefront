@@ -119,6 +119,20 @@ export default {
           console.log(error);
         });
     },
+    getSitePageResources: function() {
+      SiteService.getSitePageResources(this.siteId, this.pageId)
+        .then((result) => {
+          const data = result.data.data;
+          if (data && data.web && this.getScreenSize.screen === "web")
+            this.fetchSections(JSON.parse(data.web));
+
+          if (data && data.mobile && this.getScreenSize.screen === "mobile")
+            this.fetchSections(JSON.parse(data.mobile));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   computed: {
     ...mapGetters(["getDrawerPages", "getPages"]),

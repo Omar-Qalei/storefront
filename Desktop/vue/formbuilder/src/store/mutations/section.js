@@ -6,6 +6,30 @@ export const setResources = (state, resources) => {
     state.resources = resources || {}
 };
 
+export const duplicateResource = (state, payload) => {
+    let index = state.sections.findIndex(obj => obj.id === payload.id);
+    state.selectedWidget = { i: null };
+    state.sections[index].resources.push(payload.k);
+};
+
+export const removeResource = (state, payload) => {
+    state.selectedWidget = { i: null };
+    let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
+    const index = state.sections.map((item) => item.id).indexOf(payload.id);
+    if (refIndex > -1 && index > -1) {
+        // state.sections[index].resources.splice(refIndex, 1);
+        state.properties.refGridLayout.$children[refIndex].$refs.item.style.display = "none";
+        // console.log(state.sections[index].resources);
+    }
+};
+
+export const removeSection = (state, payload) => {
+    if (payload.id !== 0) {
+        const index = state.sections.map((item) => item.id).indexOf(payload.id);
+        state.sections.splice(index, 1);
+    }
+}
+
 export const setPages = (state, pages) => {
     state.pages = pages || [];
 }
@@ -69,6 +93,70 @@ export const setNewSection = (state, payload) => {
             item.selectedIndex += 1;
             item.y *= state.sectionProperties.default;
             // }
+        });
+        state.sections.push(...array);
+    }
+
+    // // By Default First Push 
+    if (!previousIndex && nextIndex === 0) {
+        console.log('test4')
+        payload.selectedIndex = 1;
+        state.sections.push(payload);
+    }
+    state.sections = compact(state.sections);
+    // state.sections.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
+}
+
+export const duplicateSection = (state, payload) => {
+    let previousIndex = 0, nextIndex = 0;
+    if (payload.selectedIndex !== undefined) {
+        previousIndex = payload.selectedIndex;
+    }
+    if (state.sections[payload.selectedIndex + 1] !== undefined) {
+        nextIndex = state.sections[payload.selectedIndex + 1].selectedIndex;
+    }
+    // Push between Indexes
+    if (previousIndex > 0 && nextIndex !== 0) {
+        console.log('test1')
+        payload.selectedIndex = nextIndex;
+        payload.y = nextIndex * state.sectionProperties.default;
+        const array = state.sections.splice(nextIndex, state.sections.length, payload);
+        state.sections.join();
+        array.forEach(item => {
+            if (item.id !== state.sections[previousIndex].id && payload.id !== item.id) {
+                if (item.id !== 0) {
+                    item.selectedIndex += 1;
+                    item.y *= state.sectionProperties.default;
+                }
+            }
+        });
+        state.sections.push(...array);
+    }
+
+    // Push After Index bigger than index = 0
+    if (previousIndex > 0 && nextIndex === 0) {
+        console.log('test2')
+        payload.y = (previousIndex + 1) * state.sectionProperties.default;
+        payload.selectedIndex = previousIndex + 1;
+        const array = state.sections.splice(previousIndex + 2, state.sections.length, payload);
+        state.sections.join();
+        array.forEach(item => {
+            item.selectedIndex += 1;
+            item.y *= state.sectionProperties.default;
+        });
+        state.sections.push(...array);
+    }
+
+    // Push After index = 0 
+    if (previousIndex === 0 && nextIndex !== 0) {
+        console.log('test3')
+        payload.selectedIndex = nextIndex;
+        payload.y = state.sectionProperties.default;
+        const array = state.sections.splice(nextIndex, state.sections.length, payload);
+        state.sections.join();
+        array.forEach(item => {
+            item.selectedIndex += 1;
+            item.y *= state.sectionProperties.default;
         });
         state.sections.push(...array);
     }
@@ -162,20 +250,20 @@ export const setDrag = (state, payload) => {
                         state.dragPos.x = new_pos.x;
                         state.dragPos.y = new_pos.y;
                     }
-                    if (mouseInGrid === false) {
-                        state.refs[indexSection].$children[0].$children[0].dragEvent(
-                            "dragend",
-                            "drop",
-                            new_pos.x,
-                            new_pos.y,
-                            elementWidth,
-                            elementHight
-                        );
-                        state.refs[indexSection].$children[0].$children[0].$children = state.refs[indexSection].$children[0].$children[0].$children.filter((obj) => obj.i !== "drop");
-                        state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
-                    }
                 } catch {
                     console.log();
+                }
+                if (mouseInGrid === false) {
+                    state.properties.refGridLayout.dragEvent(
+                        "dragend",
+                        "drop",
+                        new_pos.x,
+                        new_pos.y,
+                        elementWidth,
+                        elementHight
+                    );
+                    state.properties.refGridLayout.$children = state.properties.refGridLayout.$children.filter((obj) => obj.i !== "drop");
+                    state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
                 }
             }
         } else {
@@ -276,21 +364,24 @@ export const setUpdateSectionLayout = (state, payload) => {
     // state.currentSelectedSectionId !== null ? state.currentSelectedSectionId : 
     let sectionId = payload.sectionId;
     let gridHeight = payload.h;
+
     let statusCompact = false;
-    if (sectionId !== undefined) {
-        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
-        if (state.sections[currentIndex].resize.h < gridHeight) {
-            statusCompact = true;
-            state.sections[currentIndex].h = gridHeight;
-            if (statusCompact) {
-                state.sections = compact(state.sections);
-                statusCompact = false;
+    if (!state.preventCollision)
+        if (sectionId !== undefined) {
+            let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+            if (state.sections[currentIndex].resize.h < gridHeight) {
+                statusCompact = true;
+                state.sections[currentIndex].h = gridHeight;
+                if (statusCompact) {
+                    state.sections = compact(state.sections);
+                    statusCompact = false;
+                }
             }
         }
-    }
 }
 
 export const setSelectedSection = (state, payload) => {
+    console.log(state.currentSelectedSectionId);
     state.currentSelectedSectionIndex = payload.index;
     state.currentSelectedSectionId = payload.id;
 }
@@ -324,7 +415,8 @@ export const setSortSectionsLayout = (state) => {
 export const checkUpdateSectionLayoutResized = (state, payload) => {
     const sectionId = payload.sectionId;
     if (sectionId !== undefined) {
-        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let selectedIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let currentIndex = state.sections.findIndex((element) => element.selectedIndex === selectedIndex);
         let maxGridHeight = 0;
         state.sections[currentIndex].resources.map(element => {
             if ((element.y + element.h) > maxGridHeight) {

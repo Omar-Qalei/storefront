@@ -1,10 +1,5 @@
 <template>
   <div class="widget">
-    <SettingsWidget
-      :show="item.i === getSelectedWidgetById.i"
-      :item="item"
-      :sectionId="sectionId"
-    ></SettingsWidget>
     <iframe :src="getDefaultUrl(item)" frameborder="0" allowfullscreen></iframe>
     <!-- <iframe
       :src="getDefaultUrl(item) + item.properties.autoPlay"
@@ -16,13 +11,8 @@
 </template>
 
 <script>
-import SettingsWidget from "../settings/SettingsWidget";
-import { mapGetters } from "vuex";
 export default {
-  name: "VideoWidget",
-  components: {
-    SettingsWidget,
-  },
+  name: "VideoPreview",
   data() {
     return {
       items: [
@@ -36,9 +26,6 @@ export default {
   props: {
     item: {},
     sectionId: Number,
-  },
-  computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
     getDefaultUrl: function(item) {
@@ -77,12 +64,9 @@ export default {
 iframe {
   width: 100%;
   height: 100%;
-  z-index: -1;
-  position: absolute;
 }
 .widget {
   width: 100%;
   height: 100%;
-  z-index: 1;
 }
 </style>

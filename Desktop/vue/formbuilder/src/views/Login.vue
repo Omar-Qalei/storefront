@@ -133,7 +133,7 @@ export default {
         (v) =>
           (v && v.length <= 10) || "Password must be less than 10 characters",
       ],
-      email: "ashraf@mail.com",
+      email: "test@mail.com",
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",

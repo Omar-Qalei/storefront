@@ -105,14 +105,46 @@
                 class="hint text-capitalize"
                 >{{ item.type }}</label
               >
-              <ButtonWidget v-if="item.type == 'button'" :item="item" />
-              <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
-              <TextWidget v-if="item.type == 'text'" :item="item" />
-              <ImageWidget v-if="item.type == 'image'" :item="item" />
-              <MenuWidget v-if="item.type == 'menu'" :item="item" />
-              <VideoWidget v-if="item.type == 'video'" :item="item" />
-              <MapWidget v-if="item.type == 'map'" :item="item" />
-              <AudioWidget v-if="item.type == 'audio'" :item="item" />
+              <ButtonWidget
+                v-if="item.type == 'button'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <CarouselWidget
+                v-if="item.type == 'carousel'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <TextWidget
+                v-if="item.type == 'text'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <ImageWidget
+                v-if="item.type == 'image'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <MenuWidget
+                v-if="item.type == 'menu'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <VideoWidget
+                v-if="item.type == 'video'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <MapWidget
+                v-if="item.type == 'map'"
+                :item="item"
+                :sectionId="sectionId"
+              />
+              <AudioWidget
+                v-if="item.type == 'audio'"
+                :item="item"
+                :sectionId="sectionId"
+              />
             </GridItem>
 
             <GridItem
@@ -140,7 +172,7 @@
                 class="hint text-capitalize"
                 >{{ item.type }}</label
               >
-              <FormWidget :item="item" />
+              <FormWidget :item="item" :sectionId="sectionId" />
             </GridItem>
           </div>
         </template>

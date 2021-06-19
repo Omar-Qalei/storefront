@@ -1,6 +1,10 @@
 <template>
   <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
+    <SettingsWidget
+      :show="item.i === getSelectedWidgetById.i"
+      :item="item"
+      :sectionId="sectionId"
+    ></SettingsWidget>
     <div
       class="d-flex"
       :style="[
@@ -47,6 +51,7 @@ export default {
   },
   props: {
     item: {},
+    sectionId: Number,
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),

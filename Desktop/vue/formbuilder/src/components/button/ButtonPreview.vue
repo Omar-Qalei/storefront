@@ -1,12 +1,5 @@
 <template>
   <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    {{ item.i }}
-    <!--  x: {{ item.x }} y: {{ item.y }} -->
-    <SettingsWidget
-      :show="item.i === getSelectedWidgetById.i"
-      :item="item"
-      :sectionId="sectionId"
-    ></SettingsWidget>
     <!-- <template v-if="selectedLinkTo === null"> -->
     <v-btn
       class="draggable"
@@ -80,14 +73,8 @@
 </template>
 
 <script>
-import SettingsWidget from "../settings/SettingsWidget";
-// mapActions,
-import { mapGetters } from "vuex";
 export default {
   name: "ButtonWidget",
-  components: {
-    SettingsWidget,
-  },
   data() {
     return {
       hover: false,
@@ -98,9 +85,6 @@ export default {
   props: {
     item: {},
     sectionId: Number,
-  },
-  computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
   },
   methods: {
     onHover: function(elementHover) {
@@ -157,7 +141,7 @@ export default {
 .v-btn {
   position: absolute !important;
   display: block !important;
-  z-index: -1 !important;
+  z-index: 1;
   width: 100% !important;
   height: 100% !important;
 }

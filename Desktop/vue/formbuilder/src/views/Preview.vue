@@ -1,18 +1,16 @@
 <template>
   <v-flex class="home page">
     <PreviewPages></PreviewPages>
-    <SettingsDialog from="modal" />
   </v-flex>
 </template>
 
 <script>
 // import { mapActions } from "vuex";
 import PreviewPages from "./PreviewPages";
-import SettingsDialog from "../components/settings/SettingsDialog";
 
 export default {
   name: "Preview",
-  components: { PreviewPages, SettingsDialog },
+  components: { PreviewPages },
   data() {
     return {
       dialog: true,

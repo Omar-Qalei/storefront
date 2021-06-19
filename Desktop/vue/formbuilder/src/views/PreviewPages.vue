@@ -91,14 +91,14 @@
                 class="hint text-capitalize"
                 >{{ item.type }}</label
               >
-              <ButtonWidget v-if="item.type == 'button'" :item="item" />
-              <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
-              <TextWidget v-if="item.type == 'text'" :item="item" />
-              <ImageWidget v-if="item.type == 'image'" :item="item" />
-              <MenuWidget v-if="item.type == 'menu'" :item="item" />
-              <VideoWidget v-if="item.type == 'video'" :item="item" />
+              <ButtonPreview v-if="item.type == 'button'" :item="item" />
+              <CarouselPreview v-if="item.type == 'carousel'" :item="item" />
+              <TextPreview v-if="item.type == 'text'" :item="item" />
+              <ImagePreview v-if="item.type == 'image'" :item="item" />
+              <MenuPreview v-if="item.type == 'menu'" :item="item" />
               <MapWidget v-if="item.type == 'map'" :item="item" />
-              <AudioWidget v-if="item.type == 'audio'" :item="item" />
+              <VideoPreview v-if="item.type == 'video'" :item="item" />
+              <MapPreview v-if="item.type == 'audio'" :item="item" />
             </GridItem>
             <GridItem
               :key="index"
@@ -119,7 +119,7 @@
                 class="hint text-capitalize"
                 >{{ item.type }}</label
               >
-              <FormWidget :item="item" />
+              <FormPreview :item="item" />
             </GridItem>
           </template>
         </GridLayout>
@@ -136,30 +136,30 @@
 import { GridLayout, GridItem } from "vue-grid-layout";
 // mapActions,
 import { mapGetters } from "vuex";
-import ButtonWidget from "../components/button/ButtonWidget";
-import CarouselWidget from "../components/carousel/CarouselWidget";
-import TextWidget from "../components/text/TextWidget";
-import ImageWidget from "../components/image/ImageWidget";
-import FormWidget from "../components/form/FormWidget";
-import MenuWidget from "../components/menu/MenuWidget";
-import VideoWidget from "../components/video/VideoWidget";
-import MapWidget from "../components/map/MapWidget";
-import AudioWidget from "../components/audio/AudioWidget";
+import ButtonPreview from "../components/button/ButtonPreview";
+import CarouselPreview from "../components/carousel/CarouselPreview";
+import TextPreview from "../components/text/TextPreview";
+import ImagePreview from "../components/image/ImagePreview";
+import FormPreview from "../components/form/FormPreview";
+import MenuPreview from "../components/menu/MenuPreview";
+import VideoPreview from "../components/video/VideoPreview";
+import MapPreview from "../components/map/MapPreview";
+// import AudioPreview from "../components/audio/AudioPreview";
 
 export default {
   name: "PreviewPages",
   components: {
     GridLayout,
     GridItem,
-    ButtonWidget,
-    CarouselWidget,
-    TextWidget,
-    ImageWidget,
-    FormWidget,
-    MenuWidget,
-    VideoWidget,
-    MapWidget,
-    AudioWidget,
+    ButtonPreview,
+    CarouselPreview,
+    TextPreview,
+    ImagePreview,
+    FormPreview,
+    MenuPreview,
+    VideoPreview,
+    MapPreview,
+    // AudioPreview,
   },
   data() {
     return {
@@ -172,9 +172,6 @@ export default {
       margin: [0, 0],
       rowHeight: 30,
     };
-  },
-  methods: {
-    // ...mapActions(["fetchResources"]),
   },
   computed: {
     ...mapGetters(["getSections", "getScreenSize"]),

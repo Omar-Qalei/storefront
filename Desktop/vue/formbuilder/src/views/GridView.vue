@@ -107,7 +107,11 @@
             </v-row>
           </template>
           <label v-show="hoverElement === item.id" class="hint">Section</label>
-          <SettingsWidget :show="item.i === getSelectedWidgetById.i" />
+          <SettingsWidget
+            :item="item"
+            :show="item.i === getSelectedWidgetById.i"
+            :sectionId="item.id"
+          />
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"

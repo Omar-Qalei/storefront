@@ -32,6 +32,80 @@ export const fetchResources = ({ commit }, payload) => {
     }
 }
 
+// Action to duplicate element
+export const onDuplicateResource = ({ commit, state }, payload) => {
+    let g = lib.guid()
+    let k;
+    if (payload.item.type !== 'section') {
+        k = {
+            'x': payload.item.x, 'y': payload.item.y, 'w': payload.item.w, 'h': payload.item.h, 'i': g, 'type': payload.item.type,
+            properties: {
+                name: payload.item.type,
+                style: payload.item.properties.style,
+                elementHover: payload.item.properties.elementHover,
+                fields: payload.item.properties.fields,
+                map: payload.item.properties.map,
+                text: payload.item.properties.text,
+            }
+        }
+        k.i = g;
+        commit('duplicateResource', { k: k, id: 0 })
+    } else {
+        k = {
+            collides: payload.item.collides,
+            h: payload.item.h,
+            i: "",
+            moved: payload.item.moved,
+            properties: payload.item.properties,
+            resize: payload.item.resize,
+            resources: [],
+            type: "section",
+            w: payload.item.w,
+            x: payload.item.x,
+            y: payload.item.y,
+        }
+        k.i = g;
+        let max = 0;
+        state.sections.forEach(element => {
+            console.log('element.id', element.id)
+            if (max === 0) {
+                max += 1;
+            }
+            if (max <= element.id) {
+                max += element.id;
+            }
+        });
+        k.id = max;
+        payload.item.resources.forEach(element => {
+            const i = element.i;
+            if (element.i !== lib.guid()) {
+                k.resources.push({
+                    'x': element.x, 'y': element.y, 'w': element.w, 'h': element.h, 'i': lib.guid(), 'type': element.type,
+                    properties: {
+                        name: element.type,
+                        style: element.properties.style,
+                        elementHover: element.properties.elementHover,
+                        fields: element.properties.fields,
+                        map: element.properties.map,
+                        text: element.properties.text,
+                    }
+                });
+            }
+            element.i = i;
+        });
+        commit('duplicateSection', k)
+    }
+}
+
+// Action to remove element
+export const onRemoveResource = ({ commit }, payload) => {
+    if (payload.type !== 'section') {
+        commit('removeResource', payload)
+    } else {
+        commit('removeSection', payload)
+    }
+}
+
 export const addNewSection = ({ commit, state }, payload) => {
     let g = lib.guid()
     let k = {

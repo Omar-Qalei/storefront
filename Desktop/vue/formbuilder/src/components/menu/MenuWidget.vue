@@ -1,6 +1,10 @@
 <template>
   <div class="widget">
-    <SettingsWidget :show="item.i === getSelectedWidgetById.i"></SettingsWidget>
+    <SettingsWidget
+      :show="item.i === getSelectedWidgetById.i"
+      :item="item"
+      :sectionId="sectionId"
+    ></SettingsWidget>
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn color="primary" dark v-bind="attrs" v-on="on">
@@ -36,6 +40,7 @@ export default {
   },
   props: {
     item: {},
+    sectionId: Number,
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),

@@ -1,10 +1,5 @@
 <template>
   <div class="widget">
-    <SettingsWidget
-      :show="item.i === getSelectedWidgetById.i"
-      :item="item"
-      :sectionId="sectionId"
-    ></SettingsWidget>
     <img
       :src="getDefaultImage(item)"
       :alt="item.properties.alt"
@@ -14,17 +9,10 @@
 </template>
 
 <script>
-import SettingsWidget from "../settings/SettingsWidget";
-import { mapGetters } from "vuex";
 export default {
-  name: "ImageWidget",
-  components: {
-    SettingsWidget,
-  },
+  name: "ImagePreview",
   data() {
     return {
-      // height: Number,
-      // width: Number,
       style: {
         objectFit: "cover",
       },
@@ -34,17 +22,12 @@ export default {
     item: {},
     sectionId: Number,
   },
-  computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
-  },
   methods: {
     getDefaultImage(item) {
       if (item.properties.image) return item.properties.image;
       return "https://zrassets.s3.eu-north-1.amazonaws.com/bed-and-breakfast/images/amenities.jpg";
     },
   },
-  created() {},
-  mounted() {},
 };
 </script>
 
