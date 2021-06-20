@@ -38,8 +38,6 @@
               onCheckGridHeight();
             "
           >
-            {{ item.i }}
-
             <GridItem
               v-if="item.type != 'form'"
               :class="{ editMode: !preview, dropped: item.i === 'drop' }"
