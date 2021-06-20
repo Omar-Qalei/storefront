@@ -38,6 +38,8 @@
               onCheckGridHeight();
             "
           >
+            {{ item.i }}
+
             <GridItem
               v-if="item.type != 'form'"
               :class="{ editMode: !preview, dropped: item.i === 'drop' }"
@@ -61,45 +63,6 @@
                 selectedElement === item.i ? showElement : '',
               ]"
             >
-              <!-- <div
-            v-if="!preview"
-            @click="removeItem({ key: index })"
-            style="position: absolute; bottom: 0px; left: 4px"
-          >
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </div> -->
-
-              <!-- <TextWidget
-            v-if="item.type == 'title'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></TextWidget>
-
-          <TextAreaWidget
-            v-if="item.type == 'content'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></TextAreaWidget>
-
-          <ImageWidget
-            v-if="item.type == 'image'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></ImageWidget>
-
-          <ButtonWidget
-            v-if="item.type == 'button'"
-            :preview="preview"
-            :contenteditable="contenteditable"
-            :item="item"
-            :itemIndex="index"
-          ></ButtonWidget> -->
               <label
                 v-show="hoverElement === item.i && selectedElement !== item.i"
                 class="hint text-capitalize"

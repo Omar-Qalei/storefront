@@ -26,6 +26,7 @@
         @dragover="onMouseTouched({ i: item.i, indexSection: index })"
         @click="
           selectedSection = item.id;
+          selectedElement = item.i;
           onSelectedSection({ index: index, id: item.id });
           onSelectedWidgetById(item);
         "
@@ -58,7 +59,9 @@
           :ref="'section'"
           :style="[
             selectedSection === item.id ? activeSection : '',
+            selectedElement === item.i ? showElement : '',
             hoverElement === item.id ? activeSection : '',
+            hoverElement === item.id ? showElement : '',
             {
               width: getScreenSize.width,
             },
@@ -106,7 +109,11 @@
               </v-col>
             </v-row>
           </template>
-          <label v-show="hoverElement === item.id" class="hint">Section</label>
+          <label
+            v-show="hoverElement === item.id && selectedElement !== item.i"
+            class="hint"
+            >Section</label
+          >
           <SettingsWidget
             :item="item"
             :show="item.i === getSelectedWidgetById.i"
@@ -187,6 +194,10 @@ export default {
       hoverElement: 0,
       siteId: null,
       pageId: null,
+      selectedElement: null,
+      showElement: {
+        zIndex: "9",
+      },
     };
   },
   methods: {

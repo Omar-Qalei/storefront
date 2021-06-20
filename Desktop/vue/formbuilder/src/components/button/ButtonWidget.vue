@@ -1,6 +1,5 @@
 <template>
   <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    {{ item.i }}
     <!--  x: {{ item.x }} y: {{ item.y }} -->
     <SettingsWidget
       :show="item.i === getSelectedWidgetById.i"

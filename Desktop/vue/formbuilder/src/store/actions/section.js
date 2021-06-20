@@ -56,7 +56,12 @@ export const onDuplicateResource = ({ commit, state }, payload) => {
             h: payload.item.h,
             i: "",
             moved: payload.item.moved,
-            properties: payload.item.properties,
+            properties: {
+                name: payload.item.type,
+                style: payload.item.properties.style,
+                elementHover: payload.item.properties.elementHover,
+                backgroundVideo: payload.item.properties.backgroundVideo
+            },
             resize: payload.item.resize,
             resources: [],
             type: "section",
