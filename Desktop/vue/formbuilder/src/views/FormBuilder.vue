@@ -1,15 +1,31 @@
 <template>
-  <v-flex class="form-builder page">
-    <Navbar />
-    <Sidebar />
-    <Pages />
-    <div class="d-flex h-100">
-      <v-main>
-        <GridView></GridView>
-        <SettingsDialog from="modal" />
-      </v-main>
-    </div>
-  </v-flex>
+  <div>
+    <LoadingPage v-if="getLoadingPage" />
+    <v-flex class="form-builder page" v-else>
+      <Navbar />
+      <Sidebar />
+      <Pages />
+      <div class="d-flex h-100">
+        <!-- :style="{
+          maxWidth: getScreenSize.width,
+          transition: 'width 18s ease-in-out;',
+        }" -->
+        <v-main>
+          <v-col cols="12" class="center">
+            <v-card
+              style="transition: width 2s ease 0s;"
+              :style="{
+                width: getScreenSize.width,
+              }"
+            >
+              <GridView></GridView>
+            </v-card>
+          </v-col>
+          <SettingsDialog from="modal" />
+        </v-main>
+      </div>
+    </v-flex>
+  </div>
 </template>
 
 <script>
@@ -20,10 +36,11 @@ import Navbar from "../layouts/form-builder/Navbar";
 import Sidebar from "../layouts/form-builder/Sidebar";
 import Pages from "../layouts/form-builder/Pages";
 import { SiteService } from "../services/site/site";
+import LoadingPage from "../layouts/LoadingPage";
 
 export default {
   name: "FormBuilder",
-  components: { GridView, SettingsDialog, Navbar, Sidebar, Pages },
+  components: { GridView, SettingsDialog, Navbar, Sidebar, Pages, LoadingPage },
   data() {
     return {
       dialog: true,
@@ -32,10 +49,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedPage", "getScreenSize"]),
+    ...mapGetters(["getSelectedPage", "getScreenSize", "getLoadingPage"]),
   },
   methods: {
-    ...mapActions(["fetchSections", "fetchPages"]),
+    ...mapActions(["fetchSections", "fetchPages", "onLoadingPage"]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
@@ -44,6 +61,14 @@ export default {
     },
     getSiteById: function() {
       this.fetchSections([]);
+      if (localStorage.getItem(this.getScreenSize.screen)) {
+        const data = JSON.parse(
+          localStorage.getItem(this.getScreenSize.screen)
+        );
+        if (data !== null && this.getScreenSize.screen === "web") {
+          this.fetchSections(data);
+        }
+      }
       SiteService.getSitePages(this.siteId)
         .then((result) => {
           const data = result.data.data;
@@ -59,22 +84,39 @@ export default {
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;
-          console.log(data);
-          if (data && data.web && this.getScreenSize.screen === "web")
-            this.fetchSections(JSON.parse(data.web));
-
-          if (data && data.mobile && this.getScreenSize.screen === "mobile")
-            this.fetchSections(JSON.parse(data.mobile));
+          if (data) {
+            localStorage.setItem("web", data.web);
+            localStorage.setItem("mobile", data.mobile);
+            if (data.web) this.fetchSections(JSON.parse(data.web));
+          } else {
+            this.fetchSections([]);
+          }
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(() => this.onLoadingPage(false));
     },
   },
   watch: {
     getSelectedPage: function(pageId) {
       this.pageId = pageId;
+      this.onLoadingPage(true);
       this.getSitePageResources();
+    },
+    getScreenSize: function(type) {
+      if (type.screen === "web") {
+        if (JSON.parse(localStorage.getItem("web"))) {
+          let resource = JSON.parse(localStorage.getItem("web"));
+          this.fetchSections(resource);
+        }
+      }
+      if (type.screen === "mobile") {
+        if (JSON.parse(localStorage.getItem("mobile"))) {
+          let resource = JSON.parse(localStorage.getItem("mobile"));
+          this.fetchSections(resource);
+        }
+      }
     },
   },
   created() {
@@ -85,5 +127,8 @@ export default {
 <style scoped>
 .page {
   padding: 0 45px 45px;
+}
+.center {
+  text-align: -webkit-center;
 }
 </style>

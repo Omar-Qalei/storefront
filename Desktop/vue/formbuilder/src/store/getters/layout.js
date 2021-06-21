@@ -13,3 +13,7 @@ export const getPages = (state) => {
 export const getSelectedPage = (state) => {
     return state.selectedPage
 };
+
+export const getLoadingPage = (state) => {
+    return state.loading
+};

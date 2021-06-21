@@ -13,3 +13,7 @@ export const setPages = (state, payload) => {
 export const setSelectedPage = (state, payload) => {
     state.selectedPage = payload;
 }
+
+export const setLoadingPage = (state, payload) => {
+    state.loading = payload;
+}

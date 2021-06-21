@@ -13,9 +13,9 @@
     :responsive="getScreenSize.responsive"
     :use-css-transforms="true"
     :col-num="getScreenSize.cols"
+    style="transition: width 2s ease 0s;"
     :style="{
       width: getScreenSize.width,
-      margin: '0 auto',
     }"
   >
     <template v-for="(item, index) in getSections">
@@ -57,6 +57,7 @@
           :minW="getScreenSize.cols"
           :id="item.i"
           :ref="'section'"
+          style="transition: width 2s ease 0s;"
           :style="[
             selectedSection === item.id ? activeSection : '',
             selectedElement === item.i ? showElement : '',
@@ -196,7 +197,7 @@ export default {
       pageId: null,
       selectedElement: null,
       showElement: {
-        zIndex: "9",
+        zIndex: "2",
       },
     };
   },
@@ -334,24 +335,64 @@ export default {
       }
     },
     onUpdatePage: function() {
-      const data = JSON.stringify(this.getSections);
-      if (this.getScreenSize.screen === "web")
-        SiteService.addSitePageResourceWeb(this.siteId, this.pageId, data)
-          .then(() => {
-            console.log("Web posted");
-          })
-          .catch((error) => {
-            console.log(error);
+      let web, mobile;
+      if (
+        JSON.parse(localStorage.getItem("web")) &&
+        JSON.parse(localStorage.getItem("mobile"))
+      ) {
+        web = JSON.parse(localStorage.getItem("web"));
+        mobile = JSON.parse(localStorage.getItem("mobile"));
+        if (this.getSelectedWidgetById.type === "section") {
+          web.forEach((element) => {
+            if (element.i === this.getSelectedWidgetById.i)
+              element.properties = this.getSelectedWidgetById.properties;
           });
-
-      if (this.getScreenSize.screen === "mobile")
-        SiteService.addSitePageResourceMobile(this.siteId, this.pageId, data)
-          .then(() => {
-            console.log("Mobile posted");
-          })
-          .catch((error) => {
-            console.log(error);
+          mobile.forEach((element) => {
+            if (element.i === this.getSelectedWidgetById.i)
+              element.properties = this.getSelectedWidgetById.properties;
           });
+          localStorage.setItem("web", JSON.stringify(web));
+          localStorage.setItem("mobile", JSON.stringify(mobile));
+        }
+        if (this.getSelectedWidgetById.type !== "section") {
+          web.forEach((element) => {
+            element.resources.forEach((obj) => {
+              if (obj.i === this.getSelectedWidgetById.i)
+                obj.properties = this.getSelectedWidgetById.properties;
+            });
+          });
+          mobile.forEach((element) => {
+            element.resources.forEach((obj) => {
+              if (obj.i === this.getSelectedWidgetById.i)
+                obj.properties = this.getSelectedWidgetById.properties;
+            });
+          });
+          localStorage.setItem("web", JSON.stringify(web));
+          localStorage.setItem("mobile", JSON.stringify(mobile));
+        }
+      }
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(web)
+      )
+        .then(() => {
+          console.log("Web posted");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(mobile)
+      )
+        .then(() => {
+          console.log("Mobile posted");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   computed: {

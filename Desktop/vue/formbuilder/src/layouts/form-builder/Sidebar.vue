@@ -101,6 +101,7 @@ export default {
   top: 58px;
   height: 100%;
   background-color: white;
+  z-index: 15;
 }
 .settings {
   margin-top: 58px;

@@ -10,6 +10,12 @@
     </a>
     <div class="spacer"></div>
     <div class="settings d-flex">
+      <v-chip class="ma-2" color="deep-purple accent-4" outlined>
+        <v-icon left>
+          mdi-check-decagram
+        </v-icon>
+        Auto Save
+      </v-chip>
       <a
         class="link-icon"
         @click="
@@ -20,7 +26,6 @@
             screen: 'mobile',
           });
           onRearrangementResources();
-          onSortSectionsLayout();
           getSitePageResources();
         "
       >
@@ -65,7 +70,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { SiteService } from "../../services/site/site";
+// import { SiteService } from "../../services/site/site";
 
 export default {
   name: "Navbar",
@@ -91,18 +96,35 @@ export default {
       }
     },
     getSitePageResources: function() {
-      SiteService.getSitePageResources(this.siteId, this.pageId)
-        .then((result) => {
-          const data = result.data.data;
-          if (data && data.web && this.getScreenSize.screen === "web")
-            this.fetchSections(JSON.parse(data.web));
-
-          if (data && data.mobile && this.getScreenSize.screen === "mobile")
-            this.fetchSections(JSON.parse(data.mobile));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // console.log(this.screen);
+      // if (this.screen === "web") {
+      //   if (localStorage.getItem("web")) {
+      //     let resource = JSON.parse(localStorage.getItem("web"));
+      //     this.fetchSections(resource);
+      //   }
+      // }
+      // if (this.screen === "mobile") {
+      //   if (localStorage.getItem("mobile")) {
+      //     let resource = JSON.parse(localStorage.getItem("mobile"));
+      //     this.fetchSections(resource);
+      //   }
+      // }
+      // if (
+      //   resource &&
+      //   resource.mobile &&
+      //   this.getScreenSize.screen === "mobile"
+      // ) {
+      //   this.fetchSections(JSON.parse(resource.mobile));
+      // }
+      // SiteService.getSitePageResources(this.siteId, this.pageId)
+      //   .then((result) => {
+      //     const data = JSON.stringify(result.data.data);
+      //     localStorage.setItem("resources", data);
+      //     this.onSortSectionsLayout();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
   },
   computed: {
@@ -141,8 +163,8 @@ nav {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1;
   background: white;
+  z-index: 15;
 }
 .logo {
   font-weight: 700;

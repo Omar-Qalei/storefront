@@ -49,7 +49,7 @@ export const onDuplicateResource = ({ commit, state }, payload) => {
             }
         }
         k.i = g;
-        commit('duplicateResource', { k: k, id: 0 })
+        commit('duplicateResource', { k: k, id: payload.id })
     } else {
         k = {
             collides: payload.item.collides,
@@ -143,7 +143,8 @@ export const onDragOver = ({ commit }, payload) => {
 
 export const onDrag = ({ commit, state }) => {
     let k = {
-        'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height, 'i': "drop", 'type': state.element.type,
+        'x': (state.resources.length * 2) % (state.properties.colNum || 2), 'y': state.resources.length + (state.properties.colNum || 2), 'w': state.element.width, 'h': state.element.height,
+        'i': "drop", 'type': state.element.type,
         properties: {
             name: state.element.type,
             style: null,

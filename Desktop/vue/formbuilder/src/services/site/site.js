@@ -38,4 +38,8 @@ export class SiteService {
         const url = `user/${ApiConfiguration.sites.url}/${siteId}`;
         return await httpClient.delete(url);
     }
+    static async removePage(siteId, pageId) {
+        const url = `user/${ApiConfiguration.sites.url}/${siteId}/${ApiConfiguration.page.url}/${pageId}`;
+        return await httpClient.delete(url);
+    }
 }

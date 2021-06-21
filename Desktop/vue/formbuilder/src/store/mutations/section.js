@@ -10,16 +10,23 @@ export const duplicateResource = (state, payload) => {
     let index = state.sections.findIndex(obj => obj.id === payload.id);
     state.selectedWidget = { i: null };
     state.sections[index].resources.push(payload.k);
+    localStorage.setItem("web", JSON.stringify(state.sections));
+    localStorage.setItem("mobile", JSON.stringify(state.sections));
 };
 
 export const removeResource = (state, payload) => {
     state.selectedWidget = { i: null };
     let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
-    const index = state.sections.map((item) => item.id).indexOf(payload.id);
+    const index = state.sections.findIndex((item) => item.id === payload.id);
     if (refIndex > -1 && index > -1) {
-        // state.sections[index].resources.splice(refIndex, 1);
-        state.properties.refGridLayout.$children[refIndex].$refs.item.style.display = "none";
-        // console.log(state.sections[index].resources);
+        state.properties.refGridLayout.$children[refIndex].$refs.item.style.transition = "none";
+        const web = JSON.parse(localStorage.getItem('web'));
+        const mobile = JSON.parse(localStorage.getItem('mobile'));
+        web[index].resources.splice(refIndex, 1);
+        mobile[index].resources.splice(refIndex, 1);
+        localStorage.setItem('web', JSON.stringify(web))
+        localStorage.setItem('mobile', JSON.stringify(mobile))
+        state.sections[index].resources.splice(refIndex, 1);
     }
 };
 
@@ -103,6 +110,8 @@ export const setNewSection = (state, payload) => {
         payload.selectedIndex = 1;
         state.sections.push(payload);
     }
+    localStorage.setItem("web", JSON.stringify(state.sections));
+    localStorage.setItem("mobile", JSON.stringify(state.sections));
     state.sections = compact(state.sections);
     // state.sections.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
 }
@@ -167,6 +176,8 @@ export const duplicateSection = (state, payload) => {
         payload.selectedIndex = 1;
         state.sections.push(payload);
     }
+    localStorage.setItem("web", JSON.stringify(state.sections));
+    localStorage.setItem("mobile", JSON.stringify(state.sections));
     state.sections = compact(state.sections);
     // state.sections.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
 }
@@ -321,6 +332,8 @@ export const setDragEnd = (state, payload) => {
                 // }
                 // state.sections[state.currentSelectedSectionIndex].resources.push(payload);
                 // }
+                localStorage.setItem("web", JSON.stringify(state.sections));
+                localStorage.setItem("mobile", JSON.stringify(state.sections));
                 try {
                     state.properties.refGridLayout.$children[state.sections[indexSection].resources.length].$refs.item.style.display = "block";
                     state.indexSection = null;
@@ -381,7 +394,6 @@ export const setUpdateSectionLayout = (state, payload) => {
 }
 
 export const setSelectedSection = (state, payload) => {
-    console.log(state.currentSelectedSectionId);
     state.currentSelectedSectionIndex = payload.index;
     state.currentSelectedSectionId = payload.id;
 }
@@ -472,8 +484,8 @@ export const rearrangementResources = (state) => {
     state.sections.map(element => {
         if (element.collides)
             element.resources = compactResources(element.resources);
-
-        element.collides = false;
+        // here
+        element.collides = true;
     });
 }
 
@@ -578,14 +590,12 @@ export function compactItem(compareWith, l) {
 export function getFirstCollision(layout, layoutItem) {
     // console.log('getFirstCollision:', layout, layoutItem.type);
     for (let i = 0, len = layout.length; i < len; i++) {
-        console.log('collides:', collides(layout[i], layoutItem, layout[i].type, layoutItem.type));
         if (collides(layout[i], layoutItem)) return layout[i];
     }
 }
 
 export function sortLayoutItemsByRowCol(layout) {
     return [].concat(layout).sort(function (a, b) {
-        console.log(a.y === b.y && a.x === b.x);
         if (a.y === b.y && a.x === b.x) {
             return 0;
         }

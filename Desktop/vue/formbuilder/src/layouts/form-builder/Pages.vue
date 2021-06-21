@@ -23,7 +23,7 @@
               </v-btn>
             </v-list-item-action>
           </v-list-item>
-          <v-list-item link @click="addPage">
+          <v-list-item link @click="dialog = true">
             <v-list-item-icon>
               <v-icon
                 color="indigo"
@@ -49,9 +49,27 @@
               "
             >
               <v-list-item-icon>
-                <v-btn x-small icon color="primary">
-                  <v-icon color="primary">mdi mdi-drag</v-icon>
-                </v-btn>
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      x-small
+                      icon
+                      color="primary"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon color="primary">mdi mdi-cog-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item link>
+                      <v-list-item-title> Edit</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="onRemovePage(page.id)" link>
+                      <v-list-item-title> Delete</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-list-item-icon>
               <v-list-item-title>
                 <v-flex class="mr-auto">
@@ -67,6 +85,39 @@
         </v-list>
       </v-navigation-drawer>
     </div>
+
+    <!-- Add Page Dialog -->
+    <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Add Page
+        </v-card-title>
+
+        <v-card-text>
+          <v-col cols="12">
+            <h2 class="body-1 font-weight-medium mb-2">
+              Name
+            </h2>
+            <v-text-field outlined v-model="name" hide-details></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <h2 class="body-1 font-weight-medium mb-2">
+              Path
+            </h2>
+            <v-text-field outlined v-model="path" hide-details></v-text-field>
+          </v-col>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="addPage">
+            Add
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -85,26 +136,36 @@ export default {
       mini: true,
       selectedPage: null,
       siteId: null,
+      dialog: false,
+      name: null,
+      path: null,
     };
   },
   methods: {
-    ...mapActions(["onDrawerPages", "onSelectedPage", "fetchPages"]),
+    ...mapActions([
+      "onDrawerPages",
+      "onSelectedPage",
+      "fetchPages",
+      "onLoadingPage",
+    ]),
     onAddElement: function() {
       this.addElement = !this.addElement;
     },
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
+        this.getSiteById();
       }
     },
     addPage: function() {
       const data = {
-        name: "Home" + this.getPages.length,
-        path: "/home/" + this.getPages.length,
+        name: this.name,
+        path: this.path,
       };
       SiteService.addPage(this.siteId, data)
         .then(() => {
-          // const data = result.data.data;
+          this.dialog = false;
+          this.drawer = true;
           this.getSiteById();
         })
         .catch((err) => console.log(err));
@@ -119,19 +180,31 @@ export default {
           console.log(error);
         });
     },
-    getSitePageResources: function() {
-      SiteService.getSitePageResources(this.siteId, this.pageId)
-        .then((result) => {
-          const data = result.data.data;
-          if (data && data.web && this.getScreenSize.screen === "web")
-            this.fetchSections(JSON.parse(data.web));
-
-          if (data && data.mobile && this.getScreenSize.screen === "mobile")
-            this.fetchSections(JSON.parse(data.mobile));
+    // getSitePageResources: function() {
+    //   console.log("checked");
+    //   SiteService.getSitePageResources(this.siteId, this.pageId)
+    //     .then((result) => {
+    //       const data = result.data.data;
+    //       if (data) {
+    //         localStorage.setItem("web", data.web);
+    //         localStorage.setItem("mobile", data.mobile);
+    //         if (data.web) this.fetchSections(JSON.parse(data.web));
+    //       } else {
+    //         this.fetchSections([]);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    onRemovePage: function(pageId) {
+      SiteService.removePage(this.siteId, pageId)
+        .then(() => {
+          this.dialog = false;
+          this.drawer = true;
+          this.getSiteById();
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => console.log(err));
     },
   },
   computed: {
@@ -165,6 +238,7 @@ export default {
   top: 58px;
   height: 100%;
   background-color: white;
+  z-index: 15;
 }
 .settings {
   top: 48px !important;

@@ -13,3 +13,7 @@ export const fetchPages = ({ commit }, payload) => {
 export const onSelectedPage = ({ commit }, payload) => {
     commit('setSelectedPage', payload)
 }
+
+export const onLoadingPage = ({ commit }, payload) => {
+    commit('setLoadingPage', payload)
+}
