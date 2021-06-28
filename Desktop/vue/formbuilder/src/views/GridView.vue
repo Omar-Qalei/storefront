@@ -34,10 +34,6 @@
           currentSelectedSection = item.id;
           selectedSectionByI = item.i;
         "
-        @mouseup="
-          displayPlaceholder = false;
-          onCheckUpdateSectionLayoutResized({ sectionId: item.id });
-        "
       >
         <GridItem
           :class="{
@@ -435,7 +431,12 @@ export default {
   },
   mounted() {
     const thiz = this;
+    console.log(thiz.selectedSection);
     window.addEventListener("mouseup", function() {
+      thiz.displayPlaceholder = false;
+      thiz.onCheckUpdateSectionLayoutResized({
+        sectionId: thiz.selectedSection,
+      });
       if (thiz.getSelectedWidgetById.type === "section") {
         thiz.getWebResources.forEach((element) => {
           if (element.id === thiz.getSelectedWidgetById.id)

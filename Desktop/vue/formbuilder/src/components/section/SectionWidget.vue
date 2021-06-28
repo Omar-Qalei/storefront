@@ -33,10 +33,6 @@
               onMoveElement(index);
             "
             @dblclick="selectedElement = null"
-            @mouseup="
-              onMouseUp;
-              onCheckGridHeight();
-            "
           >
             <GridItem
               v-if="item.type != 'form'"
@@ -211,12 +207,6 @@ export default {
       "onRemoveBreakLines",
       "onCheckGridHeight",
     ]),
-    onMouseUp() {
-      this.$emit("onDragElement", false);
-      this.statusMoveElement = false;
-      this.onResizeSection(false);
-      this.$emit("onMouseUpGrid", false);
-    },
     onMouseDown() {
       this.$emit("onDragElement", true);
       this.statusMoveElement = true;
@@ -286,10 +276,13 @@ export default {
     ]),
   },
   mounted() {
-    // const thiz = this;
+    const thiz = this;
     window.addEventListener("mouseup", function() {
-      // if (thiz.getSelectedWidgetById.type === "section") {
-      // }
+      thiz.onCheckGridHeight();
+      thiz.$emit("onDragElement", false);
+      thiz.statusMoveElement = false;
+      thiz.onResizeSection(false);
+      thiz.$emit("onMouseUpGrid", false);
     });
   },
   updated() {
