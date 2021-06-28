@@ -2,6 +2,14 @@ export const getSections = (state) => {
     return state.sections
 };
 
+export const getWebResources = (state) => {
+    return state.webResources
+};
+
+export const getMobileResources = (state) => {
+    return state.mobileResources
+};
+
 export const getResources = (state) => {
     return state.resources
 };
@@ -17,7 +25,6 @@ export const getRefs = (state) => {
 export const getPreventCollision = (state) => {
     return state.preventCollision
 };
-
 
 export const getCurrentSectionLayout = (state) => {
     return state.currentSectionLayout

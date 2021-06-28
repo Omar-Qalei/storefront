@@ -18,7 +18,10 @@
       fab
       x-small
       light
-      @click="onDuplicateResource({ item: item, id: sectionId })"
+      @click="
+        onDuplicateResource({ item: item, id: sectionId });
+        onFetchData();
+      "
     >
       <v-icon>mdi-content-duplicate</v-icon>
     </v-btn>
@@ -26,7 +29,10 @@
       color="white"
       fab
       x-small
-      @click="onRemoveResource({ i: item.i, type: item.type, id: sectionId })"
+      @click="
+        onRemoveResource({ i: item.i, type: item.type, id: sectionId });
+        onFetchData();
+      "
     >
       <v-icon>mdi-delete-outline</v-icon>
     </v-btn>
@@ -35,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "SettingsWidget",
   props: {
@@ -51,7 +57,21 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["onRemoveResource", "onDuplicateResource"]),
+    ...mapActions(["onRemoveResource", "onDuplicateResource", "fetchSections"]),
+    onFetchData: function() {
+      let resource;
+      if (this.getScreenSize.screen === "web") {
+        resource = this.getWebResources;
+        this.fetchSections(resource);
+      }
+      if (this.getScreenSize.screen === "mobile") {
+        resource = this.getMobileResources;
+        this.fetchSections(resource);
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["getScreenSize", "getWebResources", "getMobileResources"]),
   },
 };
 </script>

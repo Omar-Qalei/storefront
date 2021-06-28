@@ -26,7 +26,7 @@
         @dragover="onMouseTouched({ i: item.i, indexSection: index })"
         @click="
           selectedSection = item.id;
-          selectedElement = item.i;
+          selectedElement = item.id;
           onSelectedSection({ index: index, id: item.id });
           onSelectedWidgetById(item);
         "
@@ -37,7 +37,6 @@
         @mouseup="
           displayPlaceholder = false;
           onCheckUpdateSectionLayoutResized({ sectionId: item.id });
-          onUpdatePage();
         "
       >
         <GridItem
@@ -60,9 +59,9 @@
           style="transition: width 2s ease 0s;"
           :style="[
             selectedSection === item.id ? activeSection : '',
-            selectedElement === item.i ? showElement : '',
+            selectedElement === item.id ? showElement : '',
             hoverElement === item.id ? activeSection : '',
-            hoverElement === item.id ? showElement : '',
+
             {
               width: getScreenSize.width,
             },
@@ -70,6 +69,7 @@
           ]"
           @resize="resizeEvent"
         >
+          <!-- hoverElement === item.id ? showElement : '', -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
               <video autoplay muted loop id="myVideo">
@@ -106,15 +106,19 @@
               <v-col>
                 <p class="ma-0 text-center">
                   This is a blank section, start adding to it.
+                  <!--  id: {{ item.id }} index: {{ index }} selectedIndex:
+                  {{ item.selectedIndex }} -->
                 </p>
               </v-col>
             </v-row>
           </template>
           <label
-            v-show="hoverElement === item.id && selectedElement !== item.i"
+            v-show="hoverElement === item.id && selectedElement !== item.id"
             class="hint"
             >Section</label
           >
+          <!-- id: <b>{{ item.id }}</b> index: {{ index }} selectedIndex:
+          {{ item.selectedIndex }} -->
           <SettingsWidget
             :item="item"
             :show="item.i === getSelectedWidgetById.i"
@@ -131,6 +135,7 @@
             @onMouseUpGrid="onMouseUpGrid($event)"
             @onMoveGrid="onMoveGrid($event)"
             @resizeGrid="resizeGrid($event)"
+            @onMovedWidget="onMovedWidget()"
             :margin="margin"
             :row-height="rowHeight"
             :responsive="getScreenSize.responsive"
@@ -142,7 +147,10 @@
             dark
             color="#357df9"
             v-if="item.id === selectedSection"
-            @click="addNewSection(item.selectedIndex)"
+            @click="
+              addNewSection(item.selectedIndex);
+              onFetchData();
+            "
             ><v-icon class="icon-add-section mr-2">mdi-plus</v-icon>Add
             Section</v-btn
           >
@@ -197,12 +205,13 @@ export default {
       pageId: null,
       selectedElement: null,
       showElement: {
-        zIndex: "2",
+        zIndex: "4",
       },
     };
   },
   methods: {
     ...mapActions([
+      "fetchSections",
       "onSetLayout",
       "fetchResources",
       "addNewSection",
@@ -214,6 +223,9 @@ export default {
       "onUpdateSectionLayoutResized",
       "onSelectedWidgetById",
       "onCheckUpdateSectionLayoutResized",
+      "fetchWebResources",
+      "fetchMobileResources",
+      "onRearrangementResources",
     ]),
     onDragElement: function(event) {
       this.statusSection = event;
@@ -333,66 +345,47 @@ export default {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
       }
-    },
-    onUpdatePage: function() {
-      let web, mobile;
-      if (
-        JSON.parse(localStorage.getItem("web")) &&
-        JSON.parse(localStorage.getItem("mobile"))
-      ) {
-        web = JSON.parse(localStorage.getItem("web"));
-        mobile = JSON.parse(localStorage.getItem("mobile"));
-        if (this.getSelectedWidgetById.type === "section") {
-          web.forEach((element) => {
-            if (element.i === this.getSelectedWidgetById.i)
-              element.properties = this.getSelectedWidgetById.properties;
-          });
-          mobile.forEach((element) => {
-            if (element.i === this.getSelectedWidgetById.i)
-              element.properties = this.getSelectedWidgetById.properties;
-          });
-          localStorage.setItem("web", JSON.stringify(web));
-          localStorage.setItem("mobile", JSON.stringify(mobile));
-        }
-        if (this.getSelectedWidgetById.type !== "section") {
-          web.forEach((element) => {
-            element.resources.forEach((obj) => {
-              if (obj.i === this.getSelectedWidgetById.i)
-                obj.properties = this.getSelectedWidgetById.properties;
-            });
-          });
-          mobile.forEach((element) => {
-            element.resources.forEach((obj) => {
-              if (obj.i === this.getSelectedWidgetById.i)
-                obj.properties = this.getSelectedWidgetById.properties;
-            });
-          });
-          localStorage.setItem("web", JSON.stringify(web));
-          localStorage.setItem("mobile", JSON.stringify(mobile));
-        }
+      if (this.$route.query.pageId) {
+        this.pageId = +this.$route.query.pageId;
       }
-      SiteService.addSitePageResourceWeb(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(web)
-      )
-        .then(() => {
-          console.log("Web posted");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      SiteService.addSitePageResourceMobile(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(mobile)
-      )
-        .then(() => {
-          console.log("Mobile posted");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    },
+    onFetchData: function() {
+      let resource;
+      if (this.getScreenSize.screen === "web") {
+        resource = this.getWebResources;
+        this.fetchSections(resource);
+      }
+      if (this.getScreenSize.screen === "mobile") {
+        resource = this.getMobileResources;
+        this.fetchSections(resource);
+        this.onRearrangementResources();
+      }
+    },
+    onMovedWidget: function() {
+      if (this.getSelectedWidgetById.type !== "section") {
+        SiteService.addSitePageResourceWeb(
+          this.siteId,
+          this.pageId,
+          JSON.stringify(this.getWebResources)
+        )
+          .then((result) => {
+            console.log("Web posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        SiteService.addSitePageResourceMobile(
+          this.siteId,
+          this.pageId,
+          JSON.stringify(this.getMobileResources)
+        )
+          .then((result) => {
+            console.log("Mobile posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
   computed: {
@@ -406,23 +399,70 @@ export default {
       "getAllowSorting",
       "getSelectedPage",
       "getPages",
+      "getWebResources",
+      "getMobileResources",
     ]),
   },
   created() {
     this.getQueryStringParams();
     this.fetchResources();
     this.onSelectedSection({ index: 0, id: 0 });
+    this.onSelectedWidgetById(this.getSections[0]);
   },
   watch: {
     getSelectedPage: function(pageId) {
       this.pageId = pageId;
     },
-
     getPages: function(pages) {
       if (pages.length > 0) {
         this.pageId = pages[0].id;
       }
     },
+    getScreenSize: function(type) {
+      let resource;
+      if (type.screen === "web") {
+        resource = this.getWebResources;
+        console.log("resource web", resource);
+        this.fetchSections(resource);
+      }
+      if (type.screen === "mobile") {
+        resource = this.getMobileResources;
+        this.fetchSections(resource);
+        console.log("resource web", resource);
+        this.onRearrangementResources();
+      }
+    },
+  },
+  mounted() {
+    const thiz = this;
+    window.addEventListener("mouseup", function() {
+      if (thiz.getSelectedWidgetById.type === "section") {
+        thiz.getWebResources.forEach((element) => {
+          if (element.id === thiz.getSelectedWidgetById.id)
+            element.properties = thiz.getSelectedWidgetById.properties;
+        });
+        thiz.getMobileResources.forEach((element) => {
+          if (element.id === thiz.getSelectedWidgetById.id)
+            element.properties = thiz.getSelectedWidgetById.properties;
+        });
+      }
+      if (thiz.getSelectedWidgetById.type !== "section") {
+        thiz.getWebResources.forEach((element) => {
+          element.resources.forEach((obj) => {
+            if (element.gridKey === thiz.getSelectedWidgetById.gridKey)
+              obj.properties = thiz.getSelectedWidgetById.properties;
+          });
+        });
+        thiz.getMobileResources.forEach((element) => {
+          element.resources.forEach((obj) => {
+            if (element.gridKey === thiz.getSelectedWidgetById.gridKey)
+              obj.properties = thiz.getSelectedWidgetById.properties;
+          });
+        });
+      }
+      // thiz.fetchWebResources(thiz.getWebResources);
+      // thiz.fetchMobileResources(thiz.getMobileResources);
+    });
   },
   updated() {
     this.onUpdateRefs(this.$refs["section"]);

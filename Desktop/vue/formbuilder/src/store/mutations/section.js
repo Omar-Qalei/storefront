@@ -1,47 +1,173 @@
+import * as lib from '../lib';
+import { SiteService } from "../../services/site/site";
+
+export const setSiteId = (state, payload) => {
+    state.siteId = payload || null
+};
+
+export const setPageId = (state, payload) => {
+    state.pageId = payload || null
+};
+
 export const setSections = (state, sections) => {
     state.sections = sections || {}
+};
+
+export const setWebResources = (state, resources) => {
+    state.webResources = resources || {}
+};
+
+export const setMobileResources = (state, resources) => {
+    state.mobileResources = resources || {}
 };
 
 export const setResources = (state, resources) => {
     state.resources = resources || {}
 };
 
-export const duplicateResource = (state, payload) => {
-    let index = state.sections.findIndex(obj => obj.id === payload.id);
+export const duplicateResourceWeb = (state, payload) => {
+    let index = state.webResources.findIndex(obj => obj.id === payload.id);
     state.selectedWidget = { i: null };
-    state.sections[index].resources.push(payload.k);
-    localStorage.setItem("web", JSON.stringify(state.sections));
-    localStorage.setItem("mobile", JSON.stringify(state.sections));
+    if (state.screenSize.screen === 'web') {
+        let k = {
+            'x': payload.k.x, 'y': payload.k.y, 'w': payload.k.w, 'h': payload.k.h, 'i': lib.guid(), 'type': payload.k.type,
+            properties: {
+                name: payload.k.type,
+                style: null,
+                elementHover: null,
+                fields: [],
+                map: null,
+                gridKey: payload.k.i,
+                text: 'Write your text here'
+            }
+        }
+        state.webResources[index].resources.push(k)
+    }
+    if (state.screenSize.screen === 'mobile') {
+        state.webResources[index].resources.push(payload.k)
+    }
+    state.webResources[index].resources.push(payload.k);
+    SiteService.addSitePageResourceWeb(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.webResources)
+    )
+        .then((result) => {
+            console.log("Web remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+export const duplicateResourceMobile = (state, payload) => {
+    let index = state.mobileResources.findIndex(obj => obj.id === payload.id);
+    state.selectedWidget = { i: null };
+    if (state.screenSize.screen === 'web') {
+        let k = {
+            'x': payload.k.x, 'y': payload.k.y, 'w': payload.k.w, 'h': payload.k.h, 'i': lib.guid(), 'type': payload.k.type,
+            properties: {
+                name: payload.k.type,
+                style: null,
+                elementHover: null,
+                fields: [],
+                map: null,
+                gridKey: payload.k.i,
+                text: 'Write your text here'
+            }
+        }
+        state.mobileResources[index].resources.push(k)
+    }
+    if (state.screenSize.screen === 'mobile') {
+        // state.mobileResources = state.mobileResources;
+        state.webResources[index].resources.push(payload.k)
+    }
+    state.mobileResources[index].resources.push(payload.k);
+    SiteService.addSitePageResourceMobile(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.mobileResources)
+    )
+        .then((result) => {
+            console.log("Mobile remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 };
 
 export const removeResource = (state, payload) => {
     state.selectedWidget = { i: null };
     let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
+    let refMobileGrid = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.gridKey);
     const index = state.sections.findIndex((item) => item.id === payload.id);
     if (refIndex > -1 && index > -1) {
         state.properties.refGridLayout.$children[refIndex].$refs.item.style.transition = "none";
-        const web = JSON.parse(localStorage.getItem('web'));
-        const mobile = JSON.parse(localStorage.getItem('mobile'));
-        web[index].resources.splice(refIndex, 1);
-        mobile[index].resources.splice(refIndex, 1);
-        localStorage.setItem('web', JSON.stringify(web))
-        localStorage.setItem('mobile', JSON.stringify(mobile))
-        state.sections[index].resources.splice(refIndex, 1);
+        state.webResources[index].resources.splice(refIndex, 1);
+        state.mobileResources[index].resources.splice(refMobileGrid, 1);
+        console.log('webResources', state.webResources)
+        console.log('mobileResources', state.mobileResources)
     }
+    SiteService.addSitePageResourceWeb(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.webResources)
+    )
+        .then((result) => {
+            console.log("Web remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    SiteService.addSitePageResourceMobile(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.mobileResources)
+    )
+        .then((result) => {
+            console.log("Mobile remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 };
 
 export const removeSection = (state, payload) => {
     if (payload.id !== 0) {
-        const index = state.sections.map((item) => item.id).indexOf(payload.id);
-        state.sections.splice(index, 1);
+        const indexWeb = state.webResources.map((item) => item.id).indexOf(payload.id);
+        const indexMobile = state.webResources.map((item) => item.id).indexOf(payload.id);
+        state.webResources.splice(indexWeb, 1);
+        state.mobileResources.splice(indexMobile, 1);
     }
+    SiteService.addSitePageResourceWeb(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.webResources)
+    )
+        .then((result) => {
+            console.log("Web remove section posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    SiteService.addSitePageResourceMobile(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.mobileResources)
+    )
+        .then((result) => {
+            console.log("Mobile remove section posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 
 export const setPages = (state, pages) => {
     state.pages = pages || [];
 }
 
-// Mutation too new grid item in resources
+// // Mutation too new grid item in resources
 export const setNewSection = (state, payload) => {
     let previousIndex = 0, nextIndex = 0;
     if (payload.selectedIndex !== undefined) {
@@ -54,8 +180,12 @@ export const setNewSection = (state, payload) => {
     if (previousIndex > 0 && nextIndex !== 0) {
         console.log('test1')
         payload.selectedIndex = nextIndex;
+        console.log(payload.selectedIndex);
         payload.y = nextIndex * state.sectionProperties.default;
         const array = state.sections.splice(nextIndex, state.sections.length, payload);
+        console.log('array', array)
+        // const arrayWeb = state.webResources.splice(nextIndex, state.sections.length, payload);
+        // const arrayMobile = state.mobileResources.splice(nextIndex, state.sections.length, payload);
         state.sections.join();
         array.forEach(item => {
             if (item.id !== state.sections[previousIndex].id && payload.id !== item.id) {
@@ -63,11 +193,28 @@ export const setNewSection = (state, payload) => {
                 if (item.id !== 0) {
                     item.selectedIndex += 1;
                     item.y *= state.sectionProperties.default;
+                    item.resize.h = item.y;
                 }
                 //    }
             }
         });
         state.sections.push(...array);
+        // if (state.screenSize.screen === 'web') {
+        //     state.mobileResources.push(...array);
+        // }
+        // if (state.screenSize.screen === 'mobile') {
+        //     state.webResources.push(...array);
+        // }
+        // state.webResources.push(...array);
+        // state.mobileResources.push(...array);
+        // if (state.screenSize.screen === 'mobile') {
+        //     state.webResources.push(...arrayWeb);
+        //     state.mobileResources = state.sections;
+        // }
+        // if (state.screenSize.screen === 'web') {
+        //     state.mobileResources.push(...arrayMobile);
+        //     state.webResources = state.sections;
+        // }
     }
 
     // Push After Index bigger than index = 0
@@ -75,17 +222,29 @@ export const setNewSection = (state, payload) => {
         console.log('test2')
         payload.y = (previousIndex + 1) * state.sectionProperties.default;
         payload.selectedIndex = previousIndex + 1;
-        const array = state.sections.splice(previousIndex + 2, state.sections.length, payload);
+        console.log(previousIndex + 2, state.sections.length);
+        const array = state.sections.splice(previousIndex + 1, state.sections.length, payload);
+        console.log(array, state.sections)
+        // const arrayWeb = state.webResources.splice(previousIndex + 2, state.sections.length, payload);
+        // const arrayMobile = state.mobileResources.splice(previousIndex + 2, state.sections.length, payload);
         state.sections.join();
+        console.log('previousIndex', previousIndex, nextIndex, state.sections, array)
         array.forEach(item => {
-            // if (item.id !== state.sections[previousIndex].id && payload.id !== item.id) {
-            //    if (nextIndex < item.selectedIndex) {
+            // if (nextIndex < item.selectedIndex) {
             item.selectedIndex += 1;
             item.y *= state.sectionProperties.default;
-            //    }
+            item.resize.h = item.y;
             // }
         });
         state.sections.push(...array);
+        // if (state.screenSize.screen === 'web') {
+        //     state.mobileResources.push(...array);
+        // }
+        // if (state.screenSize.screen === 'mobile') {
+        //     state.webResources.push(...array);
+        // }
+        // state.webResources.push(...array);
+        // state.mobileResources.push(...array);
     }
 
     // Push After index = 0 
@@ -93,15 +252,27 @@ export const setNewSection = (state, payload) => {
         console.log('test3')
         payload.selectedIndex = nextIndex;
         payload.y = state.sectionProperties.default;
-        const array = state.sections.splice(nextIndex, state.sections.length, payload);
+        let array = state.sections.splice(nextIndex, state.sections.length, payload);
+        // let arrayWeb = state.webResources.splice(nextIndex, state.sections.length, payload);
+        // let arrayMobile = state.mobileResources.splice(nextIndex, state.sections.length, payload);
         state.sections.join();
         array.forEach(item => {
+            console.log('item', item);
             // if (nextIndex < item.selectedIndex) {
             item.selectedIndex += 1;
             item.y *= state.sectionProperties.default;
+            item.resize.h = item.y;
             // }
         });
         state.sections.push(...array);
+        // if (state.screenSize.screen === 'web') {
+        //     state.mobileResources.push(...array);
+        // }
+        // if (state.screenSize.screen === 'mobile') {
+        //     state.webResources.push(...array);
+        // }
+        // state.webResources.push(...array);
+        // state.mobileResources.push(...array);
     }
 
     // // By Default First Push 
@@ -109,37 +280,52 @@ export const setNewSection = (state, payload) => {
         console.log('test4')
         payload.selectedIndex = 1;
         state.sections.push(payload);
+        if (state.screenSize.screen === 'web') {
+            state.mobileResources.push(payload);
+        }
+        if (state.screenSize.screen === 'mobile') {
+            state.webResources.push(payload);
+        }
     }
-    localStorage.setItem("web", JSON.stringify(state.sections));
-    localStorage.setItem("mobile", JSON.stringify(state.sections));
+    if (state.screenSize.screen === 'web') {
+        // state.webResources = state.sections;
+    }
+    if (state.screenSize.screen === 'mobile') {
+        state.mobileResources = state.sections;
+    }
     state.sections = compact(state.sections);
+
     // state.sections.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
 }
 
-export const duplicateSection = (state, payload) => {
+// Mutation too new grid item in resources
+export const setNewSectionMobile = (state, payload) => {
     let previousIndex = 0, nextIndex = 0;
     if (payload.selectedIndex !== undefined) {
         previousIndex = payload.selectedIndex;
     }
-    if (state.sections[payload.selectedIndex + 1] !== undefined) {
-        nextIndex = state.sections[payload.selectedIndex + 1].selectedIndex;
+    if (state.mobileResources[payload.selectedIndex + 1] !== undefined) {
+        nextIndex = state.mobileResources[payload.selectedIndex + 1].selectedIndex;
     }
     // Push between Indexes
     if (previousIndex > 0 && nextIndex !== 0) {
         console.log('test1')
         payload.selectedIndex = nextIndex;
         payload.y = nextIndex * state.sectionProperties.default;
-        const array = state.sections.splice(nextIndex, state.sections.length, payload);
-        state.sections.join();
+        const array = state.mobileResources.splice(nextIndex, state.mobileResources.length, payload);
+        state.mobileResources.join();
         array.forEach(item => {
-            if (item.id !== state.sections[previousIndex].id && payload.id !== item.id) {
+            if (item.id !== state.mobileResources[previousIndex].id && payload.id !== item.id) {
+                //    if (previousIndex < item.selectedIndex) {
                 if (item.id !== 0) {
                     item.selectedIndex += 1;
                     item.y *= state.sectionProperties.default;
+                    item.resize.h = item.y;
                 }
+                //    }
             }
         });
-        state.sections.push(...array);
+        state.mobileResources.push(...array);
     }
 
     // Push After Index bigger than index = 0
@@ -147,13 +333,16 @@ export const duplicateSection = (state, payload) => {
         console.log('test2')
         payload.y = (previousIndex + 1) * state.sectionProperties.default;
         payload.selectedIndex = previousIndex + 1;
-        const array = state.sections.splice(previousIndex + 2, state.sections.length, payload);
-        state.sections.join();
+        const array = state.mobileResources.splice(previousIndex + 1, state.mobileResources.length, payload);
+        state.mobileResources.join();
         array.forEach(item => {
+            // if (nextIndex < item.selectedIndex) {
             item.selectedIndex += 1;
             item.y *= state.sectionProperties.default;
+            item.resize.h = item.y;
+            // }
         });
-        state.sections.push(...array);
+        state.mobileResources.push(...array);
     }
 
     // Push After index = 0 
@@ -161,26 +350,128 @@ export const duplicateSection = (state, payload) => {
         console.log('test3')
         payload.selectedIndex = nextIndex;
         payload.y = state.sectionProperties.default;
-        const array = state.sections.splice(nextIndex, state.sections.length, payload);
-        state.sections.join();
+        let array = state.mobileResources.splice(nextIndex, state.mobileResources.length, payload);
+        state.mobileResources.join();
         array.forEach(item => {
+            // if (nextIndex < item.selectedIndex) {
             item.selectedIndex += 1;
             item.y *= state.sectionProperties.default;
+            item.resize.h = item.y;
+            // }
         });
-        state.sections.push(...array);
+        state.mobileResources.push(...array);
     }
 
     // // By Default First Push 
     if (!previousIndex && nextIndex === 0) {
         console.log('test4')
         payload.selectedIndex = 1;
-        state.sections.push(payload);
+        state.mobileResources.push(payload);
     }
-    localStorage.setItem("web", JSON.stringify(state.sections));
-    localStorage.setItem("mobile", JSON.stringify(state.sections));
-    state.sections = compact(state.sections);
-    // state.sections.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
+    state.mobileResources = compact(state.mobileResources);
+    // state.mobileResources.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
+    SiteService.addSitePageResourceMobile(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.mobileResources)
+    )
+        .then((result) => {
+            console.log("Mobile remove section posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
+
+// Mutation too new grid item in resources
+export const setNewSectionWeb = (state, payload) => {
+    let previousIndex = 0, nextIndex = 0;
+    if (payload.selectedIndex !== undefined) {
+        previousIndex = payload.selectedIndex;
+    }
+    if (state.webResources[payload.selectedIndex + 1] !== undefined) {
+        nextIndex = state.webResources[payload.selectedIndex + 1].selectedIndex;
+    }
+    // Push between Indexes
+    if (previousIndex > 0 && nextIndex !== 0) {
+        console.log('test1')
+        payload.selectedIndex = nextIndex;
+        payload.y = nextIndex * state.sectionProperties.default;
+        const array = state.webResources.splice(nextIndex, state.webResources.length, payload);
+        state.webResources.join();
+        array.forEach(item => {
+            if (item.id !== state.webResources[previousIndex].id && payload.id !== item.id) {
+                //    if (previousIndex < item.selectedIndex) {
+                if (item.id !== 0) {
+                    item.selectedIndex += 1;
+                    item.y *= state.sectionProperties.default;
+                    item.resize.h = item.y;
+                }
+                //    }
+            }
+        });
+        state.webResources.push(...array);
+    }
+
+    // Push After Index bigger than index = 0
+    if (previousIndex > 0 && nextIndex === 0) {
+        console.log('test2')
+        payload.y = (previousIndex + 1) * state.sectionProperties.default;
+        payload.selectedIndex = previousIndex + 1;
+        const array = state.webResources.splice(previousIndex + 1, state.webResources.length, payload);
+        // const arrayWeb = state.webResources.splice(previousIndex + 2, state.webResources.length, payload);
+        // const arrayMobile = state.webResources.splice(previousIndex + 2, state.webResources.length, payload);
+        state.webResources.join();
+        console.log('previousIndex', previousIndex, nextIndex, state.webResources, array)
+        array.forEach(item => {
+            // if (nextIndex < item.selectedIndex) {
+            item.selectedIndex += 1;
+            item.y *= state.sectionProperties.default;
+            item.resize.h = item.y;
+            // }
+        });
+        state.webResources.push(...array);
+    }
+
+    // Push After index = 0 
+    if (previousIndex === 0 && nextIndex !== 0) {
+        console.log('test3')
+        payload.selectedIndex = nextIndex;
+        payload.y = state.sectionProperties.default;
+        let array = state.webResources.splice(nextIndex, state.webResources.length, payload);
+        state.webResources.join();
+        array.forEach(item => {
+            console.log('item', item);
+            // if (nextIndex < item.selectedIndex) {
+            item.selectedIndex += 1;
+            item.y *= state.sectionProperties.default;
+            item.resize.h = item.y;
+            // }
+        });
+        state.webResources.push(...array);
+    }
+
+    // // By Default First Push 
+    if (!previousIndex && nextIndex === 0) {
+        console.log('test4')
+        payload.selectedIndex = 1;
+        state.webResources.push(payload);
+    }
+    state.webResources = compact(state.webResources);
+    // state.webResources.forEach(element => console.log(element.id + '====>' + element.selectedIndex));
+    SiteService.addSitePageResourceWeb(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.webResources)
+    )
+        .then((result) => {
+            console.log("Web remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 
 // Mutation too set layout grid item in resources
 export const setLayout = (state, payload) => {
@@ -238,31 +529,32 @@ export const setDrag = (state, payload) => {
                 // if (state.properties.refGridLayout !== null && state.properties.refGridLayout.$children.length > 0) {
                 elementHight = state.sections[indexSection].resources[index].h;
                 elementWidth = state.sections[indexSection].resources[index].w;
-                try {
-                    el = state.properties.refGridLayout.$children[index];
-                    el.dragging = {
-                        top: state.mouseXY.y - parentRect.top,
-                        left: state.mouseXY.x - parentRect.left,
-                    };
-                    new_pos = el.calcXY(
-                        state.mouseXY.y - parentRect.top,
-                        state.mouseXY.x - parentRect.left
-                    );
-                    if (mouseInGrid === true) {
-                        state.properties.refGridLayout.dragEvent(
-                            "dragstart",
-                            "drop",
-                            new_pos.x,
-                            new_pos.y,
-                            elementWidth,
-                            elementHight
+                if (state.properties.refGridLayout) {
+                    if (state.properties.refGridLayout.$children[index] !== undefined) {
+                        el = state.properties.refGridLayout.$children[index];
+                        el.dragging = {
+                            top: state.mouseXY.y - parentRect.top,
+                            left: state.mouseXY.x - parentRect.left,
+                        };
+                        new_pos = el.calcXY(
+                            state.mouseXY.y - parentRect.top,
+                            state.mouseXY.x - parentRect.left
                         );
-                        state.dragPos.i = String(index);
-                        state.dragPos.x = new_pos.x;
-                        state.dragPos.y = new_pos.y;
+                        if (mouseInGrid === true) {
+                            state.properties.refGridLayout.dragEvent(
+                                "dragstart",
+                                "drop",
+                                new_pos.x,
+                                new_pos.y,
+                                elementWidth,
+                                elementHight
+                            );
+                            state.dragPos.i = String(index);
+                            state.dragPos.x = new_pos.x !== null ? new_pos.x : 0;
+                            state.dragPos.y = new_pos.y !== null ? new_pos.y : 0;
+                        }
                     }
-                } catch {
-                    console.log();
+
                 }
                 if (mouseInGrid === false) {
                     state.properties.refGridLayout.dragEvent(
@@ -321,19 +613,46 @@ export const setDragEnd = (state, payload) => {
                     3,
                     2
                 );
+                // state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
+                // state.sections[indexSection].resources.push(payload);
                 state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
-                // UNCOMMENT below if you want to add a grid-item
-                // if (state.currentSelectedSectionIndex === indexSection) {
+                if (state.screenSize.screen === 'web') {
+                    state.webResources = state.sections;
+                    let k = {
+                        'x': 0, 'y': 0, 'w': state.element.width, 'h': state.element.height, 'i': lib.guid(), 'type': state.element.type,
+                        properties: {
+                            name: state.element.type,
+                            style: null,
+                            elementHover: null,
+                            fields: [],
+                            map: null,
+                            gridKey: payload.i,
+                            text: 'Write your text here'
+                        }
+                    }
+                    state.mobileResources[indexSection].resources.push(k)
+                }
+                if (state.screenSize.screen === 'mobile') {
+                    state.mobileResources = state.sections;
+                    let k = {
+                        'x': 0, 'y': 0, 'w': state.element.width, 'h': state.element.height, 'i': lib.guid(), 'type': state.element.type,
+                        properties: {
+                            name: state.element.type,
+                            style: null,
+                            elementHover: null,
+                            fields: [],
+                            map: null,
+                            gridKey: payload.i,
+                            text: 'Write your text here'
+                        }
+                    }
+                    state.webResources[indexSection].resources.push(k)
+                }
                 state.sections[indexSection].resources.push(payload);
                 let addNewRows = (payload.h + payload.y) - state.sections[indexSection].h;
                 state.sections[indexSection].h = (payload.h + payload.y) > state.sections[indexSection].h ? state.sections[indexSection].h + addNewRows : state.sections[indexSection].h;
                 state.sections = compact(state.sections);
                 state.properties.refGridLayout.dragEvent('dragend', state.dragPos.i, state.dragPos.x, state.dragPos.y, 1, 1);
-                // }
-                // state.sections[state.currentSelectedSectionIndex].resources.push(payload);
-                // }
-                localStorage.setItem("web", JSON.stringify(state.sections));
-                localStorage.setItem("mobile", JSON.stringify(state.sections));
                 try {
                     state.properties.refGridLayout.$children[state.sections[indexSection].resources.length].$refs.item.style.display = "block";
                     state.indexSection = null;
@@ -343,6 +662,29 @@ export const setDragEnd = (state, payload) => {
                 }
                 state.indexSection = null;
                 state.selectedGridId = null;
+                SiteService.addSitePageResourceWeb(
+                    state.siteId,
+                    state.pageId,
+                    JSON.stringify(state.webResources)
+                )
+                    .then((result) => {
+                        console.log("Web posted", result);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                SiteService.addSitePageResourceMobile(
+                    state.siteId,
+                    state.pageId,
+                    JSON.stringify(state.mobileResources)
+                )
+                    .then((result) => {
+                        console.log("Mobile posted", result);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                console.log(state.webResources, state.mobileResources)
             }
         }
         else {
@@ -352,13 +694,12 @@ export const setDragEnd = (state, payload) => {
                 if (state.refs[indexSection].$children[0].$children.length > 0) {
                     state.refs[indexSection].$children[0].$children[0].$children = state.refs[indexSection].$children[0].$children[0].$children.filter((obj) => obj.i !== 'drop');
                 }
-                if (state.sections[indexSection].resources.length > 0) {
-                    state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
-                }
+                state.sections.forEach(element => element.resources = element.resources.filter((obj) => obj.i !== "drop"));
             }
         }
         state.selectedPerviousGridId = state.selectedGridId;
     }
+    state.sections.forEach(element => element.resources = element.resources.filter((obj) => obj.i !== "drop"));
 }
 
 export const setMouseTouched = (state, payload) => {
@@ -381,7 +722,8 @@ export const setUpdateSectionLayout = (state, payload) => {
     let statusCompact = false;
     if (!state.preventCollision)
         if (sectionId !== undefined) {
-            let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+            let selectedIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+            let currentIndex = state.sections.findIndex((element) => element.selectedIndex === selectedIndex);
             if (state.sections[currentIndex].resize.h < gridHeight) {
                 statusCompact = true;
                 state.sections[currentIndex].h = gridHeight;
@@ -476,17 +818,22 @@ export const setUpdateSectionLayoutGridResized = (state, payload) => {
 
 export const setResizeSectionScreen = (state, payload) => {
     state.screenSize = payload;
-    rearrangementResources(state);
 }
 
 export const rearrangementResources = (state) => {
-    // 
     state.sections.map(element => {
         if (element.collides)
             element.resources = compactResources(element.resources);
-        // here
+
         element.collides = true;
     });
+    state.mobileResources.map(element => {
+        if (element.collides)
+            element.resources = compactResources(element.resources);
+
+        element.collides = true;
+    });
+    state.sections = compact(state.sections);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------//

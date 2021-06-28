@@ -9,8 +9,13 @@ export class MediaService {
     static async addImages(data) {
         const url = `user/${ApiConfiguration.media.images}`;
         const formData = new FormData();
-        formData.append('files[]', data);
-        console.log(data);
-        return await httpClient.post(url, formData);
+        for (let index = 0; index < data.length; index++) {
+            formData.append('files[' + index + ']', data[index]);
+        }
+        return await httpClient.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+        });
     }
 }

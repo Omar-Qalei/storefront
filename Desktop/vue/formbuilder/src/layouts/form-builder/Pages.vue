@@ -43,10 +43,8 @@
             <v-list-item
               v-for="(page, index) in getPages"
               :key="index"
-              @click="
-                selectedPage = page.id;
-                onDrawerPages();
-              "
+              link
+              @click="onDo(page)"
             >
               <v-list-item-icon>
                 <v-menu offset-y>
@@ -136,6 +134,7 @@ export default {
       mini: true,
       selectedPage: null,
       siteId: null,
+      pageId: null,
       dialog: false,
       name: null,
       path: null,
@@ -146,6 +145,7 @@ export default {
       "onDrawerPages",
       "onSelectedPage",
       "fetchPages",
+      "fetchPageId",
       "onLoadingPage",
     ]),
     onAddElement: function() {
@@ -155,6 +155,9 @@ export default {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
         this.getSiteById();
+      }
+      if (this.$route.query.pageId) {
+        this.pageId = +this.$route.query.pageId;
       }
     },
     addPage: function() {
@@ -180,23 +183,6 @@ export default {
           console.log(error);
         });
     },
-    // getSitePageResources: function() {
-    //   console.log("checked");
-    //   SiteService.getSitePageResources(this.siteId, this.pageId)
-    //     .then((result) => {
-    //       const data = result.data.data;
-    //       if (data) {
-    //         localStorage.setItem("web", data.web);
-    //         localStorage.setItem("mobile", data.mobile);
-    //         if (data.web) this.fetchSections(JSON.parse(data.web));
-    //       } else {
-    //         this.fetchSections([]);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
     onRemovePage: function(pageId) {
       SiteService.removePage(this.siteId, pageId)
         .then(() => {
@@ -205,6 +191,12 @@ export default {
           this.getSiteById();
         })
         .catch((err) => console.log(err));
+    },
+    onDo: function(page) {
+      if (this.pageId !== page.id) {
+        this.selectedPage = page.id;
+        this.onDrawerPages();
+      }
     },
   },
   computed: {
@@ -219,6 +211,11 @@ export default {
     },
     selectedPage: function(value) {
       this.onSelectedPage(value);
+      this.fetchPageId(value);
+      this.$router.push({
+        path: "formBuilder",
+        query: { siteId: this.siteId, pageId: value },
+      });
     },
   },
   created() {

@@ -52,23 +52,23 @@
                 <div class="title">No Files Found.</div>
               </v-col>
               <v-col
-                v-for="n in files.length"
-                :key="n"
+                v-for="(file, index) in files"
+                :key="index"
                 class="d-flex child-flex"
                 cols="2"
               >
                 <v-img
                   @click="
                     selectedFile = {
-                      id: n,
-                      file: `https://picsum.photos/500/300?image=${n * 5 + 10}`,
+                      id: index,
+                      file: file.path,
                     }
                   "
-                  :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-                  :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+                  :src="file.path"
+                  :lazy-src="file.path"
                   aspect-ratio="1"
                   class="grey lighten-2"
-                  :class="{ selectedBox: selectedFile.id === n }"
+                  :class="{ selectedBox: selectedFile.id === index }"
                 >
                   <template v-slot:placeholder>
                     <v-row

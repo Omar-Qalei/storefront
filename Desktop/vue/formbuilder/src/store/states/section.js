@@ -1,5 +1,9 @@
 export default {
+    siteId: null,
+    pageId: null,
     sections: {},
+    webResources: [],
+    mobileResources: [],
     resources: {},
     pages: [],
     mouseXY: { x: null, y: null },

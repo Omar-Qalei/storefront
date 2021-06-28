@@ -1,5 +1,5 @@
 export const setSelectedWidgetById = (state, payload) => {
-    console.log(payload);
+    console.log('selectedWidget', payload)
     state.selectedWidget = payload;
 }
 

@@ -6,10 +6,6 @@
       <Sidebar />
       <Pages />
       <div class="d-flex h-100">
-        <!-- :style="{
-          maxWidth: getScreenSize.width,
-          transition: 'width 18s ease-in-out;',
-        }" -->
         <v-main>
           <v-col cols="12" class="center">
             <v-card
@@ -18,7 +14,9 @@
                 width: getScreenSize.width,
               }"
             >
-              <GridView></GridView>
+              <keep-alive>
+                <GridView></GridView>
+              </keep-alive>
             </v-card>
           </v-col>
           <SettingsDialog from="modal" />
@@ -49,30 +47,44 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedPage", "getScreenSize", "getLoadingPage"]),
+    ...mapGetters([
+      "getSelectedPage",
+      "getScreenSize",
+      "getLoadingPage",
+      "getWebResources",
+      "getMobileResources",
+      "getSections",
+    ]),
   },
   methods: {
-    ...mapActions(["fetchSections", "fetchPages", "onLoadingPage"]),
+    ...mapActions([
+      "fetchSections",
+      "fetchWebResources",
+      "fetchMobileResources",
+      "fetchPages",
+      "fetchSiteId",
+      "fetchPageId",
+      "onLoadingPage",
+    ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
+        this.onLoadingPage(true);
         this.getSiteById();
+        this.fetchSiteId(this.siteId);
+      }
+      if (this.$route.query.pageId) {
+        this.pageId = +this.$route.query.pageId;
+        this.getSitePageResources();
+        this.fetchPageId(this.pageId);
       }
     },
     getSiteById: function() {
-      this.fetchSections([]);
-      if (localStorage.getItem(this.getScreenSize.screen)) {
-        const data = JSON.parse(
-          localStorage.getItem(this.getScreenSize.screen)
-        );
-        if (data !== null && this.getScreenSize.screen === "web") {
-          this.fetchSections(data);
-        }
-      }
       SiteService.getSitePages(this.siteId)
         .then((result) => {
           const data = result.data.data;
-          this.pageId = data[0].id;
+          if (this.pageId === null) this.pageId = data[0].id;
+          this.fetchPageId(this.pageId);
           this.fetchPages(data);
           this.getSitePageResources();
         })
@@ -81,15 +93,23 @@ export default {
         });
     },
     getSitePageResources: function() {
+      this.fetchWebResources(null);
+      this.fetchMobileResources(null);
+      this.fetchSections([]);
+      console.log("checked page", this.siteId, this.pageId);
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;
           if (data) {
-            localStorage.setItem("web", data.web);
-            localStorage.setItem("mobile", data.mobile);
-            if (data.web) this.fetchSections(JSON.parse(data.web));
+            this.fetchWebResources(JSON.parse(data.web));
+            this.fetchMobileResources(JSON.parse(data.mobile));
+            JSON.parse(data.web)
+              ? this.fetchSections(JSON.parse(data.web))
+              : this.fetchSections([]);
           } else {
             this.fetchSections([]);
+            this.fetchWebResources(data);
+            this.fetchMobileResources(data);
           }
         })
         .catch((err) => {
@@ -104,19 +124,8 @@ export default {
       this.onLoadingPage(true);
       this.getSitePageResources();
     },
-    getScreenSize: function(type) {
-      if (type.screen === "web") {
-        if (JSON.parse(localStorage.getItem("web"))) {
-          let resource = JSON.parse(localStorage.getItem("web"));
-          this.fetchSections(resource);
-        }
-      }
-      if (type.screen === "mobile") {
-        if (JSON.parse(localStorage.getItem("mobile"))) {
-          let resource = JSON.parse(localStorage.getItem("mobile"));
-          this.fetchSections(resource);
-        }
-      }
+    $router: function() {
+      this.getQueryStringParams();
     },
   },
   created() {

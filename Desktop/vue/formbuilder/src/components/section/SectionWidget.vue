@@ -52,6 +52,7 @@
               :static="statusPreventCollision"
               ref="gridItem"
               @move="moveElementY(item)"
+              @moved="onMovedWidget(item)"
               @resize="
                 resizeEvent;
                 onRemoveBreakLines();
@@ -122,6 +123,7 @@
               :static="statusPreventCollision"
               ref="gridItem"
               @move="moveElementY(item)"
+              @moved="onMovedWidget(item)"
               @resize="resizeEvent"
               :style="[
                 hoverElement === item.i ? activeSection : '',
@@ -269,9 +271,26 @@ export default {
         this.onSelectedWidgetById(item);
       }
     },
+    onMovedWidget: function(item) {
+      this.$emit("onMovedWidget", item);
+    },
   },
   computed: {
-    ...mapGetters(["getResources", "getResizeSectionStatus"]),
+    ...mapGetters([
+      "getSelectedWidgetById",
+      "getSections",
+      "getResizeSectionStatus",
+      "getScreenSize",
+      "getWebResources",
+      "getMobileResources",
+    ]),
+  },
+  mounted() {
+    // const thiz = this;
+    window.addEventListener("mouseup", function() {
+      // if (thiz.getSelectedWidgetById.type === "section") {
+      // }
+    });
   },
   updated() {
     var data = {

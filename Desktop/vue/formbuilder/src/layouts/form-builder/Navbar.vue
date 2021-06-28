@@ -16,6 +16,7 @@
         </v-icon>
         Auto Save
       </v-chip>
+      <!-- onRearrangementResources(); -->
       <a
         class="link-icon"
         @click="
@@ -24,9 +25,7 @@
             cols: 1,
             responsive: true,
             screen: 'mobile',
-          });
-          onRearrangementResources();
-          getSitePageResources();
+          })
         "
       >
         <span class="mdi mdi-cellphone-cog"></span>
@@ -34,13 +33,12 @@
       <a
         class="link-icon"
         @click="
-          getSitePageResources();
           onResizeSectionScreen({
             width: '100%',
             cols: 12,
             responsive: false,
             screen: 'web',
-          });
+          })
         "
       >
         <span class="mdi mdi-monitor"></span>
@@ -88,43 +86,14 @@ export default {
       "onResizeSectionScreen",
       "onRearrangementResources",
       "onSortSectionsLayout",
-      "fetchSections",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
       }
-    },
-    getSitePageResources: function() {
-      // console.log(this.screen);
-      // if (this.screen === "web") {
-      //   if (localStorage.getItem("web")) {
-      //     let resource = JSON.parse(localStorage.getItem("web"));
-      //     this.fetchSections(resource);
-      //   }
-      // }
-      // if (this.screen === "mobile") {
-      //   if (localStorage.getItem("mobile")) {
-      //     let resource = JSON.parse(localStorage.getItem("mobile"));
-      //     this.fetchSections(resource);
-      //   }
-      // }
-      // if (
-      //   resource &&
-      //   resource.mobile &&
-      //   this.getScreenSize.screen === "mobile"
-      // ) {
-      //   this.fetchSections(JSON.parse(resource.mobile));
-      // }
-      // SiteService.getSitePageResources(this.siteId, this.pageId)
-      //   .then((result) => {
-      //     const data = JSON.stringify(result.data.data);
-      //     localStorage.setItem("resources", data);
-      //     this.onSortSectionsLayout();
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      if (this.$route.query.pageId) {
+        this.pageId = +this.$route.query.pageId;
+      }
     },
   },
   computed: {
@@ -133,14 +102,21 @@ export default {
   watch: {
     getSelectedPage: function(pageId) {
       this.pageId = pageId;
-
       if (this.getPages.length > 0)
         this.title = this.getPages.find((item) => item.id === pageId).name;
     },
     getPages: function(pages) {
       if (this.getPages.length > 0) {
-        this.pageId = pages[0].id;
-        this.title = this.getPages.find((item) => item.id === pages[0].id).name;
+        if (this.$route.query.pageId === undefined) {
+          this.pageId = pages[0].id;
+          this.title = this.getPages.find(
+            (item) => item.id === pages[0].id
+          ).name;
+        } else {
+          this.title = this.getPages.find(
+            (item) => item.id === this.pageId
+          ).name;
+        }
       }
     },
   },
