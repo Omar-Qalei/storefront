@@ -14,7 +14,7 @@
 <script>
 // import { mapActions } from "vuex";
 import Sites from "./sites/Sites";
-// import Contacts from "./contacts/Contacts.vue";
+// import Contacts from "./contacts/Main.vue";
 import Navbar from "../layouts/home/Navbar";
 import Sidebar from "../layouts/home/Sidebar";
 

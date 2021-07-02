@@ -28,11 +28,12 @@
           selectedSection = item.id;
           selectedElement = item.id;
           onSelectedSection({ index: index, id: item.id });
-          onSelectedWidgetById(item);
+          onSelectedWidget(item);
         "
         @mousedown="
           currentSelectedSection = item.id;
           selectedSectionByI = item.i;
+          selectedSection = item.id;
         "
       >
         <GridItem
@@ -383,6 +384,11 @@ export default {
           });
       }
     },
+    onSelectedWidget: function(item) {
+      this.onSelectedWidgetById({ i: null });
+      console.log("item", item);
+      this.onSelectedWidgetById(item);
+    },
   },
   computed: {
     ...mapGetters([
@@ -397,6 +403,7 @@ export default {
       "getPages",
       "getWebResources",
       "getMobileResources",
+      "getLoadingPage",
     ]),
   },
   created() {
@@ -431,9 +438,9 @@ export default {
   },
   mounted() {
     const thiz = this;
-    console.log(thiz.selectedSection);
     window.addEventListener("mouseup", function() {
       thiz.displayPlaceholder = false;
+      console.log(thiz.selectedSection);
       thiz.onCheckUpdateSectionLayoutResized({
         sectionId: thiz.selectedSection,
       });

@@ -258,6 +258,7 @@ export default {
     onCheckWidget: function(event, item) {
       if (this.statusSection) {
         event.stopPropagation();
+        this.onSelectedWidgetById({});
         this.onSelectedWidgetById(item);
       }
     },

@@ -834,6 +834,7 @@ export const rearrangementResources = (state) => {
         element.collides = true;
     });
     state.sections = compact(state.sections);
+    setSortSectionsLayout(state)
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------//

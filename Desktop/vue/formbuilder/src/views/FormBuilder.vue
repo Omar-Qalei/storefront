@@ -65,6 +65,7 @@ export default {
       "fetchSiteId",
       "fetchPageId",
       "onLoadingPage",
+      "onSelectedWidgetById",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -96,7 +97,7 @@ export default {
       this.fetchWebResources(null);
       this.fetchMobileResources(null);
       this.fetchSections([]);
-      console.log("checked page", this.siteId, this.pageId);
+      this.onSelectedWidgetById({});
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;
@@ -125,6 +126,7 @@ export default {
       this.getSitePageResources();
     },
     $router: function() {
+      this.onSelectedWidgetById({});
       this.getQueryStringParams();
     },
   },

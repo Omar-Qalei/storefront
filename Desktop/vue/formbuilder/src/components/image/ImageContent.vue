@@ -107,7 +107,8 @@ export default {
       selectedPage: null,
       selectedUrl: null,
       statusNewTab: false,
-      image: null,
+      image:
+        "https://zrassets.s3.eu-north-1.amazonaws.com/bed-and-breakfast/images/amenities.jpg",
       tags: [
         { id: 0, title: "Page" },
         { id: 1, title: "URL" },
@@ -143,6 +144,7 @@ export default {
 img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 .backgroundSection {
   height: 150px;

@@ -14,4 +14,7 @@ export class ApiConfiguration {
     static media = {
         images: 'images',
     }
+    static contacts = {
+        url: 'contacts',
+    }
 }
