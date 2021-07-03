@@ -253,7 +253,18 @@
 
           <!-- Background Video -->
           <v-row v-if="selectedLinkTo === 3">
-            <v-col
+            <v-col cols="12">
+              <h2 class="body-1 font-weight-medium mb-2">
+                Video URL
+              </h2>
+              <v-text-field
+                outlined
+                placeholder="https://www.video-example.com"
+                v-model="backgroundVideo"
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <!-- <v-col
               cols="12"
               class="backgroundElement"
               :style="{
@@ -278,7 +289,7 @@
                   Add Background Video
                 </h2>
               </label>
-            </v-col>
+            </v-col> -->
           </v-row>
           <!-- Background Video -->
         </v-expansion-panel-content>

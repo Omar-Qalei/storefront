@@ -39,9 +39,9 @@ export default {
     beforeOpen() {
       // console.log("before-open", event);
       // event.ref.draggable = true;
+      this.getQueryStringParams();
     },
     beforeClose() {
-      console.log(this.siteId, this.pageId);
       SiteService.addSitePageResourceWeb(
         this.siteId,
         this.pageId,

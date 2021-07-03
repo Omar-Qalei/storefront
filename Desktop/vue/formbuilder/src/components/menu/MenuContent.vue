@@ -1,6 +1,6 @@
 <template>
   <v-container class="menu-content" fluid>
-    <v-row class="pt-4">
+    <!-- <v-row class="pt-4">
       <v-col cols="8">
         <h2 class="body-1 font-weight-medium mb-2">
           Menu Text
@@ -64,31 +64,87 @@
           hide-details
         ></v-text-field>
       </v-col>
+    </v-row> -->
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Logo</v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-row class="pt-4">
+            <v-col cols="12">
+              <v-col
+                cols="12"
+                class="backgroundSection"
+                @click="
+                  onShowChooseFilesDialog(true);
+                  onTypeChooseFileDialog('image');
+                "
+              >
+                <img v-if="image" :src="image" />
+                <label class="labelFile" v-else>
+                  <h2 class="body-1 font-weight-medium">
+                    Add Image
+                  </h2>
+                </label>
+              </v-col>
+            </v-col>
+          </v-row>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+    <v-row class="my-2">
+      <v-col cols="12">
+        <v-card>
+          <draggable v-model="list" class="w-100">
+            <v-card-actions
+              class="py-2"
+              v-for="(item, index) in list"
+              :key="index"
+            >
+              <h2 class="body-2 font-weight-medium">
+                <v-btn x-small icon color="primary">
+                  <v-icon color="primary">mdi mdi-drag</v-icon>
+                </v-btn>
+                {{ item.name }}
+              </h2>
+              <v-spacer></v-spacer>
+              <v-btn x-small icon color="primary" @click="onDisplayPage(index)">
+                <v-icon color="primary">mdi mdi-eye-outline</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </draggable>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import draggable from "vuedraggable";
 export default {
   name: "MenuContent",
+  components: {
+    draggable,
+  },
   data() {
     return {
-      text: null,
-      selectedLinkTo: 0,
-      selectedPage: null,
-      selectedUrl: null,
-      statusNewTab: false,
-      tags: [
-        { id: 0, title: "Page" },
-        { id: 1, title: "URL" },
-        { id: 2, title: "Phone" },
-        { id: 3, title: "Email" },
-      ],
+      list: [],
+      image: null,
     };
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById", "getPages"]),
+  },
+  methods: {
+    ...mapActions(["onShowChooseFilesDialog", "onTypeChooseFileDialog"]),
+    onDisplayPage: function() {},
+  },
+  created() {
+    this.onTypeChooseFileDialog("image");
+  },
+  mounted() {
+    this.list = this.getPages;
+    console.log(this.list);
   },
   updated() {
     this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
@@ -96,4 +152,22 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.backgroundSection {
+  height: 150px;
+  border-radius: 4px;
+  border: 1px solid black;
+}
+.labelFile {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+</style>

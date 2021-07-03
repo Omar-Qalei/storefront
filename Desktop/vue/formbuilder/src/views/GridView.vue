@@ -385,8 +385,6 @@ export default {
       }
     },
     onSelectedWidget: function(item) {
-      this.onSelectedWidgetById({ i: null });
-      console.log("item", item);
       this.onSelectedWidgetById(item);
     },
   },
@@ -408,7 +406,6 @@ export default {
   },
   created() {
     this.getQueryStringParams();
-    this.fetchResources();
     this.onSelectedSection({ index: 0, id: 0 });
     this.onSelectedWidgetById(this.getSections[0]);
   },
@@ -425,13 +422,11 @@ export default {
       let resource;
       if (type.screen === "web") {
         resource = this.getWebResources;
-        console.log("resource web", resource);
         this.fetchSections(resource);
       }
       if (type.screen === "mobile") {
         resource = this.getMobileResources;
         this.fetchSections(resource);
-        console.log("resource web", resource);
         this.onRearrangementResources();
       }
     },
@@ -440,7 +435,6 @@ export default {
     const thiz = this;
     window.addEventListener("mouseup", function() {
       thiz.displayPlaceholder = false;
-      console.log(thiz.selectedSection);
       thiz.onCheckUpdateSectionLayoutResized({
         sectionId: thiz.selectedSection,
       });

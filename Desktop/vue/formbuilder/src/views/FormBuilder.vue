@@ -94,10 +94,10 @@ export default {
         });
     },
     getSitePageResources: function() {
+      this.onLoadingPage(true);
       this.fetchWebResources(null);
       this.fetchMobileResources(null);
       this.fetchSections([]);
-      this.onSelectedWidgetById({});
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;
@@ -125,7 +125,7 @@ export default {
       this.onLoadingPage(true);
       this.getSitePageResources();
     },
-    $router: function() {
+    $route: function() {
       this.onSelectedWidgetById({});
       this.getQueryStringParams();
     },

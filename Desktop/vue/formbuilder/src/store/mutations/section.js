@@ -37,16 +37,16 @@ export const duplicateResourceWeb = (state, payload) => {
                 elementHover: null,
                 fields: [],
                 map: null,
-                gridKey: payload.k.i,
                 text: 'Write your text here'
-            }
+            },
+            gridKey: payload.k.i,
         }
         state.webResources[index].resources.push(k)
     }
     if (state.screenSize.screen === 'mobile') {
         state.webResources[index].resources.push(payload.k)
     }
-    state.webResources[index].resources.push(payload.k);
+    // state.webResources[index].resources.push(payload.k);
     SiteService.addSitePageResourceWeb(
         state.siteId,
         state.pageId,
@@ -72,9 +72,9 @@ export const duplicateResourceMobile = (state, payload) => {
                 elementHover: null,
                 fields: [],
                 map: null,
-                gridKey: payload.k.i,
                 text: 'Write your text here'
-            }
+            },
+            gridKey: payload.k.i,
         }
         state.mobileResources[index].resources.push(k)
     }
@@ -82,7 +82,7 @@ export const duplicateResourceMobile = (state, payload) => {
         // state.mobileResources = state.mobileResources;
         state.webResources[index].resources.push(payload.k)
     }
-    state.mobileResources[index].resources.push(payload.k);
+    // state.mobileResources[index].resources.push(payload.k);
     SiteService.addSitePageResourceMobile(
         state.siteId,
         state.pageId,
@@ -616,6 +616,8 @@ export const setDragEnd = (state, payload) => {
                 // state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
                 // state.sections[indexSection].resources.push(payload);
                 state.sections[indexSection].resources = state.sections[indexSection].resources.filter((obj) => obj.i !== "drop");
+                payload.gridKey = payload.i;
+                state.sections[indexSection].resources.push(payload);
                 if (state.screenSize.screen === 'web') {
                     state.webResources = state.sections;
                     let k = {
@@ -626,9 +628,9 @@ export const setDragEnd = (state, payload) => {
                             elementHover: null,
                             fields: [],
                             map: null,
-                            gridKey: payload.i,
                             text: 'Write your text here'
-                        }
+                        },
+                        gridKey: payload.i,
                     }
                     state.mobileResources[indexSection].resources.push(k)
                 }
@@ -642,13 +644,12 @@ export const setDragEnd = (state, payload) => {
                             elementHover: null,
                             fields: [],
                             map: null,
-                            gridKey: payload.i,
                             text: 'Write your text here'
-                        }
+                        },
+                        gridKey: payload.i,
                     }
                     state.webResources[indexSection].resources.push(k)
                 }
-                state.sections[indexSection].resources.push(payload);
                 let addNewRows = (payload.h + payload.y) - state.sections[indexSection].h;
                 state.sections[indexSection].h = (payload.h + payload.y) > state.sections[indexSection].h ? state.sections[indexSection].h + addNewRows : state.sections[indexSection].h;
                 state.sections = compact(state.sections);
@@ -684,7 +685,6 @@ export const setDragEnd = (state, payload) => {
                     .catch((error) => {
                         console.log(error);
                     });
-                console.log(state.webResources, state.mobileResources)
             }
         }
         else {

@@ -5,18 +5,22 @@
       :item="item"
       :sectionId="sectionId"
     ></SettingsWidget>
-    <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark v-bind="attrs" v-on="on">
-          Menu
+    <nav>
+      <a class="logo mr-6">
+        Wimmly
+      </a>
+      <div class="spacer"></div>
+      <template v-if="getScreenSize.screen === 'web'">
+        <v-btn v-for="(item, index) in list" :key="index" text>
+          {{ item.name }}
         </v-btn>
       </template>
-      <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+      <template v-else>
+        <v-btn icon small>
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+      </template>
+    </nav>
   </div>
 </template>
 
@@ -30,12 +34,7 @@ export default {
   },
   data() {
     return {
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
+      list: [],
     };
   },
   props: {
@@ -43,9 +42,11 @@ export default {
     sectionId: Number,
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages", "getScreenSize"]),
   },
-  mounted() {},
+  mounted() {
+    this.list = this.getPages;
+  },
 };
 </script>
 
@@ -54,11 +55,12 @@ export default {
   width: 100%;
   height: 100%;
 }
-.v-btn {
-  position: absolute !important;
-  display: block !important;
-  z-index: -1 !important;
-  width: 100% !important;
-  height: 100% !important;
+nav {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
 }
 </style>

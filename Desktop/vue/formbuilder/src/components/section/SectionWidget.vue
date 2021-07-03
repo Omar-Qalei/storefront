@@ -258,7 +258,7 @@ export default {
     onCheckWidget: function(event, item) {
       if (this.statusSection) {
         event.stopPropagation();
-        this.onSelectedWidgetById({});
+        this.onSelectedWidgetById({ i: null });
         this.onSelectedWidgetById(item);
       }
     },
@@ -276,6 +276,9 @@ export default {
       "getMobileResources",
     ]),
   },
+  // created() {
+  //   this.onSelectedWidgetById({i: null});
+  // },
   mounted() {
     const thiz = this;
     window.addEventListener("mouseup", function() {
