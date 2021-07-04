@@ -56,6 +56,33 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
   },
+  created() {
+    if (this.getSelectedWidgetById.properties.selectedLinkTo === null)
+      this.getSelectedWidgetById.properties.selectedLinkTo = 0;
+    if (this.getSelectedWidgetById.properties.style === null) {
+      this.getSelectedWidgetById.properties.style = {};
+      this.$set(this.getSelectedWidgetById.properties.style, "menu", {
+        background: "#009695FF",
+        fixedPosition: false,
+      });
+      this.$set(this.getSelectedWidgetById.properties.style, "elements", {
+        text: {
+          textAlign: "center",
+          alignSelf: "center",
+          fontWeight: "",
+          fontStyle: "",
+          textDecoration: "",
+          color: "#FFFFFFFF",
+          textTransform: "none",
+          fontSize: "18px",
+        },
+      });
+      this.getSelectedWidgetById.properties.elementHover = {
+        color: "#000000de",
+        backgroundColor: "#f5f5f5",
+      };
+    }
+  },
 };
 </script>
 

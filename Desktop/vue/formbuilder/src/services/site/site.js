@@ -34,6 +34,10 @@ export class SiteService {
         const url = `user/${ApiConfiguration.sites.url}/${siteId}/${ApiConfiguration.page.url}/${pageId}/${ApiConfiguration.resources.store}/mobile`;
         return await httpClient.post(url, data);
     }
+    static async modifyPage(siteId, pageId, data) {
+        const url = `user/${ApiConfiguration.sites.url}/${siteId}/${ApiConfiguration.page.url}/${pageId}`;
+        return await httpClient.post(url, data);
+    }
     static async removeSite(siteId) {
         const url = `user/${ApiConfiguration.sites.url}/${siteId}`;
         return await httpClient.delete(url);

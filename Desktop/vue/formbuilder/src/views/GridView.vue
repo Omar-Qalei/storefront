@@ -65,6 +65,7 @@
             item.properties.style,
           ]"
           @resize="resizeEvent"
+          @resized="resizedEvent"
         >
           <!-- hoverElement === item.id ? showElement : '', -->
           <template v-if="item.properties.backgroundVideo">
@@ -321,6 +322,32 @@ export default {
       //   document.getElementById(element.id).style.height = h + "px";
       // });
     },
+    resizedEvent: function() {
+      if (this.getSelectedWidgetById.type !== "section") {
+        SiteService.addSitePageResourceWeb(
+          this.siteId,
+          this.pageId,
+          JSON.stringify(this.getWebResources)
+        )
+          .then((result) => {
+            console.log("Web posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        SiteService.addSitePageResourceMobile(
+          this.siteId,
+          this.pageId,
+          JSON.stringify(this.getMobileResources)
+        )
+          .then((result) => {
+            console.log("Mobile posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
     onMoveGrid: function(event) {
       this.displayPlaceholder = event;
       // if (this.selectedSectionByI) {
@@ -451,13 +478,13 @@ export default {
       if (thiz.getSelectedWidgetById.type !== "section") {
         thiz.getWebResources.forEach((element) => {
           element.resources.forEach((obj) => {
-            if (element.gridKey === thiz.getSelectedWidgetById.gridKey)
+            if (obj.gridKey === thiz.getSelectedWidgetById.gridKey)
               obj.properties = thiz.getSelectedWidgetById.properties;
           });
         });
         thiz.getMobileResources.forEach((element) => {
           element.resources.forEach((obj) => {
-            if (element.gridKey === thiz.getSelectedWidgetById.gridKey)
+            if (obj.gridKey === thiz.getSelectedWidgetById.gridKey)
               obj.properties = thiz.getSelectedWidgetById.properties;
           });
         });
@@ -506,6 +533,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+  object-fit: fill;
 }
 .hint {
   font-size: 14px;

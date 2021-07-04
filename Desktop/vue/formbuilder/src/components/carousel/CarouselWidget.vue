@@ -12,7 +12,7 @@
       :cycle="getDefalutAllowLoop()"
     >
       <template v-if="item.properties.style">
-        <video v-show="item.properties.style.carousel.background === ''">
+        <video v-show="item.properties.backgroundVideo">
           <source :src="item.properties.backgroundVideo" type="video/mp4" />
         </video>
       </template>
@@ -171,21 +171,21 @@ export default {
         return "";
       }
     },
-    getDefalutSlides() {
+    getDefalutSlides: function() {
       if (this.item.properties.fields.length)
         return this.item.properties.fields;
       return this.fields;
     },
-    getDefalutAllowArrows() {
+    getDefalutAllowArrows: function() {
       if (!this.item.properties.allowArrow)
         return this.item.properties.allowArrow;
       return true;
     },
-    getDefalutAllowDots() {
+    getDefalutAllowDots: function() {
       if (this.item.properties.allowDots) return this.item.properties.allowDots;
       return false;
     },
-    getDefalutAllowLoop() {
+    getDefalutAllowLoop: function() {
       // console.log("properties", this.item.properties.allowLoop);
       if (!this.item.properties.allowLoop)
         return this.item.properties.allowLoop;
@@ -207,6 +207,7 @@ export default {
 video {
   width: 100%;
   height: 100%;
+  object-fit: fill;
 }
 .v-carousel {
   position: absolute !important;

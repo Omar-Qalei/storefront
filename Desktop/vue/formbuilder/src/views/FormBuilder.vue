@@ -98,6 +98,7 @@ export default {
       this.fetchWebResources(null);
       this.fetchMobileResources(null);
       this.fetchSections([]);
+      console.log(this.siteId, this.pageId);
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;

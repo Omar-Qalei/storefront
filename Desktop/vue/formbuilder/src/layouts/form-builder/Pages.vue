@@ -23,7 +23,7 @@
               </v-btn>
             </v-list-item-action>
           </v-list-item>
-          <v-list-item link @click="dialog = true">
+          <v-list-item link @click="addDialog = true">
             <v-list-item-icon>
               <v-icon
                 color="indigo"
@@ -60,10 +60,10 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item link>
+                    <v-list-item @click="onEditPage(page)" link>
                       <v-list-item-title> Edit</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="onRemovePage(page.id)" link>
+                    <v-list-item @click="onDeletePage(page.id)" link>
                       <v-list-item-title> Delete</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -85,7 +85,7 @@
     </div>
 
     <!-- Add Page Dialog -->
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog v-model="addDialog" width="500">
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
           Add Page
@@ -110,8 +110,76 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn text @click="addDialog = false">
+            Cancel
+          </v-btn>
           <v-btn color="primary" text @click="addPage">
             Add
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Edit Page Dialog -->
+    <v-dialog v-model="editDialog" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Edit Page
+        </v-card-title>
+
+        <v-card-text>
+          <v-col cols="12">
+            <h2 class="body-1 font-weight-medium mb-2">
+              Name
+            </h2>
+            <v-text-field outlined v-model="name" hide-details></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <h2 class="body-1 font-weight-medium mb-2">
+              Path
+            </h2>
+            <v-text-field outlined v-model="path" hide-details></v-text-field>
+          </v-col>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="editDialog = false">
+            Cancel
+          </v-btn>
+          <v-btn color="primary" text @click="onModifyPage">
+            Modify
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Remove Page Dialog -->
+    <v-dialog v-model="removeDialog" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Remove Page
+        </v-card-title>
+
+        <v-card-text>
+          <v-col cols="12">
+            <h2 class="body-1 font-weight-medium mb-2">
+              Are you sure?
+            </h2>
+          </v-col>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="removeDialog = false">
+            Cancel
+          </v-btn>
+          <v-btn color="primary" text @click="onRemovePage">
+            Remove
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -135,7 +203,9 @@ export default {
       selectedPage: null,
       siteId: null,
       pageId: null,
-      dialog: false,
+      addDialog: false,
+      editDialog: false,
+      removeDialog: false,
       name: null,
       path: null,
     };
@@ -160,19 +230,6 @@ export default {
         this.pageId = +this.$route.query.pageId;
       }
     },
-    addPage: function() {
-      const data = {
-        name: this.name,
-        path: this.path,
-      };
-      SiteService.addPage(this.siteId, data)
-        .then(() => {
-          this.dialog = false;
-          this.drawer = true;
-          this.getSiteById();
-        })
-        .catch((err) => console.log(err));
-    },
     getSiteById: function() {
       SiteService.getSitePages(this.siteId)
         .then((result) => {
@@ -183,10 +240,46 @@ export default {
           console.log(error);
         });
     },
-    onRemovePage: function(pageId) {
-      SiteService.removePage(this.siteId, pageId)
+    addPage: function() {
+      const data = {
+        name: this.name,
+        path: this.path,
+      };
+      SiteService.addPage(this.siteId, data)
         .then(() => {
-          this.dialog = false;
+          this.addDialog = false;
+          this.drawer = true;
+          this.getSiteById();
+        })
+        .catch((err) => console.log(err));
+    },
+    onEditPage: function(page) {
+      this.editDialog = true;
+      this.pageId = page.id;
+      this.name = page.name;
+      this.path = page.path;
+    },
+    onModifyPage: function() {
+      const data = {
+        name: this.name,
+        path: this.path,
+      };
+      SiteService.modifyPage(this.siteId, this.pageId, data)
+        .then(() => {
+          this.editDialog = false;
+          this.drawer = true;
+          this.getSiteById();
+        })
+        .catch((err) => console.log(err));
+    },
+    onDeletePage: function(pageId) {
+      this.removeDialog = true;
+      this.pageId = pageId;
+    },
+    onRemovePage: function() {
+      SiteService.removePage(this.siteId, this.pageId)
+        .then(() => {
+          this.removeDialog = false;
           this.drawer = true;
           this.getSiteById();
         })

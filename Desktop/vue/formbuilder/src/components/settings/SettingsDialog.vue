@@ -48,7 +48,7 @@ export default {
         JSON.stringify(this.getWebResources)
       )
         .then((result) => {
-          console.log("Mobile Settings posted", result);
+          console.log("Web Settings posted", result);
         })
         .catch((error) => {
           console.log(error);

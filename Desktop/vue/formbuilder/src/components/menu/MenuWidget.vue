@@ -5,22 +5,47 @@
       :item="item"
       :sectionId="sectionId"
     ></SettingsWidget>
-    <nav>
+    <nav :style="menuStyle()">
       <a class="logo mr-6">
         Wimmly
       </a>
-      <div class="spacer"></div>
       <template v-if="getScreenSize.screen === 'web'">
-        <v-btn v-for="(item, index) in list" :key="index" text>
-          {{ item.name }}
-        </v-btn>
+        <div class="w-100" :style="{ textAlign: textAlign }">
+          <v-btn
+            v-for="(element, index) in list"
+            :key="index"
+            :style="[textStyle(), onHover(item.properties.elementHover)]"
+            text
+            @mouseover="hover = true"
+            @mouseleave="hover = false"
+            v-show="element.status"
+          >
+            {{ element.name }}
+          </v-btn>
+        </div>
       </template>
       <template v-else>
-        <v-btn icon small>
+        <v-spacer></v-spacer>
+        <v-btn
+          :style="[
+            { color: textStyle().color },
+            onHover(item.properties.elementHover),
+          ]"
+          icon
+          small
+        >
           <v-icon>mdi-menu</v-icon>
         </v-btn>
       </template>
     </nav>
+    <!-- <v-btn
+      v-for="(item, index) in list"
+      :key="index"
+      text
+      :style="[textStyle(), onHover(item.properties.elementHover)]"
+    >
+      {{ item.name }}
+    </v-btn> -->
   </div>
 </template>
 
@@ -34,7 +59,23 @@ export default {
   },
   data() {
     return {
+      drawer: false,
       list: [],
+      textAlign: "center",
+      text: {
+        alignSelf: "center",
+        fontWeight: "",
+        fontStyle: "",
+        textDecoration: "",
+        color: "#FFFFFFFF",
+        textTransform: "none",
+        fontSize: "18px",
+      },
+      menu: {
+        background: "transparent",
+        fixedPosition: false,
+      },
+      hover: false,
     };
   },
   props: {
@@ -44,8 +85,56 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById", "getPages", "getScreenSize"]),
   },
+  methods: {
+    navStyle: function() {
+      if (this.item.properties.style) {
+        if (this.item.properties.style.menu) {
+          return this.item.properties.style.menu
+            ? this.item.properties.style.menu
+            : this.menu;
+        } else {
+          return this.menu;
+        }
+      } else {
+        return this.menu;
+      }
+    },
+    menuStyle: function() {
+      if (this.item.properties.style) {
+        return this.item.properties.style.menu
+          ? this.item.properties.style.menu
+          : this.menu;
+      } else {
+        return this.menu;
+      }
+    },
+    textStyle: function() {
+      if (this.item.properties.style) {
+        if (this.item.properties.style.elements) {
+          this.textAlign = this.item.properties.style.elements.text.textAlign;
+          return this.item.properties.style.elements.text
+            ? this.item.properties.style.elements.text
+            : this.text;
+        } else {
+          return this.text;
+        }
+      } else {
+        return this.text;
+      }
+    },
+    onHover: function(elementHover) {
+      if (this.hover) {
+        if (elementHover !== undefined) {
+          return elementHover;
+        }
+      } else {
+        return "";
+      }
+    },
+  },
   mounted() {
-    this.list = this.getPages;
+    if (this.item.properties.fields.length > 0)
+      this.list = this.item.properties.fields;
   },
 };
 </script>
@@ -62,5 +151,8 @@ nav {
   z-index: -1;
   width: 100%;
   height: 100%;
+}
+.widget ::v-deep.v-btn {
+  text-transform: inherit;
 }
 </style>

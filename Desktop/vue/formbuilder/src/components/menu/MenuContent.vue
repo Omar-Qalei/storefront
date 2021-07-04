@@ -1,70 +1,5 @@
 <template>
   <v-container class="menu-content" fluid>
-    <!-- <v-row class="pt-4">
-      <v-col cols="8">
-        <h2 class="body-1 font-weight-medium mb-2">
-          Menu Text
-        </h2>
-        <v-text-field
-          outlined
-          v-model="getSelectedWidgetById.properties.name"
-          hide-details
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium mb-2">
-          Link to
-        </h2>
-        <v-chip-group
-          active-class="primary--text"
-          mandatory
-          v-model="selectedLinkTo"
-        >
-          <v-chip v-for="tag in tags" :key="tag.id">
-            {{ tag.title }}
-          </v-chip>
-        </v-chip-group>
-      </v-col>
-      <v-col cols="12">
-        <h2 class="body-1 font-weight-medium mb-2">
-          {{ tags[selectedLinkTo].title }}
-        </h2>
-        <v-select
-          v-if="selectedLinkTo === 0"
-          :items="getPages"
-          item-text="name"
-          return-object
-          v-model="getSelectedWidgetById.properties.page"
-          outlined
-        ></v-select>
-        <template v-if="selectedLinkTo === 1">
-          <v-text-field
-            placeholder="https://www.example.com"
-            v-model="getSelectedWidgetById.properties.url"
-            outlined
-            hide-details
-          ></v-text-field>
-          <v-switch
-            label="Open a new tab"
-            v-model="getSelectedWidgetById.properties.newTab"
-          ></v-switch>
-        </template>
-        <v-text-field
-          v-if="selectedLinkTo === 2"
-          placeholder="Ex. 079-501-218"
-          v-model="getSelectedWidgetById.properties.phone"
-          outlined
-          hide-details
-        ></v-text-field>
-        <v-text-field
-          v-if="selectedLinkTo === 3"
-          placeholder="example@example.com"
-          v-model="getSelectedWidgetById.properties.email"
-          outlined
-          hide-details
-        ></v-text-field>
-      </v-col>
-    </v-row> -->
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-header>Logo</v-expansion-panel-header>
@@ -97,7 +32,7 @@
           <draggable v-model="list" class="w-100">
             <v-card-actions
               class="py-2"
-              v-for="(item, index) in list"
+              v-for="(item, index) in getList"
               :key="index"
             >
               <h2 class="body-2 font-weight-medium">
@@ -107,61 +42,123 @@
                 {{ item.name }}
               </h2>
               <v-spacer></v-spacer>
-              <v-btn x-small icon color="primary" @click="onDisplayPage(index)">
+              <!-- {{ item.id }} {{ item.status }} -->
+              <v-btn
+                v-if="item.status"
+                x-small
+                icon
+                color="primary"
+                @click="onDisplayPage(item)"
+              >
                 <v-icon color="primary">mdi mdi-eye-outline</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="!item.status"
+                x-small
+                icon
+                color="primary"
+                @click="onDisplayPage(item)"
+              >
+                <v-icon color="primary">mdi mdi-eye-off-outline</v-icon>
               </v-btn>
             </v-card-actions>
           </draggable>
         </v-card>
       </v-col>
     </v-row>
+    <!-- Choose Files -->
+    <ChooseFilesWidget
+      @onSelectedImage="onSelectedImage($event)"
+      :type="'image'"
+    />
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
+import ChooseFilesWidget from "../options/ChooseFilesWidget";
+
 export default {
   name: "MenuContent",
   components: {
     draggable,
+    ChooseFilesWidget,
   },
   data() {
     return {
-      list: [],
+      list: [
+        { id: "lol", status: true },
+        { id: "lol2", status: true },
+        { id: "lol3", status: true },
+        { id: "lol4", status: true },
+      ],
       image: null,
     };
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById", "getPages"]),
+    getList: function() {
+      return this.list;
+    },
   },
   methods: {
     ...mapActions(["onShowChooseFilesDialog", "onTypeChooseFileDialog"]),
-    onDisplayPage: function() {},
+    onSelectedImage: function(event) {
+      this.image = event;
+    },
+    onDisplayPage: function(event) {
+      this.list.forEach((element) => {
+        if (element.id === event.id) element.status = !element.status;
+      });
+      this.getSelectedWidgetById.properties.fields = this.list;
+    },
   },
   created() {
     this.onTypeChooseFileDialog("image");
-  },
-  mounted() {
-    this.list = this.getPages;
-    console.log(this.list);
+    if (this.getSelectedWidgetById.properties.image)
+      this.image = this.getSelectedWidgetById.properties.image;
+
+    if (this.getSelectedWidgetById.properties.fields.length === 0)
+      this.getSelectedWidgetById.properties.fields = this.getPages;
+
+    if (this.getSelectedWidgetById.properties.fields.length > 0) {
+      const pages = this.getPages.map((element) => element.id).sort();
+      this.getPages.forEach((element) => (element.status = true));
+      this.list = this.getPages;
+      const fields = this.getSelectedWidgetById.properties.fields
+        .map((element) => element.id)
+        .sort();
+      const thiz = this;
+      pages.forEach(function(element) {
+        if (fields.indexOf(element) === -1) {
+          const object = thiz.getPages.find((obj) => obj.id === element);
+          thiz.getSelectedWidgetById.properties.fields.push(object);
+        }
+      });
+      this.list = this.getSelectedWidgetById.properties.fields;
+    }
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    this.getSelectedWidgetById.properties.image = this.image;
+    this.getSelectedWidgetById.properties.fields = this.list;
   },
 };
 </script>
 
 <style scoped>
 img {
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
 }
 .backgroundSection {
   height: 150px;
   border-radius: 4px;
   border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .labelFile {
   display: flex;
