@@ -592,6 +592,7 @@ export const setDrag = (state, payload) => {
 // Mutation too drag end grid item in resources
 export const setDragEnd = (state, payload) => {
     state.preventCollision = false;
+    console.log(state.dragPos.x, state.dragPos.y)
     if (state.indexSection !== null && state.selectedGridId) {
         if (state.selectedPerviousGridId && state.selectedPerviousGridId === state.selectedGridId) {
             let mouseInGrid = false;

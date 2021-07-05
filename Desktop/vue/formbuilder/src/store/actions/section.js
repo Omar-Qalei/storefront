@@ -330,7 +330,8 @@ export const onDrag = ({ commit, state }) => {
             fields: [],
             map: null,
             text: 'Write your text here',
-            image: null
+            image: null,
+            hideFormName: true,
         }
     }
     commit('setDrag', k);
@@ -347,7 +348,8 @@ export const onDragend = ({ commit, state }) => {
             fields: [],
             map: null,
             text: 'Write your text here',
-            image: null
+            image: null,
+            hideFormName: true,
         }
     }
     commit('setDragEnd', k)

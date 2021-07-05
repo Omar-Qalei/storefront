@@ -91,6 +91,36 @@ export default {
   computed: {
     ...mapGetters(["getSelectedWidgetById", "getPages", "getScreenSize"]),
   },
+  watch: {
+    getPages: function() {
+      if (this.item.properties.fields.length > 0) {
+        const pages = this.getPages.map((element) => element.id).sort();
+        this.getPages.forEach((element) => (element.status = true));
+        this.list = this.getPages;
+        const fields = this.item.properties.fields
+          .map((element) => element.id)
+          .sort();
+        const thiz = this;
+        pages.forEach(function(element) {
+          if (fields.indexOf(element) === -1) {
+            const object = thiz.getPages.find((obj) => obj.id === element);
+            thiz.item.properties.fields.push(object);
+          }
+        });
+        this.list = thiz.item.properties.fields.map((element) => {
+          return {
+            id: element.id,
+            name: element.name,
+            path: element.path,
+            status: element?.status !== undefined ? element.status : true,
+          };
+        });
+      }
+    },
+    "item.properties.fields": function(value) {
+      if (value.length > 0) this.list = value;
+    },
+  },
   methods: {
     getDefaultImage(item) {
       if (item.properties.image) return item.properties.image;
@@ -142,8 +172,16 @@ export default {
       }
     },
   },
-  mounted() {
-    if (this.item.properties.fields.length === 0) this.list = this.getPages;
+  created() {
+    if (this.item.properties.fields.length === 0)
+      this.list = this.getPages.map((element) => {
+        return {
+          id: element.id,
+          name: element.name,
+          path: element.path,
+          status: element?.status !== undefined ? element.status : true,
+        };
+      });
     if (this.item.properties.fields.length > 0)
       this.list = this.item.properties.fields;
   },

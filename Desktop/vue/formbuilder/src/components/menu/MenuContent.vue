@@ -43,6 +43,7 @@
               </h2>
               <v-spacer></v-spacer>
               <!-- {{ item.id }} {{ item.status }} -->
+              <!-- <v-switch v-model="item.status" hide-details></v-switch> -->
               <v-btn
                 v-if="item.status"
                 x-small
@@ -137,7 +138,16 @@ export default {
           thiz.getSelectedWidgetById.properties.fields.push(object);
         }
       });
-      this.list = this.getSelectedWidgetById.properties.fields;
+      this.list = thiz.getSelectedWidgetById.properties.fields.map(
+        (element) => {
+          return {
+            id: element.id,
+            name: element.name,
+            path: element.path,
+            status: element?.status !== undefined ? element.status : true,
+          };
+        }
+      );
     }
   },
   updated() {
