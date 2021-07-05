@@ -9,6 +9,10 @@ export const setPageId = (state, payload) => {
     state.pageId = payload || null
 };
 
+export const setCols = (state, payload) => {
+    state.cols = payload || null
+};
+
 export const setSections = (state, sections) => {
     state.sections = sections || {}
 };

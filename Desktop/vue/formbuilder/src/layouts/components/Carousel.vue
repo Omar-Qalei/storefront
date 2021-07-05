@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "carousel",
-        width: 8,
+        width: 16,
         height: 16,
       },
     };

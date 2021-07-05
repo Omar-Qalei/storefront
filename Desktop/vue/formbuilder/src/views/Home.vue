@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import Sites from "./sites/Sites";
 // import Contacts from "./contacts/Main.vue";
 import Navbar from "../layouts/home/Navbar";
@@ -23,21 +22,6 @@ export default {
   components: { Sidebar, Navbar, Sites },
   data() {
     return {};
-  },
-  created() {
-    this.onSelectedWidgetById({});
-    this.fetchSections([]);
-    this.fetchWebResources(null);
-    this.fetchMobileResources(null);
-    console.log("checked");
-  },
-  methods: {
-    ...mapActions([
-      "onSelectedWidgetById",
-      "fetchSections",
-      "fetchMobileResources",
-      "fetchWebResources",
-    ]),
   },
 };
 </script>

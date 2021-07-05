@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "menu",
-        width: 12,
+        width: 22,
         height: 2,
       },
     };

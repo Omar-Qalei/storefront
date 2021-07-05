@@ -20,12 +20,13 @@
       <a
         class="link-icon"
         @click="
+          fetchCols(1);
           onResizeSectionScreen({
             width: '320px',
-            cols: 1,
             responsive: true,
+            cols: 1,
             screen: 'mobile',
-          })
+          });
         "
       >
         <span class="mdi mdi-cellphone-cog"></span>
@@ -33,12 +34,13 @@
       <a
         class="link-icon"
         @click="
+          fetchCols(24);
           onResizeSectionScreen({
             width: '100%',
-            cols: 12,
             responsive: false,
+            cols: 24,
             screen: 'web',
-          })
+          });
         "
       >
         <span class="mdi mdi-monitor"></span>
@@ -86,6 +88,7 @@ export default {
       "onResizeSectionScreen",
       "onRearrangementResources",
       "onSortSectionsLayout",
+      "fetchCols",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -97,7 +100,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getSelectedPage", "getPages", "getScreenSize"]),
+    ...mapGetters(["getSelectedPage", "getPages", "getScreenSize", "getCols"]),
   },
   watch: {
     getSelectedPage: function(pageId) {

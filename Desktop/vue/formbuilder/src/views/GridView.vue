@@ -67,6 +67,7 @@
           @resize="resizeEvent"
           @resized="resizedEvent"
         >
+          <!-- id: {{ item.id }} i: {{ item.i }} -->
           <!-- hoverElement === item.id ? showElement : '', -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
@@ -386,6 +387,8 @@ export default {
       }
     },
     onMovedWidget: function() {
+      if (this.$route.query.pageId && this.$route.query.pageId !== this.pageId)
+        this.pageId = +this.$route.query.pageId;
       if (this.getSelectedWidgetById.type !== "section") {
         SiteService.addSitePageResourceWeb(
           this.siteId,
@@ -432,9 +435,9 @@ export default {
     ]),
   },
   created() {
+    this.onSelectedWidgetById({});
     this.getQueryStringParams();
     this.onSelectedSection({ index: 0, id: 0 });
-    this.onSelectedWidgetById(this.getSections[0]);
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -462,6 +465,7 @@ export default {
     const thiz = this;
     window.addEventListener("mouseup", function() {
       thiz.displayPlaceholder = false;
+      console.log("selectedSection", thiz.selectedSection);
       thiz.onCheckUpdateSectionLayoutResized({
         sectionId: thiz.selectedSection,
       });
@@ -503,6 +507,15 @@ export default {
     //   //   "translate3d(10px," + transformHeight + "px, 0px)";
     //   document.getElementById(element.id).style.height = h + "px";
     // });
+  },
+  destroyed() {
+    // this.selectedSection
+    console.log("destoryed Grid View");
+    this.onSelectedWidgetById({});
+    this.selectedSection = 0;
+    this.onCheckUpdateSectionLayoutResized({
+      sectionId: 0,
+    });
   },
 };
 </script>

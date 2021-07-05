@@ -93,7 +93,8 @@ export default {
         { id: "lol3", status: true },
         { id: "lol4", status: true },
       ],
-      image: null,
+      image:
+        "https://wimmly.com/storage/01becba3-9951-4516-8230-d7e5cf9d45fa/media/VVF6czRlyaQ0Y6NhWMoUgheJgZNhAv23AoZurw0R.png",
     };
   },
   computed: {
@@ -148,7 +149,7 @@ export default {
 
 <style scoped>
 img {
-  width: 100px;
+  width: 100%;
   height: 100px;
   object-fit: cover;
 }

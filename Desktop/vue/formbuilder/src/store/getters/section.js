@@ -10,6 +10,10 @@ export const getMobileResources = (state) => {
     return state.mobileResources
 };
 
+export const getCols = (state) => {
+    return state.cols
+};
+
 export const getResources = (state) => {
     return state.resources
 };
@@ -43,7 +47,7 @@ export const getIsResizeable = (state) => {
 };
 
 export const getIsAutoResize = (state) => {
-    return state.isAutoResize;
+    return state.isAutoResize
 };
 
 export const getAllowSorting = (state) => {

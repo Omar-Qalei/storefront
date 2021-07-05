@@ -1,6 +1,7 @@
 export default {
     siteId: null,
     pageId: null,
+    cols: 24,
     sections: {},
     webResources: [],
     mobileResources: [],
@@ -19,7 +20,7 @@ export default {
     currentSelectedSectionId: null, // for vertify if current equal selected Section by id
     currentSelectedSectionIndex: null, // for vertify if current equal selected Section by index
     resizeSection: false, // stop resize section from drag
-    screenSize: { width: '100%', cols: 12, screen: 'web' },
+    screenSize: { width: '100%', cols: 24, screen: 'web' },
     isResizeable: false, // for resize sections
     isAutoResize: true, // prevent change height Section on draging
     allowSorting: true,

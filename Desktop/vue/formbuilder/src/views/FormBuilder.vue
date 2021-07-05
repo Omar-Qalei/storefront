@@ -14,9 +14,7 @@
                 width: getScreenSize.width,
               }"
             >
-              <keep-alive>
-                <GridView></GridView>
-              </keep-alive>
+              <GridView></GridView>
             </v-card>
           </v-col>
           <SettingsDialog from="modal" />
@@ -58,6 +56,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      "fetchCols",
       "fetchSections",
       "fetchWebResources",
       "fetchMobileResources",
@@ -94,11 +93,6 @@ export default {
         });
     },
     getSitePageResources: function() {
-      this.onLoadingPage(true);
-      this.fetchWebResources(null);
-      this.fetchMobileResources(null);
-      this.fetchSections([]);
-      console.log(this.siteId, this.pageId);
       SiteService.getSitePageResources(this.siteId, this.pageId)
         .then((result) => {
           const data = result.data.data;
@@ -108,6 +102,8 @@ export default {
             JSON.parse(data.web)
               ? this.fetchSections(JSON.parse(data.web))
               : this.fetchSections([]);
+
+            this.onSelectedWidgetById(this.getSections[0]);
           } else {
             this.fetchSections([]);
             this.fetchWebResources(data);
@@ -128,11 +124,20 @@ export default {
     },
     $route: function() {
       this.onSelectedWidgetById({});
+      this.pageId = null;
       this.getQueryStringParams();
     },
   },
   created() {
+    this.fetchCols(24);
     this.getQueryStringParams();
+  },
+  destroyed() {
+    console.log("destoryed FormBuilder");
+    this.onSelectedWidgetById({});
+    this.fetchSections([]);
+    this.fetchWebResources(null);
+    this.fetchMobileResources(null);
   },
 };
 </script>

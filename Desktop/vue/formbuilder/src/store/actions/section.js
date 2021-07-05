@@ -8,6 +8,10 @@ export const fetchPageId = ({ commit }, payload) => {
     commit('setPageId', payload)
 }
 
+export const fetchCols = ({ commit }, payload) => {
+    commit('setCols', payload)
+}
+
 // Action to fetch sections and set in state through the mutation
 export const fetchSections = ({ commit, state }, payload) => {
     let g = lib.guid()

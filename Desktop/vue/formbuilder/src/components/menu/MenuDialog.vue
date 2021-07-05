@@ -62,7 +62,7 @@ export default {
     if (this.getSelectedWidgetById.properties.style === null) {
       this.getSelectedWidgetById.properties.style = {};
       this.$set(this.getSelectedWidgetById.properties.style, "menu", {
-        background: "#009695FF",
+        background: "transparent",
         fixedPosition: false,
       });
       this.$set(this.getSelectedWidgetById.properties.style, "elements", {
@@ -72,7 +72,7 @@ export default {
           fontWeight: "",
           fontStyle: "",
           textDecoration: "",
-          color: "#FFFFFFFF",
+          color: "black",
           textTransform: "none",
           fontSize: "18px",
         },

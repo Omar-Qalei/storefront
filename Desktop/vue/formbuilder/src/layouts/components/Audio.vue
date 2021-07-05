@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "audio",
-        width: 4,
+        width: 8,
         height: 2,
       },
     };

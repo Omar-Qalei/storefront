@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "button",
-        width: 2,
+        width: 4,
         height: 2,
       },
     };

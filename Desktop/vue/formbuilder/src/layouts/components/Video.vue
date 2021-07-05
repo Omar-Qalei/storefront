@@ -26,7 +26,7 @@ export default {
     return {
       element: {
         type: "video",
-        width: 3,
+        width: 6,
         height: 8,
       },
     };

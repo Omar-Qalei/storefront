@@ -7,8 +7,8 @@
         left
         app
         clipped
-        absolute
         temporary
+        fixed
         class="settings"
       >
         <v-list>
@@ -305,7 +305,7 @@ export default {
     selectedPage: function(value) {
       this.onSelectedPage(value);
       this.fetchPageId(value);
-      this.$router.push({
+      this.$router.replace({
         path: "formBuilder",
         query: { siteId: this.siteId, pageId: value },
       });

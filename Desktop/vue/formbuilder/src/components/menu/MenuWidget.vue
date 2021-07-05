@@ -7,7 +7,12 @@
     ></SettingsWidget>
     <nav :style="menuStyle()">
       <a class="logo mr-6">
-        Wimmly
+        <img
+          class="menu-logo"
+          :src="getDefaultImage(item)"
+          width="200"
+          height="50"
+        />
       </a>
       <template v-if="getScreenSize.screen === 'web'">
         <div class="w-100" :style="{ textAlign: textAlign }">
@@ -62,12 +67,13 @@ export default {
       drawer: false,
       list: [],
       textAlign: "center",
+      image: "../../assets/images/menu-logo.png",
       text: {
         alignSelf: "center",
         fontWeight: "",
         fontStyle: "",
         textDecoration: "",
-        color: "#FFFFFFFF",
+        color: "black",
         textTransform: "none",
         fontSize: "18px",
       },
@@ -86,6 +92,10 @@ export default {
     ...mapGetters(["getSelectedWidgetById", "getPages", "getScreenSize"]),
   },
   methods: {
+    getDefaultImage(item) {
+      if (item.properties.image) return item.properties.image;
+      return "https://wimmly.com/storage/01becba3-9951-4516-8230-d7e5cf9d45fa/media/VVF6czRlyaQ0Y6NhWMoUgheJgZNhAv23AoZurw0R.png";
+    },
     navStyle: function() {
       if (this.item.properties.style) {
         if (this.item.properties.style.menu) {
@@ -133,6 +143,7 @@ export default {
     },
   },
   mounted() {
+    if (this.item.properties.fields.length === 0) this.list = this.getPages;
     if (this.item.properties.fields.length > 0)
       this.list = this.item.properties.fields;
   },
@@ -154,5 +165,8 @@ nav {
 }
 .widget ::v-deep.v-btn {
   text-transform: inherit;
+}
+.menu-logo {
+  object-fit: cover;
 }
 </style>
