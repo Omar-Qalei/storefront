@@ -352,6 +352,7 @@ export const onDragend = ({ commit, state }) => {
             hideFormName: true,
         }
     }
+    console.log(k)
     commit('setDragEnd', k)
 }
 

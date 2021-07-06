@@ -1,10 +1,8 @@
 <template>
-  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    <!-- <template v-if="selectedLinkTo === null"> -->
-    <v-btn
-      class="draggable"
-      draggable="true"
-      unselectable="on"
+  <div class="widget">
+    <!-- <v-btn
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
       :style="[
         item.properties.style ? item.properties.style : style,
         onHover(item.properties.elementHover),
@@ -12,16 +10,18 @@
       :id="item.i + 'button'"
     >
       {{ item.properties.name }}
-    </v-btn>
+    </v-btn> -->
     <!-- </template> -->
-
-    <!-- <template v-if="selectedLinkTo && selectedLinkTo === 0">
+    <!-- :to="'/' + setPath(item.properties)" -->
+    <template v-if="selectedLinkTo === 0">
       <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
+        @click="setPath(item.properties)"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+          onHover(item.properties.elementHover),
+        ]"
         :id="item.i + 'button'"
       >
         {{ item.properties.name }}
@@ -68,7 +68,7 @@
       >
         {{ item.properties.name }}
       </v-btn>
-    </template> -->
+    </template>
   </div>
 </template>
 
@@ -78,13 +78,12 @@ export default {
   data() {
     return {
       hover: false,
-      selectedLinkTo: null,
+      selectedLinkTo: 0,
       style: {},
     };
   },
   props: {
     item: {},
-    sectionId: Number,
   },
   methods: {
     onHover: function(elementHover) {
@@ -95,6 +94,9 @@ export default {
       } else {
         return "";
       }
+    },
+    setPath: function(properties) {
+      this.$router.push(`/${properties.page.path}`);
     },
     goTo: function() {
       let url = this.getSelectedWidgetById.properties.selectedLinkTo.url;
@@ -129,11 +131,11 @@ export default {
       };
     }
   },
-  updated() {
-    if (this.getSelectedWidgetById.properties?.selectedLinkTo) {
-      this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
-    }
-  },
+  // updated() {
+  //   if (this.getSelectedWidgetById.properties?.selectedLinkTo) {
+  //     this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
+  //   }
+  // },
 };
 </script>
 
@@ -141,7 +143,7 @@ export default {
 .v-btn {
   position: absolute !important;
   display: block !important;
-  z-index: 1;
+  z-index: 1 !important;
   width: 100% !important;
   height: 100% !important;
 }

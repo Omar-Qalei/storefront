@@ -35,6 +35,7 @@
           selectedSectionByI = item.i;
           selectedSection = item.id;
         "
+        @mousedown.once="onSelectedWidget(item)"
       >
         <GridItem
           :class="{
@@ -465,7 +466,6 @@ export default {
     const thiz = this;
     window.addEventListener("mouseup", function() {
       thiz.displayPlaceholder = false;
-      console.log("selectedSection", thiz.selectedSection);
       thiz.onCheckUpdateSectionLayoutResized({
         sectionId: thiz.selectedSection,
       });

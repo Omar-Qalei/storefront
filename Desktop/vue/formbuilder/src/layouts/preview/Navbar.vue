@@ -1,22 +1,24 @@
 <template>
   <!-- <div class="navbar"> -->
   <v-app-bar app color="white" dense clipped-right clipped-left dark>
-    <a class="logo mr-6">
-      Wimmly
-    </a>
+    <v-btn
+      color="primary"
+      class="text-capitalize"
+      text
+      @click="$router.go(-1)"
+      small
+    >
+      <v-icon>mdi-chevron-left</v-icon>
+      Back to editor
+    </v-btn>
     <div class="separator"></div>
     <a class="pages ml-2" @click="onDrawerPages">
       Pages: <b class="ml-1">{{ title }}</b>
     </a>
-    <div class="spacer"></div>
+    <v-spacer></v-spacer>
+    <h2 class="font-weight-regular">PREVIEW MODE</h2>
+    <v-spacer></v-spacer>
     <div class="settings d-flex">
-      <v-chip class="ma-2" color="deep-purple accent-4" outlined>
-        <v-icon left>
-          mdi-check-decagram
-        </v-icon>
-        Auto Save
-      </v-chip>
-      <!-- onRearrangementResources(); -->
       <a
         class="link-icon"
         @click="
@@ -47,21 +49,12 @@
       >
         <span class="mdi mdi-monitor"></span>
       </a>
-      <v-btn icon small color="primary" @click.stop="onDrawer">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-      <v-btn
-        class="text-capitalize font-weight-light fs-14"
-        color="primary"
-        text
-        :to="{ name: 'Preview', query: { siteId: siteId } }"
-        ><v-icon class="mr-2">mdi-eye</v-icon>Preview</v-btn
-      >
       <v-btn
         class="text-capitalize font-weight-light fs-14"
         color="primary"
         dark
         x-large
+        @click="onBuildProduct"
       >
         Publish Website
       </v-btn>
@@ -72,7 +65,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-// import { SiteService } from "../../services/site/site";
 
 export default {
   name: "Navbar",
@@ -100,6 +92,19 @@ export default {
       if (this.$route.query.pageId) {
         this.pageId = +this.$route.query.pageId;
       }
+    },
+    onBuildProduct: function() {
+      // console.log(require("child_process"));
+      // exec("npm build", function(err, stdout, stderr) {
+      //   if (err) {
+      //     console.log(err);
+      //     // handle error
+      //   }
+      //   console.log(stdout, stderr);
+      // });
+      //       dir.on('exit', function (code) {
+      //     // return value from "npm build"
+      // });
     },
   },
   computed: {
@@ -175,5 +180,10 @@ nav {
 }
 ::v-deep.v-btn.fs-14 {
   font-size: 14px;
+}
+h2 {
+  font-size: 12px;
+  color: black;
+  letter-spacing: 0.22em;
 }
 </style>

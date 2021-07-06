@@ -15,7 +15,7 @@ export const setRemoveFormField = (state, payload) => {
 
 export const setTextHeight = (state) => {
     if (state.selectedWidget.type === 'text') {
-        if (state.selectedWidget.i)
+        if (document.getElementById(state.selectedWidget.i))
             state.textHeight = document.getElementById(state.selectedWidget.i).scrollHeight;
         document.getElementById(state.selectedWidget.i).style.height = state.textHeight + "px";
         let h = state.textHeight / 30;
@@ -36,7 +36,7 @@ export const setTextHeight = (state) => {
 
 export const setRemoveBreakLines = (state) => {
     if (state.selectedWidget.type === 'text') {
-        if (state.selectedWidget.i)
+        if (document.getElementById(state.selectedWidget.i))
             state.textHeight = document.getElementById(state.selectedWidget.i).scrollHeight;
         let h = state.textHeight / 30;
         h = Math.ceil(h);
@@ -62,7 +62,7 @@ export const setRemoveBreakLines = (state) => {
 
 export const checkGridHeight = (state) => {
     if (state.selectedWidget.type === 'text') {
-        if (state.selectedWidget.i)
+        if (document.getElementById(state.selectedWidget.i))
             state.textHeight = document.getElementById(state.selectedWidget.i).scrollHeight;
         let h = state.textHeight / 30;
         h = Math.ceil(h);

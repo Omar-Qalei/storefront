@@ -523,9 +523,9 @@ export const setDrag = (state, payload) => {
                 state.sections[indexSection].resources.findIndex((item) => item.i === "drop") === -1
             ) {
                 // for set inside section
-                if (state.currentSelectedSectionIndex === indexSection) {
-                    state.sections[indexSection].resources.push(payload);
-                }
+                // if (state.currentSelectedSectionIndex === indexSection) {
+                state.sections[indexSection].resources.push(payload);
+                // }
             }
             let index, elementHight, elementWidth;
             index = state.sections[indexSection].resources.findIndex((item) => item.i === "drop");
@@ -544,6 +544,7 @@ export const setDrag = (state, payload) => {
                             state.mouseXY.y - parentRect.top,
                             state.mouseXY.x - parentRect.left
                         );
+
                         if (mouseInGrid === true) {
                             state.properties.refGridLayout.dragEvent(
                                 "dragstart",
@@ -553,12 +554,12 @@ export const setDrag = (state, payload) => {
                                 elementWidth,
                                 elementHight
                             );
+                            console.log('new_pos.x:', new_pos.x, 'new_pos.y:', new_pos.y)
                             state.dragPos.i = String(index);
                             state.dragPos.x = new_pos.x !== null ? new_pos.x : 0;
                             state.dragPos.y = new_pos.y !== null ? new_pos.y : 0;
                         }
                     }
-
                 }
                 if (mouseInGrid === false) {
                     state.properties.refGridLayout.dragEvent(
@@ -592,7 +593,6 @@ export const setDrag = (state, payload) => {
 // Mutation too drag end grid item in resources
 export const setDragEnd = (state, payload) => {
     state.preventCollision = false;
-    console.log(state.dragPos.x, state.dragPos.y)
     if (state.indexSection !== null && state.selectedGridId) {
         if (state.selectedPerviousGridId && state.selectedPerviousGridId === state.selectedGridId) {
             let mouseInGrid = false;
@@ -794,7 +794,8 @@ export const checkUpdateSectionLayoutResized = (state, payload) => {
 export const setUpdateSectionLayoutResized = (state, payload) => {
     const sectionId = payload.sectionId;
     if (sectionId !== undefined) {
-        let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        // let currentIndex = state.sections.find((element) => element.id === sectionId).selectedIndex;
+        let currentIndex = state.sections.findIndex((element) => element.id === sectionId);
         state.sections[currentIndex].resize.status = true;
         let maxGridHeight = 0;
         state.sections[currentIndex].resources.map(element => {
