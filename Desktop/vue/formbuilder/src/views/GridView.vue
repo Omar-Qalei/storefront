@@ -13,7 +13,7 @@
     :responsive="getScreenSize.responsive"
     :use-css-transforms="true"
     :col-num="getScreenSize.cols"
-    style="transition: width 2s ease 0s;"
+    style="transition: width 1s ease 0s;"
     :style="{
       width: getScreenSize.width,
     }"
@@ -24,18 +24,15 @@
         @mouseleave="hoverElement = null"
         @mouseover="onMouseOverElement(item)"
         @dragover="onMouseTouched({ i: item.i, indexSection: index })"
-        @click="
-          selectedSection = item.id;
-          selectedElement = item.id;
-          onSelectedSection({ index: index, id: item.id });
-          onSelectedWidget(item);
-        "
         @mousedown="
+          selectedSection = item.id;
+          onSelectedSection({ index: index, id: item.id });
           currentSelectedSection = item.id;
           selectedSectionByI = item.i;
+          selectedElement = item.id;
           selectedSection = item.id;
+          onSelectedWidget(item);
         "
-        @mousedown.once="onSelectedWidget(item)"
       >
         <GridItem
           :class="{
@@ -54,7 +51,7 @@
           :minW="getScreenSize.cols"
           :id="item.i"
           :ref="'section'"
-          style="transition: width 2s ease 0s;"
+          style="transition: width 1s ease 0s;"
           :style="[
             selectedSection === item.id ? activeSection : '',
             selectedElement === item.id ? showElement : '',
@@ -68,8 +65,6 @@
           @resize="resizeEvent"
           @resized="resizedEvent"
         >
-          <!-- id: {{ item.id }} i: {{ item.i }} -->
-          <!-- hoverElement === item.id ? showElement : '', -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
               <video autoplay muted loop id="myVideo">
@@ -106,8 +101,6 @@
               <v-col>
                 <p class="ma-0 text-center">
                   This is a blank section, start adding to it.
-                  <!--  id: {{ item.id }} index: {{ index }} selectedIndex:
-                  {{ item.selectedIndex }} -->
                 </p>
               </v-col>
             </v-row>
@@ -117,8 +110,14 @@
             class="hint"
             >Section</label
           >
-          <!-- id: <b>{{ item.id }}</b> index: {{ index }} selectedIndex:
+          <!-- getElementById: {{ getSelectedWidgetById.id }} selectedIndex:{{
+            getSelectedWidgetById.selectedIndex
+          }}
+          id: <b>{{ item.id }}</b> index: {{ index }} selectedIndex:
           {{ item.selectedIndex }} -->
+          <!-- 
+          {{ item.i }}//// id: <b>{{ item.id }}</b> index:
+          {{ index }} selectedIndex: {{ item.selectedIndex }} -->
           <SettingsWidget
             :item="item"
             :show="item.i === getSelectedWidgetById.i"
@@ -136,24 +135,42 @@
             @onMoveGrid="onMoveGrid($event)"
             @resizeGrid="resizeGrid($event)"
             @onMovedWidget="onMovedWidget()"
+            @onResizedWidget="onResizedWidget()"
             :margin="margin"
             :row-height="rowHeight"
             :responsive="getScreenSize.responsive"
             :cols="getScreenSize.cols"
             :section="item"
           ></SectionWidget>
-          <v-btn
-            class="btn-add-section"
-            dark
-            color="#357df9"
-            v-if="item.id === selectedSection"
-            @click="
-              addNewSection(item.selectedIndex);
-              onFetchData();
-            "
-            ><v-icon class="icon-add-section mr-2">mdi-plus</v-icon>Add
-            Section</v-btn
-          >
+          <template v-if="getScreenSize.screen === 'web'">
+            <v-btn
+              class="btn-add-section-web"
+              dark
+              color="#357df9"
+              v-if="item.id === selectedSection"
+              @click="
+                addNewSection(item.selectedIndex);
+                onFetchData();
+              "
+              ><v-icon class="icon-add-section mr-2">mdi-plus</v-icon> Add
+              Section</v-btn
+            >
+          </template>
+          <template v-if="getScreenSize.screen === 'mobile'">
+            <v-btn
+              class="btn-add-section-mobile"
+              fab
+              dark
+              small
+              color="#357df9"
+              v-if="item.id === selectedSection"
+              @click="
+                addNewSection(item.selectedIndex);
+                onFetchData();
+              "
+              ><v-icon class="icon-add-section">mdi-plus</v-icon></v-btn
+            >
+          </template>
         </GridItem>
       </div>
     </template>
@@ -283,7 +300,7 @@ export default {
           }
         }
       }
-      if (this.getScreenSize.width === "320px") {
+      if (this.getScreenSize.width === "379px") {
         for (let row = 0; row < h - 1; row++) {
           for (let col = 0; col <= this.getScreenSize.cols; col++) {
             if (row % 2 === 0) {
@@ -390,30 +407,60 @@ export default {
     onMovedWidget: function() {
       if (this.$route.query.pageId && this.$route.query.pageId !== this.pageId)
         this.pageId = +this.$route.query.pageId;
-      if (this.getSelectedWidgetById.type !== "section") {
-        SiteService.addSitePageResourceWeb(
-          this.siteId,
-          this.pageId,
-          JSON.stringify(this.getWebResources)
-        )
-          .then((result) => {
-            console.log("Web posted", result);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        SiteService.addSitePageResourceMobile(
-          this.siteId,
-          this.pageId,
-          JSON.stringify(this.getMobileResources)
-        )
-          .then((result) => {
-            console.log("Mobile posted", result);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+      // if (this.getSelectedWidgetById.type !== "section") {
+      // thiz.fetchWebResources(thiz.getWebResources);
+      // thiz.fetchMobileResources(thiz.getMobileResources);
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getWebResources)
+      )
+        .then((result) => {
+          console.log("Web posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getMobileResources)
+      )
+        .then((result) => {
+          console.log("Mobile posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // }
+    },
+    onResizedWidget: function() {
+      if (this.$route.query.pageId && this.$route.query.pageId !== this.pageId)
+        this.pageId = +this.$route.query.pageId;
+      // if (this.getSelectedWidgetById.type !== "section") {
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getWebResources)
+      )
+        .then((result) => {
+          console.log("Web posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getMobileResources)
+      )
+        .then((result) => {
+          console.log("Mobile posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // }
     },
     onSelectedWidget: function(item) {
       this.onSelectedWidgetById(item);
@@ -436,9 +483,11 @@ export default {
     ]),
   },
   created() {
-    this.onSelectedWidgetById({});
+    // this.onSelectedWidgetById({});
     this.getQueryStringParams();
     this.onSelectedSection({ index: 0, id: 0 });
+    if (typeof this.getSelectedWidgetById === "object")
+      this.selectedElement = this.getSelectedWidgetById.id;
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -524,7 +573,7 @@ export default {
   position: absolute;
   z-index: 0;
 }
-.btn-add-section {
+.btn-add-section-web {
   position: absolute;
   left: 50%;
   bottom: -1rem;
@@ -532,6 +581,16 @@ export default {
   z-index: 1;
   border-radius: 20px;
   font-size: 10px !important;
+}
+.btn-add-section-mobile {
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  margin-left: -4rem;
+  z-index: 1;
+  border-radius: 20px;
+  font-size: 10px !important;
+  transform: translateX(100%);
 }
 .icon-add-section {
   font-size: 16px !important;

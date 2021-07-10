@@ -49,6 +49,9 @@ export default {
   created() {
     if (this.color) this.currentColor = this.color;
   },
+  destroyed() {
+    this.currentColor = null;
+  },
 };
 </script>
 

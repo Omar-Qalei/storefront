@@ -11,6 +11,7 @@ export const onRemoveFormField = ({ commit }, payload) => {
 }
 
 export const onTextHeight = ({ commit }) => {
+    console.log('onTextHeight')
     commit('setTextHeight')
     commit('setSortSectionsLayout')
 }

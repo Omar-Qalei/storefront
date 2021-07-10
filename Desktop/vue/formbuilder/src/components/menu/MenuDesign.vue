@@ -1,7 +1,8 @@
 <template>
   <v-container class="menu-design" fluid>
     <v-switch v-model="position" label="Fixed Menu"></v-switch>
-    <v-expansion-panels v-model="panel">
+    <!-- v-model="panel" -->
+    <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-header>Background</v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -30,7 +31,7 @@ export default {
   },
   data() {
     return {
-      panel: 0,
+      // panel: 0,
       position: false,
     };
   },

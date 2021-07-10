@@ -7,7 +7,24 @@
       <div class="d-flex h-100">
         <v-main>
           <v-col cols="12" class="center pa-0">
-            <PreviewPages></PreviewPages>
+            <PreviewPages @pagePath="goToPath($event)"></PreviewPages>
+
+            <!-- SnackBar -->
+            <v-snackbar v-model="snackbar">
+              {{ text }}
+
+              <template v-slot:action="{ attrs }">
+                <v-btn
+                  color="pink"
+                  text
+                  v-bind="attrs"
+                  @click="snackbar = false"
+                >
+                  Close
+                </v-btn>
+              </template>
+            </v-snackbar>
+            <!-- SnackBar -->
           </v-col>
         </v-main>
       </div>
@@ -28,9 +45,12 @@ export default {
   components: { Navbar, Pages, LoadingPage, PreviewPages },
   data() {
     return {
-      dialog: true,
       siteId: null,
       pageId: null,
+      text: null,
+      dialog: true,
+      snackbar: false,
+      pages: [],
     };
   },
   computed: {
@@ -41,6 +61,7 @@ export default {
       "getWebResources",
       "getMobileResources",
       "getSections",
+      "getShowSnackbar",
     ]),
   },
   methods: {
@@ -52,7 +73,7 @@ export default {
       "fetchSiteId",
       "fetchPageId",
       "onLoadingPage",
-      "onSelectedWidgetById",
+      "onResizeSectionScreen",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -71,6 +92,7 @@ export default {
       SiteService.getSitePages(this.siteId)
         .then((result) => {
           const data = result.data.data;
+          this.pages = data;
           if (this.pageId === null) this.pageId = data[0].id;
           this.fetchPageId(this.pageId);
           this.fetchPages(data);
@@ -90,8 +112,6 @@ export default {
             JSON.parse(data.web)
               ? this.fetchSections(JSON.parse(data.web))
               : this.fetchSections([]);
-
-            this.onSelectedWidgetById(this.getSections[0]);
           } else {
             this.fetchSections([]);
             this.fetchWebResources(data);
@@ -103,6 +123,18 @@ export default {
         })
         .finally(() => this.onLoadingPage(false));
     },
+    goToPath: function(pagePath) {
+      const data = this.pages.find(
+        (element) => element.path.toLowerCase() === pagePath.toLowerCase()
+      );
+      const siteId = data.site_id;
+      const pageId = data.id;
+      if (+this.$route.query.pageId !== pageId)
+        this.$router.replace({
+          path: "preview",
+          query: { siteId: siteId, pageId: pageId },
+        });
+    },
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -111,16 +143,24 @@ export default {
       this.getSitePageResources();
     },
     $route: function() {
-      this.onSelectedWidgetById({});
       this.pageId = null;
       this.getQueryStringParams();
+    },
+    getShowSnackbar: function(value) {
+      this.snackbar = true;
+      this.text = value;
     },
   },
   created() {
     this.getQueryStringParams();
+    this.onResizeSectionScreen({
+      width: "100%",
+      responsive: false,
+      cols: 24,
+      screen: "web",
+    });
   },
   destroyed() {
-    this.onSelectedWidgetById({});
     this.fetchSections([]);
     this.fetchWebResources(null);
     this.fetchMobileResources(null);

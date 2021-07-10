@@ -24,12 +24,11 @@
         @click="
           fetchCols(1);
           onResizeSectionScreen({
-            width: '320px',
+            width: '379px',
             responsive: true,
             cols: 1,
             screen: 'mobile',
           });
-          onSelectedWidgetById({});
         "
       >
         <span class="mdi mdi-cellphone-cog"></span>
@@ -44,7 +43,6 @@
             cols: 24,
             screen: 'web',
           });
-          onSelectedWidgetById({});
         "
       >
         <span class="mdi mdi-monitor"></span>
@@ -65,7 +63,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
 export default {
   name: "Navbar",
   data: function() {
@@ -83,7 +80,6 @@ export default {
       "onRearrangementResources",
       "onSortSectionsLayout",
       "fetchCols",
-      "onSelectedWidgetById",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -93,19 +89,7 @@ export default {
         this.pageId = +this.$route.query.pageId;
       }
     },
-    onBuildProduct: function() {
-      // console.log(require("child_process"));
-      // exec("npm build", function(err, stdout, stderr) {
-      //   if (err) {
-      //     console.log(err);
-      //     // handle error
-      //   }
-      //   console.log(stdout, stderr);
-      // });
-      //       dir.on('exit', function (code) {
-      //     // return value from "npm build"
-      // });
-    },
+    onBuildProduct: function() {},
   },
   computed: {
     ...mapGetters(["getSelectedPage", "getPages", "getScreenSize", "getCols"]),
@@ -138,6 +122,9 @@ export default {
 </script>
 
 <style scoped>
+.v-app-bar {
+  z-index: 15 !important;
+}
 .v-app-bar ::v-deep.v-toolbar__content {
   padding-right: 0;
 }
@@ -151,7 +138,6 @@ nav {
   top: 0;
   width: 100%;
   background: white;
-  z-index: 15;
 }
 .logo {
   font-weight: 700;

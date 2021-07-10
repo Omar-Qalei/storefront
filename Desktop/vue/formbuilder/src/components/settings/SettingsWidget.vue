@@ -30,8 +30,14 @@
       fab
       x-small
       @click="
-        onRemoveResource({ i: item.i, type: item.type, id: sectionId });
+        onRemoveResource({
+          i: item.i,
+          type: item.type,
+          id: sectionId,
+          gridKey: item.gridKey,
+        });
         onFetchData();
+        onSelectedWidgetById({});
       "
     >
       <v-icon>mdi-delete-outline</v-icon>
@@ -57,7 +63,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["onRemoveResource", "onDuplicateResource", "fetchSections"]),
+    ...mapActions([
+      "onRemoveResource",
+      "onDuplicateResource",
+      "fetchSections",
+      "onSelectedWidgetById",
+    ]),
     onFetchData: function() {
       let resource;
       if (this.getScreenSize.screen === "web") {

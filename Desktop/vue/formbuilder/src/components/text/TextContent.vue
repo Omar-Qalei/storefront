@@ -95,7 +95,16 @@ export default {
       this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    const properties = this.getSelectedWidgetById.properties;
+    if (
+      typeof (
+        properties["page"] ||
+        properties["url"] ||
+        properties["phone"] ||
+        properties["email"]
+      ) !== "undefined"
+    )
+      this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
   },
 };
 </script>

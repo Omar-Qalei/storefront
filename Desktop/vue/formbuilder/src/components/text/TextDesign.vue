@@ -86,27 +86,29 @@
         </h2>
       </v-col>
       <v-col cols="3">
+        <!-- @colorElementHover="textColorHover = $event" -->
         <ColorPickerWidget
           @colorElement="textColor = $event"
-          @colorElementHover="textColorHover = $event"
           :type="elementStatus"
           :color="textColor"
         />
-        {{ textColor }} {{ textColorHover }}
+        {{ textColor }}
+        <!-- {{ textColorHover }} -->
       </v-col>
       <v-col cols="9">
         <h2 class="body-1 font-weight-medium">
           Background Color
         </h2>
       </v-col>
+      <!-- @colorElementHover="backgroundColorHover = $event" -->
       <v-col cols="3">
         <ColorPickerWidget
           @colorElement="backgroundColor = $event"
-          @colorElementHover="backgroundColorHover = $event"
           :type="elementStatus"
           :color="backgroundColor"
         />
-        {{ backgroundColor }} {{ backgroundColorHover }}
+        {{ backgroundColor }}
+        <!-- {{ backgroundColorHover }} -->
       </v-col>
       <v-col cols="12">
         <h2 class="body-1 font-weight-medium">
@@ -257,7 +259,7 @@ export default {
       ],
       tags: [
         { id: 0, title: "Text", value: "element" },
-        { id: 1, title: "Hover (Mouse Over)", value: "hover" },
+        // { id: 1, title: "Hover (Mouse Over)", value: "hover" },
       ],
     };
   },
@@ -313,7 +315,7 @@ export default {
       );
       this.textColor = this.getSelectedWidgetById.properties.style.color;
       this.backgroundColor = this.getSelectedWidgetById.properties.style.backgroundColor;
-      this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
+      // this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
       this.letterCase = this.findIndex(
         { list: this.letterCases, value: "value" },
         this.getSelectedWidgetById.properties.style.textTransform
@@ -355,13 +357,13 @@ export default {
       textTransform: this.letterCases[this.letterCase].value,
       fontSize: this.fontSizes[this.selectedFontSize].value,
     };
-    this.getSelectedWidgetById.properties.elementHover = {
-      color: this.textColorHover,
-    };
+    // this.getSelectedWidgetById.properties.elementHover = {
+    //   color: this.textColorHover,
+    // };
   },
   destroyed() {
-    this.textColorHover = null;
-    this.backgroundColorHover = null;
+    // this.textColorHover = null;
+    // this.backgroundColorHover = null;
   },
 };
 </script>

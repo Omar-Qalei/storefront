@@ -22,7 +22,7 @@
         @click="
           fetchCols(1);
           onResizeSectionScreen({
-            width: '320px',
+            width: '379px',
             responsive: true,
             cols: 1,
             screen: 'mobile',

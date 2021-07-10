@@ -35,13 +35,13 @@
               ref="gridItem"
             >
               <ButtonPreview v-if="item.type == 'button'" :item="item" />
-              <CarouselWidget v-if="item.type == 'carousel'" :item="item" />
-              <TextWidget v-if="item.type == 'text'" :item="item" />
-              <ImageWidget v-if="item.type == 'image'" :item="item" />
-              <MenuWidget v-if="item.type == 'menu'" :item="item" />
-              <VideoWidget v-if="item.type == 'video'" :item="item" />
-              <MapWidget v-if="item.type == 'map'" :item="item" />
-              <AudioWidget v-if="item.type == 'audio'" :item="item" />
+              <CarouselPreview v-if="item.type == 'carousel'" :item="item" />
+              <TextPreview v-if="item.type == 'text'" :item="item" />
+              <ImagePreview v-if="item.type == 'image'" :item="item" />
+              <MenuPreview v-if="item.type == 'menu'" :item="item" />
+              <VideoPreview v-if="item.type == 'video'" :item="item" />
+              <MapPreview v-if="item.type == 'map'" :item="item" />
+              <AudioPreview v-if="item.type == 'audio'" :item="item" />
             </GridItem>
 
             <GridItem
@@ -57,7 +57,7 @@
               :static="true"
               ref="gridItem"
             >
-              <FormWidget :item="item" />
+              <FormPreview :item="item" />
             </GridItem>
           </div>
         </template>
@@ -71,14 +71,14 @@
 import { GridLayout, GridItem } from "vue-grid-layout";
 import { mapGetters } from "vuex";
 import ButtonPreview from "../button/ButtonPreview";
-import CarouselWidget from "../carousel/CarouselWidget";
-import TextWidget from "../text/TextWidget";
-import ImageWidget from "../image/ImageWidget";
-import FormWidget from "../form/FormWidget";
-import MenuWidget from "../menu/MenuWidget";
-import VideoWidget from "../video/VideoWidget";
-import MapWidget from "../map/MapWidget";
-import AudioWidget from "../audio/AudioWidget";
+import CarouselPreview from "../carousel/CarouselPreview";
+import TextPreview from "../text/TextPreview";
+import ImagePreview from "../image/ImagePreview";
+import FormPreview from "../form/FormPreview";
+import MenuPreview from "../menu/MenuPreview";
+import VideoPreview from "../video/VideoPreview";
+import MapPreview from "../map/MapPreview";
+import AudioPreview from "../audio/AudioPreview";
 
 export default {
   name: "SectionPreview",
@@ -86,14 +86,14 @@ export default {
     GridLayout,
     GridItem,
     ButtonPreview,
-    CarouselWidget,
-    TextWidget,
-    ImageWidget,
-    FormWidget,
-    MenuWidget,
-    VideoWidget,
-    MapWidget,
-    AudioWidget,
+    CarouselPreview,
+    TextPreview,
+    ImagePreview,
+    FormPreview,
+    MenuPreview,
+    VideoPreview,
+    MapPreview,
+    AudioPreview,
   },
   props: {
     resources: Array,

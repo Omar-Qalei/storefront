@@ -90,7 +90,7 @@
           <v-card v-show="showPickerColor">
             <v-flex id="colorPicker">
               <ColorPickerExpandWidget
-                v-if="width"
+                v-if="width && currentGradientColor"
                 :width="width"
                 @colorElement="
                   selectedColor = $event;
@@ -98,7 +98,7 @@
                   gradientColor();
                 "
                 :type="elementStatus"
-                :color="carousel.background"
+                :color="currentGradientColor"
               />
             </v-flex>
           </v-card>
@@ -365,6 +365,7 @@ export default {
       dblSelectedSecondColor: 0,
       width: null,
       showPickerColor: false,
+      currentGradientColor: null,
       tags: [
         { id: 0, title: "Color", type: "" },
         { id: 1, title: "Gradient", type: "" },
@@ -479,7 +480,7 @@ export default {
         case "firstColor":
           this.dblSelectedSecondColor = 0;
           this.dblSelectedFirstColor += 1;
-
+          this.currentGradientColor = this.gradientFirstColor;
           if (this.dblSelectedFirstColor % 2 === 0) {
             this.dblSelectedFirstColor = 0;
             this.showPickerColor = false;
@@ -490,6 +491,7 @@ export default {
         case "secondColor":
           this.dblSelectedFirstColor = 0;
           this.dblSelectedSecondColor += 1;
+          this.currentGradientColor = this.gradientSecondColor;
           if (this.dblSelectedSecondColor % 2 === 0) {
             this.dblSelectedSecondColor = 0;
             this.showPickerColor = false;
@@ -550,9 +552,17 @@ export default {
         case "linear-gradient":
           gradientDirection = +str[1].toString().split("deg")[0];
           firstColor = str[2].toString().split(" ")[0];
-          firstColorPercent = str[2].toString().split(" ")[1];
+          firstColorPercent = str[2]
+            .toString()
+            .split(" ")[1]
+            .toString()
+            .split("%")[0];
           secondColor = str[3].toString().split(" ")[0];
-          secondColorPercent = str[3].toString().split(" ")[1];
+          secondColorPercent = str[3]
+            .toString()
+            .split(" ")[1]
+            .toString()
+            .split("%")[0];
           this.gradientDirection = gradientDirection;
           this.gradientFirstColor = firstColor;
           this.gradientStartPosition = firstColorPercent;
@@ -580,8 +590,6 @@ export default {
       }
       if (this.tags[newValue].type !== "backgroundVideo")
         this.getSelectedWidgetById.properties.backgroundVideo = null;
-
-      console.log(this.carousel);
     },
     gradientDirection: function() {
       this.gradientColor();

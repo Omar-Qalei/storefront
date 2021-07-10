@@ -1,6 +1,7 @@
 <template>
   <v-container class="form-design" fluid>
-    <v-expansion-panels v-model="panels" key="form">
+    <!-- v-model="panels" -->
+    <v-expansion-panels key="form">
       <!-- Form -->
       <v-expansion-panel>
         <v-expansion-panel-header>Form</v-expansion-panel-header>

@@ -56,7 +56,6 @@ export const fetchWebResources = ({ commit, state }, payload) => {
         commit('setWebResources', payload)
     }
 };
-
 export const fetchMobileResources = ({ commit, state }, payload) => {
     let g = lib.guid();
     let k = {
@@ -90,29 +89,32 @@ export const fetchResources = ({ commit }, payload) => {
 
 // Action to duplicate element
 export const onDuplicateResource = ({ commit, state }, payload) => {
-    onDuplicateResourceWeb({ commit, state }, payload);
-    onDuplicateResourceMobile({ commit, state }, payload);
+    let g = lib.guid()
+    let arrKeys = [];
+    if (payload.item.type === 'section')
+        payload.item.resources.forEach(() => arrKeys.push(lib.guid()));
+    onDuplicateResourceWeb({ commit, state }, { ...payload, g: g, arrKeys: arrKeys });
+    onDuplicateResourceMobile({ commit, state }, { ...payload, g: g, arrKeys: arrKeys });
 }
 
 export const onDuplicateResourceWeb = ({ commit, state }, payload) => {
-    let g = lib.guid()
     let k;
     if (payload.item.type !== 'section') {
         k = {
             'x': payload.item.x, 'y': payload.item.y, 'w': payload.item.w, 'h': payload.item.h,
-            'i': g,
+            'i': lib.guid(),
             'type': payload.item.type,
-            properties: {
-                name: payload.item.type,
-                style: payload.item.properties.style,
-                elementHover: payload.item.properties.elementHover,
-                fields: payload.item.properties.fields,
-                map: payload.item.properties.map,
-                gridKey: payload.i,
-                text: payload.item.properties.text,
-            }
+            properties: payload.item.properties
+            // properties: {
+            //     name: payload.item.type,
+            //     style: payload.item.properties.style,
+            //     elementHover: payload.item.properties.elementHover,
+            //     fields: payload.item.properties.fields,
+            //     map: payload.item.properties.map,
+            //     text: payload.item.properties.text,
+            // }
         }
-        k.i = g;
+        k.gridKey = payload.g;
         commit('duplicateResourceWeb', { k: k, id: payload.id })
     } else {
         k = {
@@ -132,56 +134,69 @@ export const onDuplicateResourceWeb = ({ commit, state }, payload) => {
             w: payload.item.w,
             x: payload.item.x,
             y: payload.item.y,
-            selectedIndex: payload.item.selectedIndex.id,
+            selectedIndex: payload.item.selectedIndex,
         }
-        k.i = g;
+        k.i = payload.g;
         let max = 0;
+        let i = 0;
         state.webResources.forEach(element => {
             if (max === 0) {
                 max += 1;
             }
+            // if (max <= element.id) {
+            //     max += element.id;
+            // }
+            element.selectedIndex = i;
+            i++;
             if (max <= element.id) {
-                max += element.id;
+                max = element.id;
             }
+            if (max === element.id) max += 1;
         });
         k.id = max;
+        let x = 0;
         payload.item.resources.forEach(element => {
             const i = element.i;
             if (element.i !== lib.guid()) {
                 k.resources.push({
                     'x': element.x, 'y': element.y, 'w': element.w, 'h': element.h, 'i': lib.guid(), 'type': element.type,
-                    properties: {
-                        name: element.type,
-                        style: element.properties.style,
-                        elementHover: element.properties.elementHover,
-                        fields: element.properties.fields,
-                        map: element.properties.map,
-                        text: element.properties.text,
-                    }
+                    gridKey: payload.arrKeys[x],
+                    properties: { ...element.properties }
+                    // properties: {
+                    //     name: element.type,
+                    //     style: element.properties.style,
+                    //     elementHover: element.properties.elementHover,
+                    //     fields: element.properties.fields,
+                    //     map: element.properties.map,
+                    //     text: element.properties.text,
+                    // }
                 });
             }
             element.i = i;
+            x++;
         });
         commit('setNewSectionWeb', k)
     }
 }
 
 export const onDuplicateResourceMobile = ({ commit, state }, payload) => {
-    let g = lib.guid()
     let k;
     if (payload.item.type !== 'section') {
         k = {
-            'x': payload.item.x, 'y': payload.item.y, 'w': payload.item.w, 'h': payload.item.h, 'i': g, 'type': payload.item.type,
-            properties: {
-                name: payload.item.type,
-                style: payload.item.properties.style,
-                elementHover: payload.item.properties.elementHover,
-                fields: payload.item.properties.fields,
-                map: payload.item.properties.map,
-                text: payload.item.properties.text,
-            }
+            'x': payload.item.x, 'y': payload.item.y, 'w': payload.item.w, 'h': payload.item.h,
+            'i': lib.guid(),
+            'type': payload.item.type,
+            properties: { ...payload.item.properties }
+            // properties: {
+            //     name: payload.item.type,
+            //     style: payload.item.properties.style,
+            //     elementHover: payload.item.properties.elementHover,
+            //     fields: payload.item.properties.fields,
+            //     map: payload.item.properties.map,
+            //     text: payload.item.properties.text,
+            // }
         }
-        k.i = g;
+        k.gridKey = payload.g;
         commit('duplicateResourceMobile', { k: k, id: payload.id })
     } else {
         k = {
@@ -201,37 +216,46 @@ export const onDuplicateResourceMobile = ({ commit, state }, payload) => {
             w: payload.item.w,
             x: payload.item.x,
             y: payload.item.y,
-            selectedIndex: payload.item.selectedIndex.id,
+            selectedIndex: payload.item.selectedIndex,
         }
-        k.i = g;
-        let max = 0;
+        k.i = payload.g;
+        let max, i = 0;
         state.mobileResources.forEach(element => {
             if (max === 0) {
                 max += 1;
             }
+            // if (max <= element.id) {
+            //     max += element.id;
+            // }
+            element.selectedIndex = i;
+            i++;
             if (max <= element.id) {
-                max += element.id;
+                max = element.id;
             }
+            if (max === element.id) max += 1;
         });
         k.id = max;
+        let x = 0;
         payload.item.resources.forEach(element => {
             const i = element.i;
             if (element.i !== lib.guid()) {
                 k.resources.push({
                     'x': element.x, 'y': element.y, 'w': element.w, 'h': element.h, 'i': lib.guid(), 'type': element.type,
-                    properties: {
-                        name: element.type,
-                        style: element.properties.style,
-                        elementHover: element.properties.elementHover,
-                        fields: element.properties.fields,
-                        map: element.properties.map,
-                        text: element.properties.text,
-                    }
+                    gridKey: payload.arrKeys[x],
+                    properties: { ...element.properties }
+                    // {
+                    //     name: element.type,
+                    //     style: element.properties.style,
+                    //     elementHover: element.properties.elementHover,
+                    //     fields: element.properties.fields,
+                    //     map: element.properties.map,
+                    //     text: element.properties.text,
+                    // }
                 });
             }
             element.i = i;
+            x++;
         });
-        console.log('k', k);
         commit('setNewSectionMobile', k)
     }
 }
@@ -246,7 +270,6 @@ export const onRemoveResource = ({ commit }, payload) => {
 }
 
 export const addNewSection = ({ commit, state }, payload) => {
-    // Object.freeze(state.sections)
     addNewSectionWeb({ commit, state }, payload);
     addNewSectionMobile({ commit, state }, payload);
 }
@@ -254,7 +277,9 @@ export const addNewSection = ({ commit, state }, payload) => {
 export const addNewSectionWeb = ({ commit, state }, payload) => {
     let g = lib.guid()
     let k = {
-        id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: payload, resize: {
+        id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [],
+        selectedIndex: payload,
+        resize: {
             status: false,
             h: 10,
         },
@@ -271,9 +296,13 @@ export const addNewSectionWeb = ({ commit, state }, payload) => {
         if (max === 0) {
             max += 1;
         }
+        // if (max <= element.id) {
+        //     max += element.id;
+        // }
         if (max <= element.id) {
-            max += element.id;
+            max = element.id;
         }
+        if (max === element.id) max += 1;
     });
     k.id = max;
     commit('setNewSectionWeb', k)
@@ -282,7 +311,9 @@ export const addNewSectionWeb = ({ commit, state }, payload) => {
 export const addNewSectionMobile = ({ commit, state }, payload) => {
     let g = lib.guid()
     let k = {
-        id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: payload, resize: {
+        id: state.sections.length, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [],
+        selectedIndex: payload,
+        resize: {
             status: false,
             h: 10,
         },
@@ -299,9 +330,13 @@ export const addNewSectionMobile = ({ commit, state }, payload) => {
         if (max === 0) {
             max += 1;
         }
+        // if (max <= element.id) {
+        //     max += element.id;
+        // }
         if (max <= element.id) {
-            max += element.id;
+            max = element.id;
         }
+        if (max === element.id) max += 1;
     });
     k.id = max;
     commit('setNewSectionMobile', k)
@@ -332,6 +367,7 @@ export const onDrag = ({ commit, state }) => {
             text: 'Write your text here',
             image: null,
             hideFormName: true,
+            selectedLinkTo: null,
         }
     }
     commit('setDrag', k);
@@ -350,6 +386,7 @@ export const onDragend = ({ commit, state }) => {
             text: 'Write your text here',
             image: null,
             hideFormName: true,
+            selectedLinkTo: null,
         }
     }
     console.log(k)

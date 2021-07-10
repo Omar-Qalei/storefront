@@ -7,7 +7,7 @@
       :cycle="getDefalutAllowLoop()"
     >
       <template v-if="item.properties.style">
-        <video v-show="item.properties.style.carousel.background === ''">
+        <video v-show="item.properties.backgroundVideo">
           <source :src="item.properties.backgroundVideo" type="video/mp4" />
         </video>
       </template>
@@ -28,6 +28,7 @@
                   :style="[buttonStyle(), hover ? onHover() : '']"
                   @mouseover="hover = true"
                   @mouseleave="hover = false"
+                  @click="goTo(item.properties)"
                 >
                   {{ element.textButton }}
                 </v-btn>
@@ -46,6 +47,7 @@ export default {
   data() {
     return {
       model: 0,
+      selectedButtonLinkTo: null,
       fields: [
         {
           icon: "mdi-play-box-outline",
@@ -157,25 +159,67 @@ export default {
         return "";
       }
     },
-    getDefalutSlides() {
+    getDefalutSlides: function() {
       if (this.item.properties.fields.length)
         return this.item.properties.fields;
       return this.fields;
     },
-    getDefalutAllowArrows() {
+    getDefalutAllowArrows: function() {
       if (!this.item.properties.allowArrow)
         return this.item.properties.allowArrow;
       return true;
     },
-    getDefalutAllowDots() {
+    getDefalutAllowDots: function() {
       if (this.item.properties.allowDots) return this.item.properties.allowDots;
       return false;
     },
-    getDefalutAllowLoop() {
+    getDefalutAllowLoop: function() {
       if (!this.item.properties.allowLoop)
         return this.item.properties.allowLoop;
       return true;
     },
+    goTo: function(properties) {
+      let siteId, pageId, url, newTab, phone, email;
+      console.log(this.selectedButtonLinkTo);
+      switch (this.selectedButtonLinkTo) {
+        case 0:
+          siteId = properties.page.site_id;
+          pageId = properties.page.id;
+          if (+this.$route.query.pageId !== pageId)
+            this.$router.replace({
+              path: "preview",
+              query: { siteId: siteId, pageId: pageId },
+            });
+          break;
+        case 1:
+          url = properties.url;
+          newTab = properties.newTab;
+          if (newTab) {
+            window.open(url, "_blank");
+          } else {
+            window.open(url, "_self");
+          }
+          break;
+        case 2:
+          phone = properties.phone;
+          if (phone) {
+            window.open("tel:" + phone);
+          }
+          break;
+        case 3:
+          email = properties.email;
+          if (email) {
+            window.location.href = "mailto:" + email;
+          }
+          break;
+      }
+    },
+  },
+  created() {
+    if (this.item.properties.selectedButtonLinkTo !== null) {
+      if (this.item.properties.selectedButtonLinkTo !== undefined)
+        this.selectedButtonLinkTo = this.item.properties.selectedButtonLinkTo;
+    }
   },
 };
 </script>
@@ -184,6 +228,7 @@ export default {
 video {
   width: 100%;
   height: 100%;
+  object-fit: fill;
 }
 .v-carousel {
   position: absolute !important;

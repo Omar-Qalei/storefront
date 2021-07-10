@@ -1,20 +1,66 @@
 <template>
-  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
-    <div
-      class="d-flex"
-      :style="[
-        item.properties.style ? item.properties.style : style,
-        onHover(item.properties.elementHover),
-      ]"
-    >
-      <textarea
-        class="label"
-        v-model="item.properties.text"
-        contenteditable="true"
+  <!-- @mouseover="hover = true" @mouseleave="hover = false" -->
+  <div class="widget">
+    <template v-if="selectedLinkTo === null">
+      <!-- onHover(item.properties.elementHover), -->
+      <label
         :id="item.i"
-        disabled="true"
-      ></textarea>
-    </div>
+        :style="[item.properties.style ? item.properties.style : style]"
+        >{{ item.properties.text }}</label
+      >
+    </template>
+    <!-- onHover(item.properties.elementHover), -->
+    <template v-if="selectedLinkTo === 0">
+      <label
+        @click="goTo(item.properties)"
+        :id="item.i"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+
+          { cursor: 'pointer' },
+        ]"
+        >{{ item.properties.text }}</label
+      >
+    </template>
+    <template v-if="selectedLinkTo && selectedLinkTo === 1">
+      <!-- onHover(item.properties.elementHover), -->
+      <label
+        @click="goToUrl(item.properties)"
+        :id="item.i"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+
+          { cursor: 'pointer' },
+        ]"
+        >{{ item.properties.text }}</label
+      >
+    </template>
+    <template v-if="selectedLinkTo && selectedLinkTo === 2">
+      <!-- onHover(item.properties.elementHover), -->
+      <label
+        @click="onCall(item.properties)"
+        :id="item.i"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+
+          { cursor: 'pointer' },
+        ]"
+        >{{ item.properties.text }}</label
+      >
+    </template>
+    <template v-if="selectedLinkTo && selectedLinkTo === 3">
+      <!--  onHover(item.properties.elementHover), -->
+      <label
+        @click="onEmail(item.properties)"
+        :id="item.i"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+
+          { cursor: 'pointer' },
+        ]"
+        >{{ item.properties.text }}</label
+      >
+    </template>
   </div>
 </template>
 
@@ -24,6 +70,7 @@ export default {
   data() {
     return {
       hover: false,
+      selectedLinkTo: null,
       style: {},
     };
   },
@@ -41,6 +88,40 @@ export default {
         return "";
       }
     },
+    goTo: function(properties) {
+      if (properties.page) {
+        const siteId = properties.page.site_id;
+        const pageId = properties.page.id;
+        if (+this.$route.query.pageId !== pageId)
+          this.$router.replace({
+            path: "preview",
+            query: { siteId: siteId, pageId: pageId },
+          });
+      }
+    },
+    goToUrl: function(properties) {
+      if (properties.url) {
+        let url = properties.url;
+        let newTab = properties.newTab;
+        if (newTab) {
+          window.open(url, "_blank");
+        } else {
+          window.open(url, "_self");
+        }
+      }
+    },
+    onCall: function(properties) {
+      let phone = properties.phone;
+      if (phone) {
+        window.open("tel:" + phone);
+      }
+    },
+    onEmail: function(properties) {
+      let email = properties.email;
+      if (email) {
+        window.location.href = "mailto:" + email;
+      }
+    },
   },
   created() {
     if (this.item.properties.style === null) {
@@ -48,17 +129,15 @@ export default {
         fontSize: "56px",
       };
     }
+    if (this.item.properties.selectedLinkTo !== null) {
+      if (this.item.properties.selectedLinkTo !== undefined)
+        this.selectedLinkTo = this.item.properties.selectedLinkTo;
+    }
   },
 };
 </script>
 
 <style scoped>
-.label {
-  border: none;
-  outline: none;
-  width: 100%;
-  background: transparent !important;
-}
 .widget,
 .d-flex {
   width: 100%;
@@ -67,15 +146,10 @@ export default {
 .d-flex {
   display: flex;
 }
-textarea {
-  color: inherit;
-  text-decoration: inherit;
-  text-transform: inherit;
-  text-align: inherit;
-  font-size: inherit;
-  resize: none;
-  overflow: hidden;
-  background-color: inherit;
+label {
+  display: block;
+  width: 100%;
   height: 100%;
+  white-space: pre-wrap;
 }
 </style>

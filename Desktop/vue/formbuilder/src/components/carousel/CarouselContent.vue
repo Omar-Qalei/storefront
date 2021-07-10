@@ -86,7 +86,8 @@
           <v-btn text color="primary" @click="goBack">
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
-          <v-expansion-panels class="pa-2 pt-4" v-model="panels">
+          <!--  v-model="panels" -->
+          <v-expansion-panels class="pa-2 pt-4">
             <v-expansion-panel>
               <v-expansion-panel-header>
                 Text
@@ -140,7 +141,7 @@ export default {
   data() {
     return {
       slide: 1,
-      panels: 0,
+      // panels: 0,
       selectedSlideIndex: null,
       allowLoop: true,
       allowArrow: true,

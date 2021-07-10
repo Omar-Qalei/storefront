@@ -1,18 +1,29 @@
 <template>
   <div class="widget">
-    <iframe :src="getDefaultUrl(item)" frameborder="0" allowfullscreen></iframe>
-    <!-- <iframe
+    <SettingsWidget
+      :show="item.i === getSelectedWidgetById.i"
+      :item="item"
+      :sectionId="sectionId"
+    ></SettingsWidget>
+    <iframe
       :src="getDefaultUrl(item) + item.properties.autoPlay"
-      allow="autoplay"
+      modestbranding="0"
+      controls="0"
       frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
-    ></iframe> -->
+    ></iframe>
   </div>
 </template>
 
 <script>
+import SettingsWidget from "../settings/SettingsWidget";
+import { mapGetters } from "vuex";
 export default {
-  name: "VideoPreview",
+  name: "VideoWidget",
+  components: {
+    SettingsWidget,
+  },
   data() {
     return {
       items: [
@@ -27,6 +38,9 @@ export default {
     item: {},
     sectionId: Number,
   },
+  computed: {
+    ...mapGetters(["getSelectedWidgetById"]),
+  },
   methods: {
     getDefaultUrl: function(item) {
       // return item.properties.url + "?autoplay="
@@ -34,10 +48,11 @@ export default {
         const videoId = this.getId(item.properties.url);
         return this.convertToEmbedded(videoId);
       }
-      return "https://www.youtube.com/embed/tbnzAVRZ9Xc";
+      return "https://www.youtube.com/embed/tbnzAVRZ9Xc?autoplay=";
     },
     convertToEmbedded: function(videoId) {
-      const iframeMarkup = "https://www.youtube.com/embed/" + videoId;
+      const iframeMarkup =
+        "https://www.youtube.com/embed/" + videoId + "?autoplay=";
       return iframeMarkup;
     },
     getId: function(url) {
@@ -64,9 +79,11 @@ export default {
 iframe {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .widget {
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 </style>

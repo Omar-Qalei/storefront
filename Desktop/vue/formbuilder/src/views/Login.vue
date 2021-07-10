@@ -146,13 +146,14 @@ export default {
     submit() {
       this.$refs.form.validate();
       if (this.$refs.form.validate(true)) {
-        this.$router.push({ path: "/" });
         const data = {
           email: this.email,
           password: this.password,
         };
         LoginService.login(data).then((result) => {
           this.onCheckUser(result);
+          console.log(result);
+          if (result.status === 200) this.$router.push({ path: "/" });
         });
       }
     },

@@ -27,5 +27,6 @@ export default {
     sectionProperties: {
         default: 10, // defalut add a new section
         minH: 2 // min height for  section
-    }
+    },
+    gridKey: null,
 }

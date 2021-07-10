@@ -19,62 +19,6 @@
     >
       {{ item.properties.name }}
     </v-btn>
-    <!-- </template> -->
-
-    <!-- <template v-if="selectedLinkTo && selectedLinkTo === 0">
-      <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
-        :id="item.i + 'button'"
-      >
-        {{ item.properties.name }}
-      </v-btn>
-    </template>
-
-    <template v-if="selectedLinkTo && selectedLinkTo === 1">
-      <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
-        :id="item.i + 'button'"
-        @click="goTo"
-      >
-        {{ item.properties.name }}
-      </v-btn>
-    </template>
-
-    <template v-if="selectedLinkTo && selectedLinkTo === 2">
-      <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
-        :id="item.i + 'button'"
-        @click="onCall"
-      >
-        {{ item.properties.name }}
-      </v-btn>
-    </template>
-
-    <template v-if="selectedLinkTo && selectedLinkTo === 3">
-      <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
-        :id="item.i + 'button'"
-        @click="onEmail"
-      >
-        {{ item.properties.name }}
-      </v-btn>
-    </template> -->
   </div>
 </template>
 

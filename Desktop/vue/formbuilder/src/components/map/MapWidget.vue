@@ -39,12 +39,6 @@ export default {
   },
   data() {
     return {
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
       center: { lat: 51.5167849, lng: -0.1340803 },
       currentPlace: null,
       markers: [],

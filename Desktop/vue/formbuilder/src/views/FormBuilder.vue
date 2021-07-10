@@ -8,14 +8,7 @@
       <div class="d-flex h-100">
         <v-main>
           <v-col cols="12" class="center">
-            <v-card
-              style="transition: width 2s ease 0s;"
-              :style="{
-                width: getScreenSize.width,
-              }"
-            >
-              <GridView></GridView>
-            </v-card>
+            <GridView></GridView>
           </v-col>
           <SettingsDialog from="modal" />
         </v-main>
@@ -65,6 +58,7 @@ export default {
       "fetchPageId",
       "onLoadingPage",
       "onSelectedWidgetById",
+      "onResizeSectionScreen",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -131,6 +125,12 @@ export default {
   created() {
     this.fetchCols(24);
     this.getQueryStringParams();
+    this.onResizeSectionScreen({
+      width: "100%",
+      responsive: false,
+      cols: 24,
+      screen: "web",
+    });
   },
   destroyed() {
     console.log("destoryed FormBuilder");

@@ -6,12 +6,6 @@
       :sectionId="sectionId"
     ></SettingsWidget>
     <iframe :src="getDefaultUrl(item)" frameborder="0" allowfullscreen></iframe>
-    <!-- <iframe
-      :src="getDefaultUrl(item) + item.properties.autoPlay"
-      allow="autoplay"
-      frameborder="0"
-      allowfullscreen
-    ></iframe> -->
   </div>
 </template>
 
@@ -42,7 +36,6 @@ export default {
   },
   methods: {
     getDefaultUrl: function(item) {
-      // return item.properties.url + "?autoplay="
       if (item.properties.url) {
         const videoId = this.getId(item.properties.url);
         return this.convertToEmbedded(videoId);

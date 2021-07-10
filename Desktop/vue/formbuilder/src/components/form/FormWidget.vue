@@ -102,7 +102,7 @@ export default {
           text: "Name",
           label: "Name",
           placerholder: "Enter your name",
-          isRequired: false,
+          isRequired: true,
           type: "name",
         },
         {
@@ -260,7 +260,6 @@ export default {
   height: 100%;
 }
 form {
-  z-index: -1;
   position: absolute !important;
   display: block !important;
   z-index: -1 !important;
@@ -272,6 +271,7 @@ form {
 }
 .widget ::v-deep.v-btn {
   text-transform: inherit;
+  z-index: inherit;
 }
 .widget .v-btn ::v-deep.v-btn__content {
   align-items: inherit;

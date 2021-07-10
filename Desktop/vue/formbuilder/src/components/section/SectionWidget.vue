@@ -24,13 +24,11 @@
             :key="index"
             @mouseleave="hoverElement = null"
             @mouseover="onMouseOverElement(item)"
-            @click="
-              selectedElement = item.i;
-              onCheckWidget($event, item);
-            "
             @mousedown="
+              selectedElement = item.i;
               onMouseDown;
               onMoveElement(index);
+              onCheckWidget($event, item);
             "
             @dblclick="selectedElement = null"
           >
@@ -53,11 +51,14 @@
                 resizeEvent;
                 onRemoveBreakLines();
               "
+              @resized="onResizedWidget(item)"
               :style="[
                 hoverElement === item.i ? activeSection : '',
                 selectedElement === item.i ? showElement : '',
               ]"
             >
+              <!-- {{ item.i }}////{{ item.gridKey }} -->
+
               <label
                 v-show="hoverElement === item.i && selectedElement !== item.i"
                 class="hint text-capitalize"
@@ -121,6 +122,7 @@
               @move="moveElementY(item)"
               @moved="onMovedWidget(item)"
               @resize="resizeEvent"
+              @resized="onResizedWidget(item)"
               :style="[
                 hoverElement === item.i ? activeSection : '',
                 selectedElement === item.i ? showElement : '',
@@ -265,6 +267,9 @@ export default {
     onMovedWidget: function(item) {
       this.$emit("onMovedWidget", item);
     },
+    onResizedWidget(item) {
+      this.$emit("onResizedWidget", item);
+    },
   },
   computed: {
     ...mapGetters([
@@ -367,7 +372,6 @@ export default {
   top: -9px;
   left: 15px;
   border-radius: 15px;
-  z-index: 0;
   padding: 0 8px;
   color: #fff;
   background: #357df9;

@@ -1,23 +1,10 @@
 <template>
   <div class="widget">
-    <!-- <v-btn
-      @mouseover="hover = true"
-      @mouseleave="hover = false"
-      :style="[
-        item.properties.style ? item.properties.style : style,
-        onHover(item.properties.elementHover),
-      ]"
-      :id="item.i + 'button'"
-    >
-      {{ item.properties.name }}
-    </v-btn> -->
-    <!-- </template> -->
-    <!-- :to="'/' + setPath(item.properties)" -->
     <template v-if="selectedLinkTo === 0">
       <v-btn
         @mouseover="hover = true"
         @mouseleave="hover = false"
-        @click="setPath(item.properties)"
+        @click="goTo(item.properties)"
         :style="[
           item.properties.style ? item.properties.style : style,
           onHover(item.properties.elementHover),
@@ -30,13 +17,12 @@
 
     <template v-if="selectedLinkTo && selectedLinkTo === 1">
       <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+          onHover(item.properties.elementHover),
+        ]"
         :id="item.i + 'button'"
-        @click="goTo"
+        @click="goToUrl(item.properties)"
       >
         {{ item.properties.name }}
       </v-btn>
@@ -44,13 +30,12 @@
 
     <template v-if="selectedLinkTo && selectedLinkTo === 2">
       <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+          onHover(item.properties.elementHover),
+        ]"
         :id="item.i + 'button'"
-        @click="onCall"
+        @click="onCall(item.properties)"
       >
         {{ item.properties.name }}
       </v-btn>
@@ -58,13 +43,12 @@
 
     <template v-if="selectedLinkTo && selectedLinkTo === 3">
       <v-btn
-        class="draggable"
-        draggable="true"
-        unselectable="on"
-        :to="'/' + getSelectedWidgetById.properties.page"
-        :style="[item.properties.style ? item.properties.style : '', onHover()]"
+        :style="[
+          item.properties.style ? item.properties.style : style,
+          onHover(item.properties.elementHover),
+        ]"
         :id="item.i + 'button'"
-        @click="onEmail"
+        @click="onEmail(item.properties)"
       >
         {{ item.properties.name }}
       </v-btn>
@@ -95,26 +79,36 @@ export default {
         return "";
       }
     },
-    setPath: function(properties) {
-      this.$router.push(`/${properties.page.path}`);
-    },
-    goTo: function() {
-      let url = this.getSelectedWidgetById.properties.selectedLinkTo.url;
-      let newTab = this.getSelectedWidgetById.properties.selectedLinkTo.newTab;
-      if (newTab) {
-        window.open(url, "_blank");
-      } else {
-        window.open(url, "_self");
+    goTo: function(properties) {
+      if (properties.page) {
+        const siteId = properties.page.site_id;
+        const pageId = properties.page.id;
+        if (+this.$route.query.pageId !== pageId)
+          this.$router.replace({
+            path: "preview",
+            query: { siteId: siteId, pageId: pageId },
+          });
       }
     },
-    onCall: function() {
-      let phone = this.getSelectedWidgetById.properties.selectedLinkTo.phone;
+    goToUrl: function(properties) {
+      if (properties.url) {
+        let url = properties.url;
+        let newTab = properties.newTab;
+        if (newTab) {
+          window.open(url, "_blank");
+        } else {
+          window.open(url, "_self");
+        }
+      }
+    },
+    onCall: function(properties) {
+      let phone = properties.phone;
       if (phone) {
         window.open("tel:" + phone);
       }
     },
-    onEmail: function() {
-      let email = this.getSelectedWidgetById.properties.selectedLinkTo.email;
+    onEmail: function(properties) {
+      let email = properties.email;
       if (email) {
         window.location.href = "mailto:" + email;
       }
@@ -130,12 +124,11 @@ export default {
         backgroundColor: "#4E00BBFF",
       };
     }
+    if (this.item.properties.selectedLinkTo !== null) {
+      if (this.item.properties.selectedLinkTo !== undefined)
+        this.selectedLinkTo = this.item.properties.selectedLinkTo;
+    }
   },
-  // updated() {
-  //   if (this.getSelectedWidgetById.properties?.selectedLinkTo) {
-  //     this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
-  //   }
-  // },
 };
 </script>
 

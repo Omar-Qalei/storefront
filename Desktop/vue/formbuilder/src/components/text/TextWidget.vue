@@ -1,24 +1,46 @@
 <template>
-  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
+  <!-- @mouseover="hover = true" @mouseleave="hover = false" -->
+  <div class="widget">
     <SettingsWidget
       :show="item.i === getSelectedWidgetById.i"
       :item="item"
       :sectionId="sectionId"
     ></SettingsWidget>
+    <!-- onHover(item.properties.elementHover), -->
     <div
       class="d-flex"
-      :style="[
-        item.properties.style ? item.properties.style : style,
-        onHover(item.properties.elementHover),
-      ]"
+      :style="[item.properties.style ? item.properties.style : style]"
     >
       <textarea
         class="label"
         v-model="item.properties.text"
         contenteditable="true"
         :id="item.i"
-        @keydown="onTextHeight"
+        @keydown="onTextHeight;"
+        @keyup="
+          onCheckUpdateSectionLayoutResized({
+            sectionId: sectionId,
+          })
+        "
       ></textarea>
+      <!-- <v-textarea
+        :style="[item.properties.style ? item.properties.style : style]"
+        color="grey"
+        flat
+        auto-grow
+        solo
+        hide-details
+        rows="1"
+        v-model="item.properties.text"
+        contenteditable="true"
+        :id="item.i"
+        @keydown="onTextHeight;"
+        @keyup="
+          onCheckUpdateSectionLayoutResized({
+            sectionId: sectionId,
+          })
+        "
+      ></v-textarea> -->
       <!-- <v-textarea
           @keydown="calcHeight"
           @keydown.enter="calcHeight('enter')"
@@ -61,6 +83,7 @@ export default {
       "onSortSectionsLayout",
       "onTextHeight",
       "onCheckGridHeight",
+      "onCheckUpdateSectionLayoutResized",
     ]),
     onHover: function(elementHover) {
       if (this.hover) {

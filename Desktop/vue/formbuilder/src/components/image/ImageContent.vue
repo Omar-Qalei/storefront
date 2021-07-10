@@ -134,7 +134,16 @@ export default {
       this.image = this.getSelectedWidgetById.properties.image;
   },
   updated() {
-    this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
+    const properties = this.getSelectedWidgetById.properties;
+    if (
+      typeof (
+        properties["page"] ||
+        properties["url"] ||
+        properties["phone"] ||
+        properties["email"]
+      ) !== "undefined"
+    )
+      this.getSelectedWidgetById.properties.selectedLinkTo = this.selectedLinkTo;
     this.getSelectedWidgetById.properties.image = this.image;
   },
 };

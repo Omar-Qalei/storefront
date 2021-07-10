@@ -146,7 +146,8 @@
             v-for="(item, i) in userprofile"
             :key="i"
             :to="item.to"
-            @click="href"
+            @click="href(item.to)"
+            link
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -257,11 +258,8 @@ export default {
       { title: "My Balance", to: "/apps/contact-grid" },
       { title: "Inbox", to: "/apps/email/inbox" },
       { title: "Account Setting", to: "/form-layouts/flformbasic" },
-      { title: "Logout", to: "/authentication/boxedlogin" },
+      { title: "Logout", to: "/login" },
     ],
-    href() {
-      return undefined;
-    },
   }),
 
   computed: {
@@ -277,6 +275,10 @@ export default {
     },
     searchbox: function() {
       this.showSearch = !this.showSearch;
+    },
+    href: function(path) {
+      console.log(path === "/login");
+      if (path === "/login") localStorage.removeItem("user");
     },
   },
 };
