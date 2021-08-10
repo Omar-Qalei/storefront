@@ -7,8 +7,44 @@
       <Pages />
       <div class="d-flex h-100">
         <v-main>
-          <v-col cols="12" class="center">
+          <v-col v-if="getWebResources.length > 0" cols="12" class="center">
             <GridView></GridView>
+          </v-col>
+          <v-col v-if="getWebResources.length === 0" cols="12" class="center">
+            <v-col
+              class="empty-page"
+              style="transition: width 0.5s ease 0s;"
+              :style="{
+                width: getScreenSize.width,
+              }"
+            >
+              <h4>This page is empty</h4>
+              <p>
+                Click "Add section" below or use the "Add element" menu on the
+                left to start building this page
+              </p>
+              <template v-if="getScreenSize.screen === 'web'">
+                <v-btn
+                  class="btn-add-section-web"
+                  dark
+                  color="#357df9"
+                  @click="addNewSection(0)"
+                  ><v-icon class="icon-add-section mr-2">mdi-plus</v-icon> Add
+                  Section</v-btn
+                >
+              </template>
+              <template v-if="getScreenSize.screen === 'mobile'">
+                <v-btn
+                  class="btn-add-section-mobile"
+                  fab
+                  dark
+                  small
+                  color="#357df9"
+                  @click="addNewSection(0)"
+                  ><v-icon class="icon-add-section">mdi-plus</v-icon></v-btn
+                >
+              </template>
+            </v-col>
           </v-col>
           <SettingsDialog from="modal" />
         </v-main>
@@ -59,6 +95,7 @@ export default {
       "onLoadingPage",
       "onSelectedWidgetById",
       "onResizeSectionScreen",
+      "addNewSection",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -109,6 +146,26 @@ export default {
         })
         .finally(() => this.onLoadingPage(false));
     },
+    onResizeHandler: function(event) {
+      let width = event.target.outerWidth - event.target.innerWidth;
+      width = event.target.outerWidth - width;
+      if (width <= 920) {
+        console.log(width);
+        this.onResizeSectionScreen({
+          width: "379px",
+          responsive: false,
+          cols: 1,
+          screen: "mobile",
+        });
+      } else {
+        this.onResizeSectionScreen({
+          width: "100%",
+          responsive: false,
+          cols: 24,
+          screen: "web",
+        });
+      }
+    },
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -125,12 +182,22 @@ export default {
   created() {
     this.fetchCols(24);
     this.getQueryStringParams();
-    this.onResizeSectionScreen({
-      width: "100%",
-      responsive: false,
-      cols: 24,
-      screen: "web",
-    });
+    // if (window.innerWidth <= 920) {
+    //   this.onResizeSectionScreen({
+    //     width: "100%",
+    //     responsive: false,
+    //     cols: 1,
+    //     screen: "mobile",
+    //   });
+    // } else {
+    //   this.onResizeSectionScreen({
+    //     width: "100%",
+    //     responsive: false,
+    //     cols: 24,
+    //     screen: "web",
+    //   });
+    // }
+    window.addEventListener("resize", this.onResizeHandler);
   },
   destroyed() {
     console.log("destoryed FormBuilder");
@@ -138,6 +205,7 @@ export default {
     this.fetchSections([]);
     this.fetchWebResources(null);
     this.fetchMobileResources(null);
+    window.removeEventListener("resize", this.onResizeHandler);
   },
 };
 </script>
@@ -147,5 +215,29 @@ export default {
 }
 .center {
   text-align: -webkit-center;
+}
+.btn-add-section-web {
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  margin-left: -4rem;
+  z-index: 1;
+  border-radius: 20px;
+  font-size: 10px !important;
+}
+.btn-add-section-mobile {
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  margin-left: -4rem;
+  z-index: 1;
+  border-radius: 20px;
+  font-size: 10px !important;
+  transform: translateX(100%);
+}
+.empty-page {
+  position: relative;
+  margin-top: 200px;
+  text-align: center;
 }
 </style>

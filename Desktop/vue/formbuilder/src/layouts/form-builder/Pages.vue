@@ -110,7 +110,14 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="addDialog = false">
+          <v-btn
+            text
+            @click="
+              addDialog = false;
+              name = null;
+              path = null;
+            "
+          >
             Cancel
           </v-btn>
           <v-btn color="primary" text @click="addPage">
@@ -250,6 +257,8 @@ export default {
           this.addDialog = false;
           this.drawer = true;
           this.getSiteById();
+          this.name = null;
+          this.path = null;
         })
         .catch((err) => console.log(err));
     },
@@ -269,6 +278,8 @@ export default {
           this.editDialog = false;
           this.drawer = true;
           this.getSiteById();
+          this.name = null;
+          this.path = null;
         })
         .catch((err) => console.log(err));
     },

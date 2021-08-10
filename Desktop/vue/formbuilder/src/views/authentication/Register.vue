@@ -38,26 +38,33 @@
         <div class="pa-7 pa-sm-12">
           <v-row>
             <v-col cols="12" lg="9" xl="6">
-              <img src="../assets/images/logo-icon.png" />
+              <img src="@/assets/images/logo-icon.png" />
               <h2 class="font-weight-bold mt-4 blue-grey--text text--darken-2">
-                Sign in
+                Sign Up
               </h2>
               <h6 class="subtitle-1">
                 Don't have an account?
-                <a href="#/pages/fullregister" class>Sign Up</a>
+                <a href="#/pages/fulllogin/" class>Sign in</a>
               </h6>
 
               <v-form
                 ref="form"
                 v-model="valid"
                 lazy-validation
-                action="/dashboards/analytical"
+                action="/pages/boxedlogin"
               >
+                <v-text-field
+                  v-model="fname"
+                  :rules="fnameRules"
+                  label="Full Name"
+                  class="mt-4"
+                  required
+                  outlined
+                ></v-text-field>
                 <v-text-field
                   v-model="email"
                   :rules="emailRules"
                   label="E-mail"
-                  class="mt-4"
                   required
                   outlined
                 ></v-text-field>
@@ -71,17 +78,36 @@
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="show1 ? 'text' : 'password'"
                 ></v-text-field>
+                <v-text-field
+                  v-model="passwordConfirmation"
+                  :counter="10"
+                  :rules="[(ele) => ele === password]"
+                  label="Password Confirmation"
+                  required
+                  outlined
+                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show1 ? 'text' : 'password'"
+                ></v-text-field>
+                <v-text-field
+                  v-model="jobTitle"
+                  label="Job Title"
+                  required
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  v-model="mobile"
+                  label="Mobile"
+                  required
+                  outlined
+                ></v-text-field>
 
                 <div class="d-block d-sm-flex align-center mb-4 mb-sm-0">
                   <v-checkbox
                     v-model="checkbox"
                     :rules="[(v) => !!v || 'You must agree to continue!']"
-                    label="Remember me?"
+                    label="I agree to the terms and privacy"
                     required
                   ></v-checkbox>
-                  <div class="ml-auto">
-                    <a href="javascript:void(0)" class="link">Forgot pwd?</a>
-                  </div>
                 </div>
                 <v-btn
                   :disabled="!valid"
@@ -119,42 +145,52 @@
 
 <script>
 import { mapActions } from "vuex";
-import { LoginService } from "../services/login/login";
-
+import { AuthService } from "../../services/auth/auth";
 export default {
-  name: "Login",
-  data() {
-    return {
-      valid: true,
-      password: "123123",
-      show1: false,
-      passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length <= 10) || "Password must be less than 10 characters",
-      ],
-      email: "test@mail.com",
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
-      checkbox: true,
-    };
-  },
+  name: "Register",
+  data: () => ({
+    password: "123456",
+    show1: false,
+    passwordRules: [
+      (v) => !!v || "Password is required",
+      (v) => (v && v.length >= 6) || "Password must be less than 10 characters",
+    ],
+    passwordConfirmation: "123456",
+    email: "omar@omar.com",
+    emailRules: [
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
+    checkbox: false,
+    fname: "Omar",
+    fnameRules: [
+      (v) => !!v || "Name is required",
+      (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
+    ],
+    jobTitle: "Software Developer",
+    mobile: "07950000000",
+    valid: false,
+  }),
   methods: {
     ...mapActions(["onCheckUser"]),
     submit() {
       this.$refs.form.validate();
       if (this.$refs.form.validate(true)) {
+        // this.$router.push({ path: "/pages/fulllogin" });
         const data = {
+          name: this.fname,
           email: this.email,
           password: this.password,
+          password_confirmation: this.passwordConfirmation,
+          job_title: this.jobTitle,
+          mobile: this.mobile,
         };
-        LoginService.login(data).then((result) => {
-          this.onCheckUser(result);
-          console.log(result);
-          if (result.status === 200) this.$router.push({ path: "/" });
-        });
+        AuthService.register(data)
+          .then((result) => {
+            // this.onCheckUser(result);
+            if (result.status === 200) this.$router.push({ path: "/" });
+          })
+          .catch((err) => console.log(err));
       }
     },
   },

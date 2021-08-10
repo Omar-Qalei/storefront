@@ -8,7 +8,7 @@
         fab
         x-small
         light
-        @click="$modal.show('settings')"
+        @click="displayEditor()"
       >
         <v-icon>mdi-cog-outline</v-icon>
       </v-btn>
@@ -51,7 +51,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "SettingsWidget",
+  name: "TextSetting",
   props: {
     show: Boolean,
     sectionId: Number,
@@ -81,6 +81,9 @@ export default {
         resource = this.getMobileResources;
         this.fetchSections(resource);
       }
+    },
+    displayEditor: function() {
+      this.$emit("displayEditor", true);
     },
   },
   computed: {

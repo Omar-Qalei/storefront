@@ -14,8 +14,8 @@ export class ContactService {
         const url = `user/${ApiConfiguration.contacts.url}/${contactId}`;
         return await httpClient.post(url, data);
     }
-    static async removeContact(contactId) {
-        const url = `user/${ApiConfiguration.contacts.url}/${contactId}`;
-        return await httpClient.delete(url);
+    static async removeContact(data) {
+        const url = `user/${ApiConfiguration.contacts.url}`;
+        return await httpClient.request({ url: url, method: 'DELETE', data: data });
     }
 }

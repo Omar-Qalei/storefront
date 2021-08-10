@@ -55,7 +55,7 @@
         color="primary"
         text
         :to="{ name: 'Preview', query: { siteId: siteId } }"
-        ><v-icon class="mr-2">mdi-eye</v-icon>Preview</v-btn
+        >Preview</v-btn
       >
       <v-btn
         class="text-capitalize font-weight-light fs-14"

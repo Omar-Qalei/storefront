@@ -21,6 +21,7 @@
                 :key="index"
                 color="primary"
                 link
+                @click="goToPath(item.url)"
               >
                 <v-list-item-icon>
                   <v-icon color="#7683a8" v-text="item.icon"></v-icon>
@@ -50,7 +51,11 @@
                   </v-list-item-content>
                 </template>
 
-                <v-list-item v-for="child in item.submenu" :key="child.title">
+                <v-list-item
+                  v-for="child in item.submenu"
+                  :key="child.title"
+                  @click="goToPath(item.url)"
+                >
                   <v-list-item-content>
                     <v-list-item-title
                       class="silver-blue-text"
@@ -80,29 +85,30 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard",
-          url: "",
+          url: "dashboard",
           submenu: [],
         },
         {
           text: "Contacts",
           icon: "mdi-account-box",
-          url: "",
+          url: "contacts",
           submenu: [],
         },
         {
           text: "Sites",
           icon: "mdi-web-box",
-          url: "Sites",
+          url: "sites",
           submenu: [],
         },
         {
           text: "Marketing",
           icon: "mdi-shopping-outline",
+          url: "marketing",
           submenu: [
-            { text: "Compose", url: "" },
-            { text: "Campaigns", url: "" },
-            { text: "Mailing Lists", url: "" },
-            { text: "Sender", url: "" },
+            { text: "Compose", url: "compose" },
+            { text: "Campaigns", url: "campaigns" },
+            { text: "Mailing Lists", url: "mailingLists" },
+            { text: "Sender", url: "sender" },
           ],
         },
       ],
@@ -116,7 +122,11 @@ export default {
       this.drawer = value;
     },
   },
-  methods: {},
+  methods: {
+    goToPath: function(path) {
+      this.$emit("goToPath", path);
+    },
+  },
 };
 </script>
 

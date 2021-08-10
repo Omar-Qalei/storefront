@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-vue" @click="selectedElement = null">
+  <div class="grid-vue">
     <GridLayout
       :layout="resources"
       :col-num="cols"
@@ -21,19 +21,25 @@
       <template v-if="resources.length > 0">
         <template v-for="(item, index) in resources">
           <div
+            @click="
+              selectedElement = item.i;
+              onChangeWidget();
+            "
             :key="index"
             @mouseleave="hoverElement = null"
             @mouseover="onMouseOverElement(item)"
             @mousedown="
-              selectedElement = item.i;
               onMouseDown;
               onMoveElement(index);
               onCheckWidget($event, item);
             "
-            @dblclick="selectedElement = null"
+            @dblclick="
+              selectedElement = null;
+              onPreventMove();
+            "
           >
             <GridItem
-              v-if="item.type != 'form'"
+              v-if="item.type != 'form' && item.type != 'text'"
               :class="{ editMode: !preview, dropped: item.i === 'drop' }"
               :x="item.x"
               :y="item.y"
@@ -51,8 +57,13 @@
                 resizeEvent;
                 onRemoveBreakLines();
               "
-              @resized="onResizedWidget(item)"
+              @resized="
+                onResizedWidget(item);
+                onCheckGridHeight();
+                onTextHeight();
+              "
               :style="[
+                selectedElement === item.i ? activeSection : '',
                 hoverElement === item.i ? activeSection : '',
                 selectedElement === item.i ? showElement : '',
               ]"
@@ -71,11 +82,6 @@
               />
               <CarouselWidget
                 v-if="item.type == 'carousel'"
-                :item="item"
-                :sectionId="sectionId"
-              />
-              <TextWidget
-                v-if="item.type == 'text'"
                 :item="item"
                 :sectionId="sectionId"
               />
@@ -105,7 +111,48 @@
                 :sectionId="sectionId"
               />
             </GridItem>
-
+            <GridItem
+              v-if="item.type == 'text'"
+              :class="{ editMode: !preview, dropped: item.i === 'drop' }"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :minH="2"
+              :minW="1"
+              :autoSize="true"
+              :static="statusPreventCollision || preventMove"
+              ref="gridItem"
+              @move="moveElementY(item)"
+              @moved="onMovedWidget(item)"
+              @resize="
+                resizeEvent;
+                onRemoveBreakLines();
+              "
+              @resized="
+                onResizedWidget(item);
+                onCheckGridHeight();
+                onTextHeight();
+              "
+              :style="[
+                selectedElement === item.i ? activeSection : '',
+                hoverElement === item.i ? activeSection : '',
+                selectedElement === item.i ? showElement : '',
+              ]"
+            >
+              <label
+                v-show="hoverElement === item.i && selectedElement !== item.i"
+                class="hint text-capitalize"
+                >{{ item.type }}</label
+              >
+              <TextWidget
+                :item="item"
+                :sectionId="sectionId"
+                :preventMove="preventMove"
+                @onPreventMove="preventMove = true"
+              />
+            </GridItem>
             <GridItem
               v-if="item.type == 'form'"
               :class="{ editMode: !preview, dropped: item.i === 'drop' }"
@@ -191,6 +238,7 @@ export default {
       statusMoveElement: false,
       selectedElement: null,
       hoverElement: null,
+      preventMove: false,
       showElement: {
         zIndex: "9",
       },
@@ -208,6 +256,7 @@ export default {
       "onSelectedWidgetById",
       "onRemoveBreakLines",
       "onCheckGridHeight",
+      "onTextHeight",
     ]),
     onMouseDown() {
       this.$emit("onDragElement", true);
@@ -267,8 +316,14 @@ export default {
     onMovedWidget: function(item) {
       this.$emit("onMovedWidget", item);
     },
-    onResizedWidget(item) {
+    onResizedWidget: function(item) {
       this.$emit("onResizedWidget", item);
+    },
+    onPreventMove: function() {
+      if (this.getSelectedWidgetById.type === "text") this.preventMove = true;
+    },
+    onChangeWidget: function() {
+      if (this.getSelectedWidgetById.type !== "text") this.preventMove = false;
     },
   },
   computed: {
@@ -280,6 +335,12 @@ export default {
       "getWebResources",
       "getMobileResources",
     ]),
+  },
+  watch: {
+    getSelectedWidgetById: function(widget) {
+      if (widget.i !== this.selectedElement) this.selectedElement = null;
+      if (widget.type !== "text") this.preventMove = false;
+    },
   },
   // created() {
   //   this.onSelectedWidgetById({i: null});

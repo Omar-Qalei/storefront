@@ -17,4 +17,7 @@ export class ApiConfiguration {
     static contacts = {
         url: 'contacts',
     }
+    static company = {
+        url: 'company',
+    }
 }

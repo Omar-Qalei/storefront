@@ -28,10 +28,10 @@ export const setTextHeight = (state) => {
         if (state.selectedWidget.h < h) {
             state.selectedWidget.h = h;
         }
-        // if(state.selectedWidget.h > h) {
-        //     state.selectedWidget.h = state.selectedWidget.h;
-        // }
     }
+    // if(state.selectedWidget.h > h) {
+    //     state.selectedWidget.h = state.selectedWidget.h;
+    // }
 }
 
 export const setRemoveBreakLines = (state) => {
@@ -45,6 +45,12 @@ export const setRemoveBreakLines = (state) => {
         }
         if (state.selectedWidget.h < h) {
             state.selectedWidget.h = h;
+            document.getElementById(state.selectedWidget.i).querySelectorAll('div:empty').forEach(n => {
+                n.remove();
+            })
+            document.getElementById(state.selectedWidget.i).querySelectorAll('div br').forEach(n => {
+                n.remove()
+            })
         }
         state.textHeight = state.textHeight / state.selectedWidget.h;
         document.getElementById(state.selectedWidget.i).style.height = state.textHeight + "px";

@@ -1,27 +1,36 @@
 <template>
   <v-flex class="home page">
-    <Sidebar />
+    <Sidebar @goToPath="goToPath($event)" />
     <div class="d-flex h-100">
       <v-main>
-        <Navbar class="navbar" />
-        <!-- <Contacts /> -->
-        <Sites />
+        <Navbar class="navbar" :path="path" />
+        <v-slide-y-transition hide-on-leave>
+          <Contacts v-if="this.path === 'contacts'" />
+          <Sites v-if="this.path === 'sites'" />
+        </v-slide-y-transition>
       </v-main>
     </div>
   </v-flex>
 </template>
 
 <script>
+import Contacts from "./contacts/Main.vue";
 import Sites from "./sites/Sites";
-// import Contacts from "./contacts/Main.vue";
 import Navbar from "../layouts/home/Navbar";
 import Sidebar from "../layouts/home/Sidebar";
 
 export default {
   name: "Home",
-  components: { Sidebar, Navbar, Sites },
+  components: { Sidebar, Navbar, Contacts, Sites },
   data() {
-    return {};
+    return {
+      path: "sites",
+    };
+  },
+  methods: {
+    goToPath: function(path) {
+      this.path = path;
+    },
   },
 };
 </script>

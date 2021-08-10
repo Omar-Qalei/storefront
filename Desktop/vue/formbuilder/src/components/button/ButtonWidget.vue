@@ -55,27 +55,6 @@ export default {
         return "";
       }
     },
-    goTo: function() {
-      let url = this.getSelectedWidgetById.properties.selectedLinkTo.url;
-      let newTab = this.getSelectedWidgetById.properties.selectedLinkTo.newTab;
-      if (newTab) {
-        window.open(url, "_blank");
-      } else {
-        window.open(url, "_self");
-      }
-    },
-    onCall: function() {
-      let phone = this.getSelectedWidgetById.properties.selectedLinkTo.phone;
-      if (phone) {
-        window.open("tel:" + phone);
-      }
-    },
-    onEmail: function() {
-      let email = this.getSelectedWidgetById.properties.selectedLinkTo.email;
-      if (email) {
-        window.location.href = "mailto:" + email;
-      }
-    },
   },
   created() {
     if (this.item.properties.style === null) {

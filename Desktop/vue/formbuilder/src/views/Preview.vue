@@ -135,6 +135,26 @@ export default {
           query: { siteId: siteId, pageId: pageId },
         });
     },
+    onResizeHandler: function(event) {
+      let width = event.target.outerWidth - event.target.innerWidth;
+      width = event.target.outerWidth - width;
+      if (width <= 920) {
+        console.log(width);
+        this.onResizeSectionScreen({
+          width: "379px",
+          responsive: false,
+          cols: 1,
+          screen: "mobile",
+        });
+      } else {
+        this.onResizeSectionScreen({
+          width: "100%",
+          responsive: false,
+          cols: 24,
+          screen: "web",
+        });
+      }
+    },
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -153,17 +173,13 @@ export default {
   },
   created() {
     this.getQueryStringParams();
-    this.onResizeSectionScreen({
-      width: "100%",
-      responsive: false,
-      cols: 24,
-      screen: "web",
-    });
+    window.addEventListener("resize", this.onResizeHandler);
   },
   destroyed() {
     this.fetchSections([]);
     this.fetchWebResources(null);
     this.fetchMobileResources(null);
+    window.removeEventListener("resize", this.onResizeHandler);
   },
 };
 </script>

@@ -19,7 +19,6 @@
               </v-chip-group>
             </v-col>
           </v-row>
-          selectedLinkTo: {{ selectedLinkTo }}
           <!-- Background color -->
           <v-row v-if="selectedLinkTo === 0">
             <v-col cols="12">

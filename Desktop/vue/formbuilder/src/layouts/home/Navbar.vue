@@ -161,16 +161,15 @@
 </template>
 <script>
 // Utilities
-import { mapState, mapMutations } from "vuex";
+// mapMutations
+import { mapState } from "vuex";
 export default {
-  name: "HorizontalHeader",
-
+  name: "Navbar",
   components: {},
-
   props: {
-    value: {
-      type: Boolean,
-      default: false,
+    path: {
+      type: String,
+      default: null,
     },
   },
   data: () => ({
@@ -267,9 +266,9 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setSidebarDrawer: "SET_SIDEBAR_DRAWER",
-    }),
+    // ...mapMutations({
+    //   setSidebarDrawer: "SET_SIDEBAR_DRAWER",
+    // }),
     showhideLogo: function() {
       this.showLogo = !this.showLogo;
     },

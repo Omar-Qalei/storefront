@@ -25,8 +25,7 @@
           v-model="selected"
           :headers="headers"
           :items="desserts"
-          :single-select="singleSelect"
-          item-key="name"
+          item-key="email"
           show-select
           :loading="loading"
           loading-text="Loading... Please wait"
@@ -193,7 +192,7 @@ export default {
       addDialog: false,
       editDialog: false,
       selected: [],
-      singleSelect: null,
+      singleSelect: false,
       firstName: null,
       lastName: null,
       email: null,
@@ -219,6 +218,7 @@ export default {
       ContactService.getContacts()
         .then((result) => {
           const data = result.data.data.contacts.data || [];
+
           if (data.length > 0) this.desserts = data;
         })
         .catch((error) => console.log(error))
@@ -262,7 +262,6 @@ export default {
         phone: this.phone,
         address: this.address,
       };
-      console.log(data, this.contactId);
       ContactService.modifyContact(this.contactId, data)
         .then((result) => {
           console.log(result);
@@ -272,13 +271,15 @@ export default {
         .catch((error) => console.log(error));
     },
     removeContact: function() {
-      const contactId = this.selected.id;
-      ContactService.removeContact(contactId)
-        .then((result) => {
-          console.log(result);
-          this.getContacts();
-        })
-        .catch((error) => console.log(error));
+      if (this.selected.length) {
+        const users = this.selected.map((user) => user.id);
+        ContactService.removeContact(users)
+          .then((result) => {
+            console.log(result);
+            this.getContacts();
+          })
+          .catch((error) => console.log(error));
+      }
     },
   },
   created() {

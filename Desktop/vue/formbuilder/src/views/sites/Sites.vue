@@ -134,7 +134,15 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" text @click="dialog = false">
+          <v-btn
+            color="red"
+            text
+            @click="
+              dialog = false;
+              siteName = null;
+              domainName = null;
+            "
+          >
             Cancel
           </v-btn>
           <v-btn color="primary" text @click="addSite()">
@@ -190,6 +198,8 @@ export default {
       };
       SiteService.addSite(data)
         .then((event) => {
+          this.siteName = null;
+          this.domainName = null;
           const result = event.data.data;
           this.siteId = result.id;
           if (this.siteId) {

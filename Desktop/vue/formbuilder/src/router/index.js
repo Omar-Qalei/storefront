@@ -41,16 +41,21 @@ const routes = [
     beforeEnter: guard,
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
-  },
-  {
     path: '/formBuilder',
     name: 'FormBuilder',
     component: () => import(/* webpackChunkName: "formBuilder" */ '../views/FormBuilder.vue'),
     beforeEnter: guard,
-  }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/authentication/Login.vue')
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import(/* webpackChunkName: "register" */ '../views/authentication/Register.vue'),
+  },
 ]
 
 const router = new VueRouter({
