@@ -10,14 +10,14 @@
       <v-card class="overflow-y-auto elevation-0" max-height="495">
         <v-tabs color="deep-purple accent-4">
           <v-tab>Content</v-tab>
-          <!-- <v-tab>Design</v-tab> -->
+          <v-tab>Design</v-tab>
 
           <v-tab-item>
             <SectionContent />
           </v-tab-item>
-          <!-- <v-tab-item>
+          <v-tab-item>
             <SectionDesign />
-          </v-tab-item> -->
+          </v-tab-item>
         </v-tabs>
       </v-card>
     </v-card-text>
@@ -33,13 +33,12 @@
 
 <script>
 import SectionContent from "./SectionContent";
-// import SectionDesign from "./SectionDesign";
+import SectionDesign from "./SectionDesign";
 import { mapGetters } from "vuex";
 
 export default {
   name: "SectionDialog",
-  //   , SectionDesign
-  components: { SectionContent },
+  components: { SectionContent, SectionDesign },
   methods: {
     beforeOpen(event) {
       console.log("before-open", event);
@@ -56,6 +55,15 @@ export default {
   },
   computed: {
     ...mapGetters(["getSelectedWidgetById"]),
+  },
+  created() {
+    if (this.getSelectedWidgetById.properties.style === null) {
+      this.getSelectedWidgetById.properties.style = {};
+      if (this.getSelectedWidgetById.properties.content === undefined)
+        this.$set(this.getSelectedWidgetById.properties.style, "content", {});
+      if (this.getSelectedWidgetById.properties.design === undefined)
+        this.$set(this.getSelectedWidgetById.properties.style, "design", {});
+    }
   },
 };
 </script>

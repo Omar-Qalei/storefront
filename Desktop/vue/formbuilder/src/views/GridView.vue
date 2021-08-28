@@ -56,15 +56,18 @@
             selectedSection === item.id ? activeSection : '',
             selectedElement === item.id ? showElement : '',
             hoverElement === item.id ? activeSection : '',
-
+            getDefaultContent(item),
             {
               width: getScreenSize.width,
             },
-            item.properties.style,
+            {
+              height: containerHeight(placeholders(item.h)),
+            },
           ]"
           @resize="resizeEvent"
           @resized="resizedEvent"
         >
+          <!-- calcHeightSection(item, index), -->
           <template v-if="item.properties.backgroundVideo">
             <div class="position-relative">
               <video autoplay muted loop id="myVideo">
@@ -81,20 +84,45 @@
                 currentSelectedSection === selectedSection
             "
           >
-            <GridItem
-              v-for="(placeholder, placeholderIndex) in placeholders(item.h)"
-              :key="placeholderIndex + 'placeholder'"
-              :x="placeholder.x"
-              :y="placeholder.y"
-              :w="placeholder.w"
-              :h="placeholder.h"
-              :i="placeholder.i"
-              :is-resizable="false"
-              :class="{
-                hidePlacerholder: !displayPlaceholder,
-                placeholder: true,
-              }"
-            ></GridItem>
+            <v-col
+              class="position-absolute py-0 px-auto"
+              :style="getDefaultDesign(item)"
+            >
+              <GridLayout
+                :layout="getSections"
+                :row-height="rowHeight"
+                :margin="margin"
+                :is-draggable="false"
+                :is-resizable="false"
+                :is-mirrored="false"
+                :vertical-compact="false"
+                :autoSize="false"
+                :allow-overlap="false"
+                :allow-resize-grid="getIsResizeable"
+                :responsive="getScreenSize.responsive"
+                :use-css-transforms="false"
+                :col-num="getScreenSize.cols"
+                style="transition: width 1s ease 0s;"
+              >
+                <GridItem
+                  v-for="(placeholder, placeholderIndex) in placeholders(
+                    item.h
+                  )"
+                  :key="placeholderIndex + 'placeholder'"
+                  :x="placeholder.x"
+                  :y="placeholder.y"
+                  :w="placeholder.w"
+                  :h="placeholder.h"
+                  :i="placeholder.i"
+                  :is-resizable="false"
+                  :autoSize="true"
+                  :class="{
+                    hidePlacerholder: !displayPlaceholder,
+                    placeholder: true,
+                  }"
+                ></GridItem>
+              </GridLayout>
+            </v-col>
           </template>
           <template v-if="item.resources.length === 0">
             <v-row class="h-100" align="center" justify="center">
@@ -123,6 +151,8 @@
             :show="item.i === getSelectedWidgetById.i"
             :sectionId="item.id"
           />
+
+          <!-- :style="getDefaultDesign(item)" -->
           <SectionWidget
             :resources="item.resources"
             :statusSection="item.id === selectedSection"
@@ -141,6 +171,7 @@
             :responsive="getScreenSize.responsive"
             :cols="getScreenSize.cols"
             :section="item"
+            :style="getDefaultDesign(item)"
           ></SectionWidget>
           <template v-if="getScreenSize.screen === 'web'">
             <v-btn
@@ -212,7 +243,8 @@ export default {
       selectedSection: 0,
       statusSection: false,
       margin: [0, 0],
-      rowHeight: 30,
+      padding: [0, 0],
+      rowHeight: 24,
       displayPlaceholder: false,
       currentSelectedSection: "",
       selectedSectionByI: null,
@@ -224,6 +256,7 @@ export default {
       showElement: {
         zIndex: "4",
       },
+      test: [],
     };
   },
   methods: {
@@ -243,6 +276,7 @@ export default {
       "fetchWebResources",
       "fetchMobileResources",
       "onRearrangementResources",
+      "onHistoryPages",
     ]),
     onDragElement: function(event) {
       this.statusSection = event;
@@ -266,14 +300,14 @@ export default {
       this.onUpdateSectionLayoutResized(data);
       this.updateSectionLayout(data);
     },
-    containerHeight: function(h) {
-      let containerHeight = null;
-      if (!isNaN(h) && h !== undefined) {
-        containerHeight =
-          h * (this.rowHeight + this.margin[1]) + this.margin[1] + "px";
-      }
-      return containerHeight;
-    },
+    // containerHeight: function(h) {
+    //   let containerHeight = null;
+    //   if (!isNaN(h) && h !== undefined) {
+    //     containerHeight =
+    //       h * (this.rowHeight + this.margin[1]) + this.margin[1] + "px";
+    //   }
+    //   return containerHeight;
+    // },
     placeholders: function(h) {
       const placeholderGrids = [];
       if (this.getScreenSize.width === "100%") {
@@ -342,7 +376,16 @@ export default {
       // });
     },
     resizedEvent: function() {
+      // this.onHistoryPages(this.getWebResources);
+      // this.onMobileHistoryPage(this.getMobileResources);
       if (this.getSelectedWidgetById.type !== "section") {
+        const webResources = JSON.stringify(this.getWebResources);
+        const mobileResources = JSON.stringify(this.getMobileResources);
+        this.onHistoryPages({
+          saved: false,
+          web: JSON.parse(webResources),
+          mobile: JSON.parse(mobileResources),
+        });
         SiteService.addSitePageResourceWeb(
           this.siteId,
           this.pageId,
@@ -410,6 +453,15 @@ export default {
       // if (this.getSelectedWidgetById.type !== "section") {
       // thiz.fetchWebResources(thiz.getWebResources);
       // thiz.fetchMobileResources(thiz.getMobileResources);
+
+      const webResources = JSON.stringify(this.getWebResources);
+      const mobileResources = JSON.stringify(this.getMobileResources);
+      this.onHistoryPages({
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources),
+      });
+      // this.onMobileHistoryPage(this.getMobileResources);
       SiteService.addSitePageResourceWeb(
         this.siteId,
         this.pageId,
@@ -438,6 +490,15 @@ export default {
       if (this.$route.query.pageId && this.$route.query.pageId !== this.pageId)
         this.pageId = +this.$route.query.pageId;
       // if (this.getSelectedWidgetById.type !== "section") {
+      // this.onHistoryPages(this.getWebResources);
+      // this.onMobileHistoryPage(this.getMobileResources);
+      const webResources = JSON.stringify(this.getWebResources);
+      const mobileResources = JSON.stringify(this.getMobileResources);
+      this.onHistoryPages({
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources),
+      });
       SiteService.addSitePageResourceWeb(
         this.siteId,
         this.pageId,
@@ -465,6 +526,108 @@ export default {
     onSelectedWidget: function(item) {
       this.onSelectedWidgetById(item);
     },
+    getDefaultDesign: function(item) {
+      if (item.properties.style)
+        if (item.properties.style.design)
+          if (item.properties.style.design[this.getScreenSize.screen]) {
+            return item.properties.style.design[this.getScreenSize.screen];
+          }
+    },
+    getDefaultContent: function(item) {
+      if (item.properties.style)
+        if (item.properties.style.content) return item.properties.style.content;
+    },
+    containerHeight: function(layout) {
+      // console.log("bottom: " + bottom(this.layout))
+      // console.log("rowHeight + margins: " + (this.rowHeight + this.margin[1]) + this.margin[1])
+      const containerHeight =
+        this.bottom(layout) * (this.rowHeight + this.margin[0]) +
+        this.margin[1] +
+        "px";
+      // For calculate by number of rows rather than pixels
+      return containerHeight;
+    },
+    bottom: function(layout) {
+      let max = 0,
+        bottomY;
+      for (let i = 0, len = layout.length; i < len; i++) {
+        bottomY = layout[i].y + layout[i].h;
+        if (bottomY > max) max = bottomY;
+      }
+      return max;
+    },
+    calcContainerHeightByRow: function(h) {
+      let height = Math.round((h - this.margin[1]) / this.rowHeight);
+      if (height % 2 !== 0) {
+        height += 1;
+      }
+      return height;
+    },
+    setWebStyles: function() {
+      var sheet = document.createElement("style");
+      sheet.innerHTML = `
+      .h1 {
+        font-size: 80px !important;
+    }
+    .h2 {
+        font-size: 64px !important;
+    }
+    .h3 {
+        font-size: 48px !important;
+    }
+    .h4 {
+        font-size: 40px !important;
+    }
+    .h5 {
+        font-size: 32px !important;
+    }
+    .h6 {
+        font-size: 24px !important;
+    }
+    .p1 {
+        font-size: 18px !important;
+    }
+    .p2 {
+        font-size: 16px !important;
+    }
+    .p3 {
+        font-size: 14px !important;
+    }
+      `;
+      document.body.appendChild(sheet);
+    },
+    setMobileStyles: function() {
+      var sheet = document.createElement("style");
+      sheet.innerHTML = `
+      .h1 {
+        font-size: 44px !important;
+    }
+    .h2 {
+        font-size: 36px !important;
+    }
+    .h3 {
+        font-size: 32px !important;
+    }
+    .h4 {
+        font-size: 28px !important;
+    }
+    .h5 {
+        font-size: 24px !important;
+    }
+    .h6 {
+        font-size: 20px !important;
+    }
+    .p1 {
+        font-size: 18px !important;
+    }
+    .p2 {
+        font-size: 16px !important;
+    }
+    .p3 {
+        font-size: 14px !important;
+    }`;
+      document.body.appendChild(sheet);
+    },
   },
   computed: {
     ...mapGetters([
@@ -480,6 +643,10 @@ export default {
       "getWebResources",
       "getMobileResources",
       "getLoadingPage",
+      "getWebHistoryPage",
+      "getMobileHistoryPage",
+      "getUndoPage",
+      "getRedoPage",
     ]),
   },
   created() {
@@ -488,6 +655,10 @@ export default {
     this.onSelectedSection({ index: 0, id: 0 });
     if (typeof this.getSelectedWidgetById === "object")
       this.selectedElement = this.getSelectedWidgetById.id;
+    if (this.getScreenSize.screen === "web")
+      this.fetchSections(this.getWebResources);
+    if (this.getScreenSize.screen === "mobile")
+      this.fetchSections(this.getMobileResources);
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -498,18 +669,47 @@ export default {
         this.pageId = pages[0].id;
       }
     },
-    getScreenSize: function(type) {
-      let resource;
-      if (type.screen === "web") {
-        resource = this.getWebResources;
-        this.fetchSections(resource);
-      }
-      if (type.screen === "mobile") {
-        resource = this.getMobileResources;
-        this.fetchSections(resource);
-        this.onRearrangementResources();
-      }
+    getScreenSize: function() {
+      // type
+      // let resource;
+      // if (type.screen === "web") {
+      //   // resource = this.getWebResources;
+      //   // this.setWebStyles();
+      //   // this.fetchSections(resource);
+      // }
+      // if (type.screen === "mobile") {
+      //   resource = this.getMobileResources;
+      //   // this.fetchSections(resource);
+      //   // this.setMobileStyles();
+      //   // this.onRearrangementResources();
+      // }
     },
+    // getUndoPage: function(value) {
+    //   console.log("getUndoPage", value);
+    //   let resource;
+    //   if (this.getScreenSize.screen === "web") {
+    //     resource = this.getWebHistoryPage[value];
+    //     this.fetchSections(resource);
+    //   }
+    //   if (this.getScreenSize.screen === "mobile") {
+    //     resource = this.getMobileHistoryPage[value];
+    //     this.fetchSections(resource);
+    //     this.onRearrangementResources();
+    //   }
+    // },
+    // getRedoPage: function(value) {
+    //   console.log("getRedoPage", value);
+    //   let resource;
+    //   if (this.getScreenSize.screen === "web") {
+    //     resource = this.getWebHistoryPage[value];
+    //     this.fetchSections(resource);
+    //   }
+    //   if (this.getScreenSize.screen === "mobile") {
+    //     resource = this.getMobileHistoryPage[value];
+    //     this.fetchSections(resource);
+    //     this.onRearrangementResources();
+    //   }
+    // },
   },
   mounted() {
     const thiz = this;
@@ -549,12 +749,15 @@ export default {
   updated() {
     this.onUpdateRefs(this.$refs["section"]);
     // this.placeholders();
-    // document.querySelectorAll(".section").forEach((element) => {
-    //   let h = element.offsetHeight + this.margin[0] + this.margin[1];
+    // document.querySelectorAll(".resizeSection").forEach((element) => {
+    //   let h =
+    //     element.offsetHeight +
+
     //   // let transformHeight = (element.offsetHeight = this.margin[0]);
     //   // document.getElementById(element.id).style.transform =
     //   //   "translate3d(10px," + transformHeight + "px, 0px)";
-    //   document.getElementById(element.id).style.height = h + "px";
+    //   console.log(h + "px");
+    //   // document.getElementById(element.id).style.height = h + "px";
     // });
   },
   destroyed() {
@@ -624,5 +827,12 @@ export default {
 }
 .holdSection {
   border: 1px dashed #9da3a9;
+}
+.position-absolute {
+  position: absolute;
+}
+.px-auto {
+  padding-right: unset;
+  padding-left: unset;
 }
 </style>

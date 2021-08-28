@@ -36,7 +36,7 @@
       </template>
       <template v-else>
         <v-spacer></v-spacer>
-        <v-btn
+        <!-- <v-btn
           :style="[
             { color: textStyle().color },
             onHover(item.properties.elementHover),
@@ -50,6 +50,51 @@
         >
           <v-icon>mdi-menu</v-icon>
         </v-btn>
+
+        <v-list :style="[textStyle(), menuStyle()]">
+          <v-list-item
+            v-for="item in list"
+            :key="item.title"
+            @click="goTo(item.path)"
+            link
+          >
+            <v-list-item-content>
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list> -->
+
+        <v-menu left :nudge-width="350" offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              dark
+              v-bind="attrs"
+              v-on="on"
+              :style="[
+                { color: textStyle().color },
+                onHover(item.properties.elementHover),
+              ]"
+              icon
+              small
+              @click="onFetchDataMenu(item.properties.style, list)"
+            >
+              <v-icon>mdi-menu</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list :style="[textStyle(), menuStyle()]">
+            <v-list-item
+              v-for="item in list"
+              :key="item.title"
+              @click="goToPath(item.path)"
+              link
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ item.name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </template>
     </nav>
   </div>

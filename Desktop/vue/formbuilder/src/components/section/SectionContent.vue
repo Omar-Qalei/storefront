@@ -575,39 +575,34 @@ export default {
   },
   created() {
     this.afterCreated = false;
-    if (this.getSelectedWidgetById.properties.style) {
-      if (this.getSelectedWidgetById.properties.style.background)
-        this.onCheckTypeBackground(
-          this.getSelectedWidgetById.properties.style.background
-        );
-      if (
-        this.getSelectedWidgetById.properties.style
-          .selectedBackgroundGradientType
-      )
+    const style = this.getSelectedWidgetById.properties.style;
+    if (style) {
+      const content = style.content;
+      if (content.background) this.onCheckTypeBackground(content.background);
+      if (content.selectedBackgroundGradientType)
         this.selectedBackgroundGradientType = this.findIndex(
           { list: this.backgroundGradientTypes, value: "type" },
-          this.getSelectedWidgetById.properties.style
-            .selectedBackgroundGradientType
+          content.selectedBackgroundGradientType
         );
-      if (this.getSelectedWidgetById.properties.style.backgroundSize)
+      if (content.backgroundSize)
         this.selectedBackgroundImageSize = this.findIndex(
           { list: this.backgroundImageSize, value: "type" },
-          this.getSelectedWidgetById.properties.style.backgroundSize
+          content.backgroundSize
         );
-      if (this.getSelectedWidgetById.properties.style.backgroundPosition)
+      if (content.backgroundPosition)
         this.selectedBackgroundImagePosition = this.findIndex(
           { list: this.backgroundImagePosition, value: "type" },
-          this.getSelectedWidgetById.properties.style.backgroundPosition
+          content.backgroundPosition
         );
-      if (this.getSelectedWidgetById.properties.style.backgroundRepeat)
+      if (content.backgroundRepeat)
         this.selectedBackgroundImageRepeat = this.findIndex(
           { list: this.backgroundImageRepeat, value: "type" },
-          this.getSelectedWidgetById.properties.style.backgroundRepeat
+          content.backgroundRepeat
         );
-      if (this.getSelectedWidgetById.properties.style.backgroundBlendMode)
+      if (content.backgroundBlendMode)
         this.selectedBackgroundImageBlend = this.findIndex(
           { list: this.backgroundImageBlend, value: "type" },
-          this.getSelectedWidgetById.properties.style.backgroundBlendMode
+          content.backgroundBlendMode
         );
     }
     if (this.getSelectedWidgetById.properties.backgroundVideo)
@@ -640,7 +635,8 @@ export default {
     this.section.backgroundBlendMode = this.backgroundImageBlend[
       this.selectedBackgroundImageBlend
     ].type;
-    this.getSelectedWidgetById.properties.style = this.section;
+    this.getSelectedWidgetById.properties.style.content = this.section;
+    // this.getSelectedWidgetById.properties.style.content = this.section;
     this.getSelectedWidgetById.properties.backgroundVideo = this.backgroundVideo;
   },
 };

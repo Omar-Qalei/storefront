@@ -17,3 +17,27 @@ export const getSelectedPage = (state) => {
 export const getLoadingPage = (state) => {
     return state.loading
 };
+
+export const getWebHistoryPage = (state) => {
+    return state.webHistory
+};
+
+export const getMobileHistoryPage = (state) => {
+    return state.mobileHistory
+};
+
+export const getUndoPage = (state) => {
+    return state.undoRedo
+};
+
+export const getRedoPage = (state) => {
+    return state.undoRedo
+};
+
+export const getUndoStatus = (state) => {
+    return state.undoStatus
+};
+
+export const getRedoStatus = (state) => {
+    return state.redoStatus
+};

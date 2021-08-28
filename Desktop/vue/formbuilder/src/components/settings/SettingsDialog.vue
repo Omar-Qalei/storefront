@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import SettingsDialogContent from "./SettingsDialogContent";
 import { SiteService } from "../../services/site/site";
 export default {
@@ -28,6 +28,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["onHistoryPages"]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
         this.siteId = +this.$route.query.siteId;
@@ -42,6 +43,18 @@ export default {
       this.getQueryStringParams();
     },
     beforeClose() {
+      // this.onHistoryPages(this.getWebResources);
+      // this.onMobileHistoryPage(this.getMobileResources);
+      if (this.getScreenSize.screen === "web")
+        this.onHistoryPages({
+          type: "event",
+          resources: JSON.stringify(this.getWebResources),
+        });
+      if (this.getScreenSize.screen === "mobile")
+        this.onHistoryPages({
+          type: "event",
+          resources: JSON.stringify(this.getMobileResources),
+        });
       SiteService.addSitePageResourceWeb(
         this.siteId,
         this.pageId,

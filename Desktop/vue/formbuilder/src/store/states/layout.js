@@ -4,4 +4,8 @@ export default {
     pages: [],
     selectedPage: 0,
     loading: true,
+    historyList: [],
+    undoRedo: 0,
+    undoStatus: true,
+    redoStatus: true
 }

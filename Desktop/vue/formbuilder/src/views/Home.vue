@@ -34,6 +34,7 @@ export default {
   },
 };
 </script>
+<style></style>
 <style scoped>
 .page {
   padding: 0 45px 45px;

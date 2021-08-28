@@ -22,11 +22,11 @@
       <a
         class="link-icon"
         @click="
-          fetchCols(1);
+          fetchCols(4);
           onResizeSectionScreen({
             width: '379px',
             responsive: true,
-            cols: 1,
+            cols: 2,
             screen: 'mobile',
           });
         "

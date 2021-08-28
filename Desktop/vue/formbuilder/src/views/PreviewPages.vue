@@ -80,7 +80,8 @@
           </v-list-item>
         </v-list>
       </nav> -->
-      <v-navigation-drawer
+
+      <!-- <v-navigation-drawer
         :style="[textStyle(), menuStyle()]"
         v-model="drawer"
         fixed
@@ -99,7 +100,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-      </v-navigation-drawer>
+      </v-navigation-drawer> -->
     </template>
     <!-- Navbar -->
   </GridLayout>

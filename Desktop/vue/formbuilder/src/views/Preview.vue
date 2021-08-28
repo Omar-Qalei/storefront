@@ -143,7 +143,7 @@ export default {
         this.onResizeSectionScreen({
           width: "379px",
           responsive: false,
-          cols: 1,
+          cols: 2,
           screen: "mobile",
         });
       } else {

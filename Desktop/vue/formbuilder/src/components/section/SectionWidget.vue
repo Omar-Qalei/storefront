@@ -68,7 +68,7 @@
                 selectedElement === item.i ? showElement : '',
               ]"
             >
-              <!-- {{ item.i }}////{{ item.gridKey }} -->
+              {{ item.i }}////{{ item.gridKey }}
 
               <label
                 v-show="hoverElement === item.i && selectedElement !== item.i"

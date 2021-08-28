@@ -1,6 +1,6 @@
 <template>
   <!-- @mouseover="hover = true" @mouseleave="hover = false" -->
-  <div class="widget" @mousedown="onSelectedContent()" contenteditable="false">
+  <div class="widget" contenteditable="false">
     <!-- <SettingsWidget
       :show="item.i === getSelectedWidgetById.i"
       :item="item"
@@ -16,17 +16,26 @@
         @displayEditor="onDisplayEditor($event)"
       />
     </template>
+
+    <!-- @styles="onSelectedStyles($event)" -->
     <template v-else>
       <TextSettingEditor
         :v-if="item.i === getSelectedWidgetById.i"
-        @styles="onSelectedStyles($event)"
+        @onChangeFontSize="onChangeFontSize($event)"
+        @onChangeFontFamily="onChangeFontFamily($event)"
+        @onChangeFontColor="onChangeFontColor($event)"
+        @onChangeFontBold="onChangeFontBold($event)"
+        @onChangeFontStyle="onChangeFontStyle($event)"
+        @onChangeFontUnderline="onChangeFontUnderline($event)"
+        @onChangeFontTransform="onChangeFontTransform($event)"
+        @onChangeTextAlignment="onChangeTextAlignment($event)"
       />
     </template>
     <!-- 
       :style="[item.properties.style ? item.properties.style : style]"
      -->
     <div
-      class="d-flex textarea"
+      class="d-flex textarea unselectable"
       contenteditable="true"
       :id="item.i"
       @input="onInput"
@@ -37,6 +46,8 @@
           sectionId: sectionId,
         });
       "
+      :style="{ textAlign: styles.textAlign }"
+      unselectable="on"
     >
       <!-- 
       @input="onInput"
@@ -95,6 +106,8 @@
 import TextSettingEditor from "./TextSettingEditor";
 import TextSetting from "./TextSetting";
 import { mapGetters, mapActions } from "vuex";
+// import styles from "../../mixins/styles";
+
 export default {
   name: "TextWidget",
   components: {
@@ -105,6 +118,13 @@ export default {
   data() {
     return {
       hover: false,
+      range: null,
+      details: {},
+      contentAlign: null,
+      rtl: false,
+      disabledTitle: null,
+      selection: null,
+      containers: "p, span",
       style: {
         textAlign: "",
         fontWeight: "",
@@ -132,7 +152,20 @@ export default {
     preventMove: Boolean,
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById"]),
+    ...mapGetters(["getSelectedWidgetById", "getScreenSize"]),
+  },
+  watch: {
+    getSelectedWidgetById: function(widget) {
+      if (widget.type !== "text") this.displayEditor = false;
+    },
+    preventMove: function(value) {
+      this.displayEditor = value;
+    },
+    // getScreenSize: function(event) {
+    //   if(event.screen) {
+
+    //   }
+    // }
   },
   methods: {
     ...mapActions([
@@ -216,9 +249,140 @@ export default {
     },
     onSelectedStyles: function(event) {
       this.styles = event;
+      console.log("clicked");
+      this.onSelectedContent();
+      console.log(event);
     },
-    // document.getSelection().empty();
+    getSelection: async function() {
+      if (window && window.getSelection) {
+        return window.getSelection();
+      } else if (document && document.getSelection) {
+        return document.getSelection();
+      } else if (document && document.selection) {
+        return document.selection.createRange().text;
+      }
+
+      return undefined;
+    },
+    onChangeFontSize: function(style) {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          document.execCommand("styleWithCSS", false, true);
+          // document.execCommand("formatblock", false, "span");
+          // fontElements = fontElements.anchorNode.parentNode;
+          document.execCommand("fontSize", false, 7);
+          var listId = window.getSelection().focusNode.parentNode;
+          // fontElements.removeAttribute("size");
+          listId.style.fontSize = "inherit";
+          listId.className = style.fontSize;
+        }
+    },
+    onChangeFontFamily: function(style) {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          document.execCommand("styleWithCSS", false, true);
+          document.execCommand("fontName", false, style.fontFamily);
+        }
+    },
+    onChangeFontColor: function(style) {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          fontElements = fontElements.anchorNode.parentNode;
+          document.execCommand("styleWithCSS", false, true);
+          document.execCommand("foreColor", false, style.color);
+          // fontElements.removeAttribute("color");
+          // fontElements.style.color = style.color;
+        }
+    },
+    onChangeFontBold: function() {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          if (this.styles.fontWeight === "" && fontElementsStatus) {
+            document.execCommand("bold", false, true);
+          }
+          if (this.styles.fontWeight !== "" && fontElementsStatus) {
+            document.execCommand("bold", false, false);
+          }
+        }
+    },
+    onChangeFontStyle: function() {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          if (this.styles.fontStyle === "" && fontElementsStatus) {
+            document.execCommand("italic", false, true);
+          }
+          if (this.styles.fontStyle !== "" && fontElementsStatus) {
+            document.execCommand("italic", false, false);
+          }
+        }
+    },
+    onChangeFontUnderline: function() {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          if (this.styles.textDecoration === "" && fontElementsStatus) {
+            document.execCommand("underline", false, true);
+          }
+          if (this.styles.textDecoration !== "" && fontElementsStatus) {
+            document.execCommand("underline", false, false);
+          }
+        }
+    },
+    onChangeFontTransform: function() {
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          if (this.styles.fontWeight === "" && fontElementsStatus) {
+            document.execCommand("bold", false, true);
+          }
+          if (this.styles.fontWeight !== "" && fontElementsStatus) {
+            document.execCommand("bold", false, false);
+          }
+        }
+    },
+    onChangeTextAlignment: function(style) {
+      this.styles.textAlign = style.textAlign;
+    },
     onSelectedContent: function() {
+      // var fontElements = window.getSelection().anchorNode.parentNode;
+      var fontElements = getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          fontElements = fontElements.anchorNode.parentNode;
+          document.execCommand("fontSize", false, 7);
+          fontElements.removeAttribute("size");
+          fontElements.style.fontSize = this.styles.fontSize;
+        }
+
+      if (this.styles.fontStyle === "" && fontElementsStatus) {
+        document.execCommand("italic", false, true);
+      }
+      if (this.styles.fontStyle !== "" && fontElementsStatus) {
+        document.execCommand("italic", false, false);
+      }
+
+      if (this.styles.textDecoration === "" && fontElementsStatus) {
+        document.execCommand("underline", false, true);
+      }
+      if (this.styles.textDecoration !== "" && fontElementsStatus) {
+        document.execCommand("underline", false, false);
+      }
+
+      // console.log(document.getSelection().);
+      // document.getSelection().empty();
       // const p = document.querySelector("p");
       //     document.onselectionchange = function() {
       //   let selection = document.getSelection();
@@ -355,196 +519,6 @@ export default {
       //   // document.execCommand("createLink", true, "http://www.google.com");
       // }
     },
-    // Test
-    execCommandStyle: async function(action, containers) {
-      const selection = await getSelection();
-      if (!selection) {
-        return;
-      }
-      const anchorNode = selection.anchorNode;
-
-      if (!anchorNode) {
-        return;
-      }
-      const containert =
-        anchorNode.nodeType !== Node.TEXT_NODE &&
-        anchorNode.nodeType !== Node.COMMENT_NODE
-          ? anchorNode
-          : anchorNode.parentElement;
-      // TODO: next chapter
-      console.log(action, containers, containert);
-    },
-    getSelection: async function() {
-      if (window && window.getSelection) {
-        return window.getSelection();
-      } else if (document && document.getSelection) {
-        return document.getSelection();
-      } else if (document && document.selection) {
-        return document.selection.createRange().text;
-      }
-
-      return null;
-    },
-    updateSelection: async function(container, action, containers) {
-      container.style[action.style] = await this.getStyleValue(
-        container,
-        action,
-        containers
-      );
-
-      await this.cleanChildren(action, container);
-    },
-    getStyleValue: async function(container, action, containers) {
-      if (!container) {
-        return action.value;
-      }
-
-      if (await action.initial(container)) {
-        return "initial";
-      }
-
-      const style = await this.findStyleNode(
-        container,
-        action.style,
-        containers
-      );
-
-      if (await action.initial(style)) {
-        return "initial";
-      }
-
-      return action.value;
-    },
-    findStyleNode: async function(node, style, containers) {
-      // Just in case
-      if (
-        node.nodeName.toUpperCase() === "HTML" ||
-        node.nodeName.toUpperCase() === "BODY"
-      ) {
-        return null;
-      }
-
-      if (!node.parentNode) {
-        return null;
-      }
-
-      // if (DeckdeckgoInlineEditorUtils.isContainer(containers, node)) {
-      //   return null;
-      // }
-
-      const hasStyle =
-        node.style[style] !== null &&
-        node.style[style] !== undefined &&
-        node.style[style] !== "";
-
-      if (hasStyle) {
-        return node;
-      }
-
-      return await this.findStyleNode(node.parentNode, style, containers);
-    },
-    cleanChildren: async function(action, span) {
-      if (!span.hasChildNodes()) {
-        return;
-      }
-
-      // Clean direct (> *) children with same style
-      const children = Array.from(span.children).filter((element) => {
-        return (
-          element.style[action.style] !== undefined &&
-          element.style[action.style] !== ""
-        );
-      });
-
-      if (children && children.length > 0) {
-        children.forEach((element) => {
-          element.style[action.style] = "";
-
-          if (element.getAttribute("style") === "" || element.style === null) {
-            element.removeAttribute("style");
-          }
-        });
-      }
-
-      // Direct children (> *) may have children (*) to be clean too
-      const cleanChildrenChildren = Array.from(span.children).map((element) => {
-        return this.cleanChildren(action, element);
-      });
-
-      if (!cleanChildrenChildren || cleanChildrenChildren.length <= 0) {
-        return;
-      }
-
-      await Promise.all(cleanChildrenChildren);
-    },
-    replaceSelection: async function(container, action, selection, containers) {
-      const range = selection.getRangeAt(0);
-
-      const fragment = range.extractContents();
-
-      const span = await this.createSpan(container, action, containers);
-      span.appendChild(fragment);
-
-      await this.cleanChildren(action, span);
-      await this.flattenChildren(action, span);
-
-      range.insertNode(span);
-      selection.selectAllChildren(span);
-    },
-    createSpan: async function(container, action, containers) {
-      const span = document.createElement("span");
-      span.style[action.style] = await this.getStyleValue(
-        container,
-        action,
-        containers
-      );
-
-      return span;
-    },
-    flattenChildren: async function(action, span) {
-      if (!span.hasChildNodes()) {
-        return;
-      }
-
-      // Flatten direct (> *) children with no style
-      const children = Array.from(span.children).filter((element) => {
-        const style = element.getAttribute("style");
-        return !style || style === "";
-      });
-
-      if (children && children.length > 0) {
-        children.forEach((element) => {
-          const styledChildren = element.querySelectorAll("[style]");
-          if (!styledChildren || styledChildren.length === 0) {
-            const text = document.createTextNode(element.textContent);
-            element.parentElement.replaceChild(text, element);
-          }
-        });
-
-        return;
-      }
-
-      // Direct children (> *) may have children (*) to flatten too
-      const flattenChildrenChildren = Array.from(span.children).map(
-        (element) => {
-          return this.flattenChildren(action, element);
-        }
-      );
-
-      if (!flattenChildrenChildren || flattenChildrenChildren.length <= 0) {
-        return;
-      }
-
-      await Promise.all(flattenChildrenChildren);
-    },
-  },
-  watch: {
-    getSelectedWidgetById: function(widget) {
-      if (widget.type !== "text") this.displayEditor = false;
-    },
-    preventMove: function(value) {
-      this.displayEditor = value;
-    },
   },
   created() {
     if (this.item.properties.style === null) {
@@ -554,11 +528,11 @@ export default {
     }
   },
   mounted() {
-    console.log(this.item.properties.text);
+    // console.log(this.item.properties.text);
     if (this.item.properties.text === "Write your text here") {
-      document.getElementById(this.item.i).innerHTML =
-        // "<p>Write your text here</p>";
-        `<p id="p">Example: <i>italic</i> and <b>bold</b></p>`;
+      document.getElementById(
+        this.item.i
+      ).innerHTML = `<p style="font-size: 48px">Write your text here</p>`;
     } else {
       document.getElementById(
         this.item.i
@@ -567,6 +541,16 @@ export default {
   },
   updated() {
     this.onTextHeight();
+    // const x = window.getSelection();
+    // if (x.toString().length) {
+    //   console.log(x.getRangeAt(0).commonAncestorContainer.parentNode.nodeName);
+    //   console.log(
+    //     x.getRangeAt(0).commonAncestorContainer.parentNode.childNodes.forEach(element => {
+    //       element.nodeType
+    //     })
+    //   );
+    // }
+
     // this.calcHeight();
     // this.item = this.getSelectedWidgetById;
     // var text = "";
@@ -681,5 +665,11 @@ textarea {
   flex-flow: column;
   /* -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none; */
+}
+.v-application a {
+  text-decoration: none !important;
+}
+::v-deep .v-application a {
+  color: inherit !important;
 }
 </style>

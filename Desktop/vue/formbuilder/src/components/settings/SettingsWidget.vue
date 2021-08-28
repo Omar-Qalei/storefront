@@ -93,5 +93,6 @@ export default {
 .widget-settings {
   position: absolute;
   top: -40px;
+  min-width: 112px;
 }
 </style>

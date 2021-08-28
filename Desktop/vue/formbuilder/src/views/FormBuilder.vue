@@ -96,6 +96,7 @@ export default {
       "onSelectedWidgetById",
       "onResizeSectionScreen",
       "addNewSection",
+      "onHistoryPages",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -129,9 +130,14 @@ export default {
           const data = result.data.data;
           if (data) {
             this.fetchWebResources(JSON.parse(data.web));
+            this.onHistoryPages({
+              saved: false,
+              web: JSON.parse(data.web),
+              mobile: JSON.parse(data.mobile),
+            });
             this.fetchMobileResources(JSON.parse(data.mobile));
             JSON.parse(data.web)
-              ? this.fetchSections(JSON.parse(data.web))
+              ? this.fetchSections(this.getWebResources)
               : this.fetchSections([]);
 
             this.onSelectedWidgetById(this.getSections[0]);
@@ -150,13 +156,13 @@ export default {
       let width = event.target.outerWidth - event.target.innerWidth;
       width = event.target.outerWidth - width;
       if (width <= 920) {
-        console.log(width);
         this.onResizeSectionScreen({
           width: "379px",
           responsive: false,
-          cols: 1,
+          cols: 2,
           screen: "mobile",
         });
+        // this.setMobileStyles();
       } else {
         this.onResizeSectionScreen({
           width: "100%",
@@ -164,8 +170,74 @@ export default {
           cols: 24,
           screen: "web",
         });
+        // this.setWebStyles();
       }
     },
+    // setWebStyles: function() {
+    //   var sheet = document.createElement("style");
+    //   sheet.innerHTML = `
+    //   .h1 {
+    //     font-size: 80px !important;
+    // }
+    // .h2 {
+    //     font-size: 64px !important;
+    // }
+    // .h3 {
+    //     font-size: 48px !important;
+    // }
+    // .h4 {
+    //     font-size: 40px !important;
+    // }
+    // .h5 {
+    //     font-size: 32px !important;
+    // }
+    // .h6 {
+    //     font-size: 24px !important;
+    // }
+    // .p1 {
+    //     font-size: 18px !important;
+    // }
+    // .p2 {
+    //     font-size: 16px !important;
+    // }
+    // .p3 {
+    //     font-size: 14px !important;
+    // }
+    //   `;
+    //   document.body.appendChild(sheet);
+    // },
+    // setMobileStyles: function() {
+    //   var sheet = document.createElement("style");
+    //   sheet.innerHTML = `
+    //   .h1 {
+    //     font-size: 44px !important;
+    // }
+    // .h2 {
+    //     font-size: 36px !important;
+    // }
+    // .h3 {
+    //     font-size: 32px !important;
+    // }
+    // .h4 {
+    //     font-size: 28px !important;
+    // }
+    // .h5 {
+    //     font-size: 24px !important;
+    // }
+    // .h6 {
+    //     font-size: 20px !important;
+    // }
+    // .p1 {
+    //     font-size: 18px !important;
+    // }
+    // .p2 {
+    //     font-size: 16px !important;
+    // }
+    // .p3 {
+    //     font-size: 14px !important;
+    // }`;
+    //   document.body.appendChild(sheet);
+    // },
   },
   watch: {
     getSelectedPage: function(pageId) {
@@ -186,7 +258,7 @@ export default {
     //   this.onResizeSectionScreen({
     //     width: "100%",
     //     responsive: false,
-    //     cols: 1,
+    //     cols: 2,
     //     screen: "mobile",
     //   });
     // } else {

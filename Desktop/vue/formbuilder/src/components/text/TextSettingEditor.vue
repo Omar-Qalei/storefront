@@ -13,7 +13,7 @@
           {{ fontSizes[selectedFontSize].title }}
           <span class="ml-15"
             ><span class="text-grey">{{
-              fontSizes[selectedFontSize].value
+              fontSizes[selectedFontSize].valueSize
             }}</span
             ><v-icon>mdi-menu-down</v-icon></span
           >
@@ -27,6 +27,7 @@
             v-for="(item, i) in fontSizes"
             :key="i"
             link
+            @click="onChangeFontSize(item.value)"
           >
             <v-list-item-icon class="mr-2">
               <v-icon v-show="selectedFontSize === item.id">mdi-check</v-icon>
@@ -35,7 +36,7 @@
               <div class="d-flex align-center">
                 <span :style="{ fontSize: item.size }">{{ item.title }}</span>
                 <v-spacer></v-spacer>
-                {{ item.value }}
+                {{ item.valueSize }}
               </div>
             </v-list-item-title>
           </v-list-item>
@@ -58,6 +59,7 @@
             v-for="(item, i) in fontFamilies"
             :key="i"
             link
+            @click="onChangeFontFamily()"
           >
             <v-list-item-icon class="mr-2">
               <v-icon v-show="selectedFontFamily === item.id">mdi-check</v-icon>
@@ -68,10 +70,14 @@
       </v-list>
     </v-menu>
     <!-- Font Family -->
+
     <!-- Color -->
     <span class="mr-4">
       <ColorPickerWidget
-        @colorElement="textColor = $event"
+        @colorElement="
+          textColor = $event;
+          onChangeFontColor();
+        "
         :type="elementStatus"
         :color="textColor"
       />
@@ -95,13 +101,14 @@
         :value="text.id"
         color="black"
         class="ma-0 mr-4"
+        @click="onChangeFont(text.click)"
       >
         <v-icon>{{ text.icon }}</v-icon>
       </v-btn>
     </v-btn-toggle>
 
-    <!-- Font Type -->
-    <v-menu bottom origin="center center" transition="scale-transition">
+    <!-- Font Letter Type -->
+    <!-- <v-menu bottom origin="center center" transition="scale-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           color="black"
@@ -115,12 +122,16 @@
       </template>
       <v-list>
         <v-list-item-group v-model="selectedLetterCase" color="primary">
-          <v-list-item v-for="(item, i) in letterCases" :key="i">
+          <v-list-item
+            v-for="(item, i) in letterCases"
+            :key="i"
+            @click="onChangeFontTransform()"
+          >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-menu>
+    </v-menu> -->
 
     <!-- Alignment -->
     <v-menu offset-y>
@@ -131,7 +142,12 @@
       </template>
 
       <v-btn-toggle return-object v-model="selectedTextHorizontal">
-        <v-btn v-for="text in textHorizontal" :key="text.id" :value="text.id">
+        <v-btn
+          v-for="text in textHorizontal"
+          :key="text.id"
+          :value="text.id"
+          @click="onChangeTextAlignment(text.title)"
+        >
           <v-icon>{{ text.icon }}</v-icon>
         </v-btn>
       </v-btn-toggle>
@@ -143,6 +159,7 @@
       offset-y
       :nudge-width="200"
       :close-on-content-click="false"
+      :close-on-click="false"
       :style="{ minHeight: '400px' }"
       attach
     >
@@ -211,6 +228,11 @@
             hide-details
           ></v-text-field>
         </v-col>
+        <v-col cols="12">
+          <v-row justify="end"
+            ><v-btn @click="onChangeLink()" text>save</v-btn></v-row
+          >
+        </v-col>
       </v-row>
     </v-menu>
     <!-- Links -->
@@ -230,20 +252,89 @@ export default {
       textColor: "#000000de",
       elementStatus: "element",
       fontSizes: [
-        { id: 0, title: "Heading 1", value: "60px", size: "32px" },
-        { id: 1, title: "Heading 2", value: "56px", size: "30px" },
-        { id: 2, title: "Heading 3", value: "48px", size: "26px" },
-        { id: 3, title: "Heading 4", value: "40px", size: "22px" },
-        { id: 4, title: "Heading 5", value: "32px", size: "18px" },
-        { id: 5, title: "Heading 6", value: "24px", size: "14px" },
-        { id: 6, title: "Paragraph 1", value: "18px", size: "18px" },
-        { id: 7, title: "Paragraph 2", value: "16px", size: "16px" },
-        { id: 8, title: "Paragraph 3", value: "14px", size: "14px" },
+        {
+          id: 0,
+          title: "Heading 1",
+          value: "h1",
+          labelSize: "32px",
+          valueSize: "80px",
+        },
+        {
+          id: 1,
+          title: "Heading 2",
+          value: "h2",
+          labelSize: "30px",
+          valueSize: "64px",
+        },
+        {
+          id: 2,
+          title: "Heading 3",
+          value: "h3",
+          labelSize: "26px",
+          valueSize: "48px",
+        },
+        {
+          id: 3,
+          title: "Heading 4",
+          value: "h4",
+          labelSize: "22px",
+          valueSize: "40px",
+        },
+        {
+          id: 4,
+          title: "Heading 5",
+          value: "h5",
+          labelSize: "18px",
+          valueSize: "32px",
+        },
+        {
+          id: 5,
+          title: "Heading 6",
+          value: "h6",
+          labelSize: "14px",
+          valueSize: "32px",
+        },
+        {
+          id: 6,
+          title: "Paragraph 1",
+          value: "p1",
+          labelSize: "18px",
+          valueSize: "24px",
+        },
+        {
+          id: 7,
+          title: "Paragraph 2",
+          value: "p2",
+          labelSize: "16px",
+          valueSize: "16px",
+        },
+        {
+          id: 8,
+          title: "Paragraph 3",
+          value: "p3",
+          labelSize: "14px",
+          valueSize: "14px",
+        },
       ],
       textTypes: [
-        { id: 0, title: "bold", icon: "mdi-format-bold" },
-        { id: 1, title: "italic", icon: "mdi-format-italic" },
-        { id: 2, title: "underline", icon: "mdi-format-underline" },
+        {
+          id: 0,
+          title: "bold",
+          icon: "mdi-format-bold",
+          click: "bold",
+        },
+        {
+          id: 1,
+          title: "italic",
+          icon: "mdi-format-italic",
+          click: "italic",
+        },
+        {
+          id: 2,
+          title: "underline",
+          icon: "mdi-format-underline",
+          click: "underline",
+        },
       ],
       selectedTextType: [],
       selectedFontSize: 2,
@@ -253,7 +344,7 @@ export default {
         { id: 1, title: "center", icon: "mdi-format-align-center" },
         { id: 2, title: "right", icon: "mdi-format-align-right" },
       ],
-      selectedTextHorizontal: 1,
+      selectedTextHorizontal: 0,
       letterCases: [
         { id: 0, title: "Auto", value: "none", icon: "mdi-text" },
         {
@@ -315,7 +406,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById", "getPages"]),
+    ...mapGetters(["getSelectedWidgetById", "getPages", "getScreenSize"]),
     fontWeight: function() {
       const index = this.selectedTextType.findIndex(
         (element) => element === this.textTypes[0].id
@@ -347,18 +438,523 @@ export default {
       }
     },
   },
+  methods: {
+    onChangeFontSize: function(value) {
+      // if (this.getScreenSize.screen === "web") {
+      //   // this.fontSizeScreen.web = value;
+      //   // if (this.fontSizeScreen.mobile === null)
+      //   //   this.fontSizeScreen.mobile = value;
+      // }
+
+      // if (this.getScreenSize.screen === "mobile") {
+      //   this.fontSizeScreen.mobile = value;
+      // }
+
+      const styles = {
+        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+        fontWeight: this.fontWeight,
+        fontStyle: this.fontStyle,
+        textDecoration: this.textDecoration,
+        color: this.textColor,
+        textTransform: this.letterCases[this.selectedLetterCase].value,
+        fontSize: value,
+        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+      };
+      this.$emit("onChangeFontSize", styles);
+    },
+    onChangeFontFamily: function() {
+      const styles = {
+        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+        fontWeight: this.fontWeight,
+        fontStyle: this.fontStyle,
+        textDecoration: this.textDecoration,
+        color: this.textColor,
+        textTransform: this.letterCases[this.selectedLetterCase].value,
+        fontSize: this.fontSizes[this.selectedFontSize].value,
+        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+      };
+      this.$emit("onChangeFontFamily", styles);
+    },
+    onChangeFontColor: function() {
+      const styles = {
+        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+        fontWeight: this.fontWeight,
+        fontStyle: this.fontStyle,
+        textDecoration: this.textDecoration,
+        color: this.textColor,
+        textTransform: this.letterCases[this.selectedLetterCase].value,
+        fontSize: this.fontSizes[this.selectedFontSize].value,
+        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+      };
+      this.$emit("onChangeFontColor", styles);
+    },
+    onChangeFont: function(action) {
+      let styles;
+      console.log("hello");
+      switch (action) {
+        case "bold":
+          styles = {
+            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+            fontWeight: this.fontWeight,
+            fontStyle: this.fontStyle,
+            textDecoration: this.textDecoration,
+            color: this.textColor,
+            textTransform: this.letterCases[this.selectedLetterCase].value,
+            fontSize: this.fontSizes[this.selectedFontSize].value,
+            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+          };
+          this.$emit("onChangeFontBold", styles);
+          break;
+
+        case "italic":
+          styles = {
+            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+            fontWeight: this.fontWeight,
+            fontStyle: this.fontStyle,
+            textDecoration: this.textDecoration,
+            color: this.textColor,
+            textTransform: this.letterCases[this.selectedLetterCase].value,
+            fontSize: this.fontSizes[this.selectedFontSize].value,
+            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+          };
+          this.$emit("onChangeFontStyle", styles);
+          break;
+
+        case "underline":
+          styles = {
+            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+            fontWeight: this.fontWeight,
+            fontStyle: this.fontStyle,
+            textDecoration: this.textDecoration,
+            color: this.textColor,
+            textTransform: this.letterCases[this.selectedLetterCase].value,
+            fontSize: this.fontSizes[this.selectedFontSize].value,
+            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+          };
+          this.$emit("onChangeFontUnderline", styles);
+          break;
+      }
+    },
+    onChangeFontTransform: function() {
+      const styles = {
+        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
+        fontWeight: this.fontWeight,
+        fontStyle: this.fontStyle,
+        textDecoration: this.textDecoration,
+        color: this.textColor,
+        textTransform: this.letterCases[this.selectedLetterCase].value,
+        fontSize: this.fontSizes[this.selectedFontSize].value,
+        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+      };
+      this.$emit("onChangeFontTransform", styles);
+    },
+    onChangeTextAlignment: function(value) {
+      const styles = {
+        textAlign: value,
+        fontWeight: this.fontWeight,
+        fontStyle: this.fontStyle,
+        textDecoration: this.textDecoration,
+        color: this.textColor,
+        textTransform: this.letterCases[this.selectedLetterCase].value,
+        fontSize: this.fontSizes[this.selectedFontSize].value,
+        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
+      };
+      this.$emit("onChangeTextAlignment", styles);
+    },
+    onChangeLink: function() {
+      var fontElements = window.getSelection();
+      var fontElementsStatus = fontElements.toString().length > 0;
+      if (fontElementsStatus)
+        if (fontElements && fontElements.anchorNode) {
+          switch (this.selectedLinkTo) {
+            case 0:
+              document.execCommand(
+                "createLink",
+                false,
+                this.getSelectedWidgetById.properties.page
+              );
+              break;
+            case 1:
+              document.execCommand(
+                "createLink",
+                false,
+                this.getSelectedWidgetById.properties.url
+              );
+              break;
+            case 2:
+              document.execCommand(
+                "createLink",
+                false,
+                "tel:" + this.getSelectedWidgetById.properties.phone
+              );
+              break;
+            case 3:
+              document.execCommand(
+                "createLink",
+                false,
+                "mailto:" + this.getSelectedWidgetById.properties.email
+              );
+              break;
+          }
+        }
+    },
+  },
+  watch: {
+    selectedLinkTo: function(value) {
+      this.getSelectedWidgetById.properties.selectedLinkTo = value;
+    },
+    getScreenSize: function(event) {
+      if (event.screen === "web") {
+        this.fontSizes = [
+          {
+            id: 0,
+            title: "Heading 1",
+            value: "h1",
+            labelSize: "32px",
+            valueSize: "80px",
+          },
+          {
+            id: 1,
+            title: "Heading 2",
+            value: "h2",
+            labelSize: "30px",
+            valueSize: "64px",
+          },
+          {
+            id: 2,
+            title: "Heading 3",
+            value: "h3",
+            labelSize: "26px",
+            valueSize: "48px",
+          },
+          {
+            id: 3,
+            title: "Heading 4",
+            value: "h4",
+            labelSize: "22px",
+            valueSize: "40px",
+          },
+          {
+            id: 4,
+            title: "Heading 5",
+            value: "h5",
+            labelSize: "18px",
+            valueSize: "32px",
+          },
+          {
+            id: 5,
+            title: "Heading 6",
+            value: "h6",
+            labelSize: "14px",
+            valueSize: "32px",
+          },
+          {
+            id: 6,
+            title: "Paragraph 1",
+            value: "p1",
+            labelSize: "18px",
+            valueSize: "24px",
+          },
+          {
+            id: 7,
+            title: "Paragraph 2",
+            value: "p2",
+            labelSize: "16px",
+            valueSize: "16px",
+          },
+          {
+            id: 8,
+            title: "Paragraph 3",
+            value: "p3",
+            labelSize: "14px",
+            valueSize: "14px",
+          },
+        ];
+      } else {
+        this.fontSizes = [
+          {
+            id: 0,
+            title: "Heading 1",
+            value: "h1",
+            labelSize: "32px",
+            valueSize: "44px",
+          },
+          {
+            id: 1,
+            title: "Heading 2",
+            value: "h2",
+            labelSize: "30px",
+            valueSize: "36px",
+          },
+          {
+            id: 2,
+            title: "Heading 3",
+            value: "h3",
+            labelSize: "26px",
+            valueSize: "32px",
+          },
+          {
+            id: 3,
+            title: "Heading 4",
+            value: "h4",
+            labelSize: "22px",
+            valueSize: "28px",
+          },
+          {
+            id: 4,
+            title: "Heading 5",
+            value: "h5",
+            labelSize: "18px",
+            valueSize: "24px",
+          },
+          {
+            id: 5,
+            title: "Heading 6",
+            value: "h6",
+            labelSize: "14px",
+            valueSize: "20px",
+          },
+          {
+            id: 6,
+            title: "Paragraph 1",
+            value: "p1",
+            labelSize: "18px",
+            valueSize: "18px",
+          },
+          {
+            id: 7,
+            title: "Paragraph 2",
+            value: "p2",
+            labelSize: "16px",
+            valueSize: "16px",
+          },
+          {
+            id: 8,
+            title: "Paragraph 3",
+            value: "p3",
+            labelSize: "14px",
+            valueSize: "14px",
+          },
+        ];
+      }
+    },
+  },
   updated() {
-    const styles = {
-      textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-      fontWeight: this.fontWeight,
-      fontStyle: this.fontStyle,
-      textDecoration: this.textDecoration,
-      color: this.textColor,
-      textTransform: this.letterCases[this.selectedLetterCase].value,
-      fontSize: this.fontSizes[this.selectedFontSize].value,
-      fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-    };
-    this.$emit("styles", styles);
+    // if (this.i < 2) {
+    //   const p = document.querySelector("#p");
+    //   let range = new Range();
+    //   range.setStart(p.firstChild, 1);
+    //   range.setEnd(p.firstChild, 4);
+    //   // alert(range); // ample: italic and bol
+    //   // use this range for selection (explained later)
+    //   document.getSelection().removeAllRanges();
+    //   window.getSelection().addRange(range);
+    //   var inputRange = p.createTextRange();
+    //   inputRange.moveStart("character", 1);
+    //   inputRange.collapse();
+    //   inputRange.moveEnd("character", 1);
+    //   inputRange.select();
+    //   this.i++;
+    // }
+    // var elemToSelect = document.querySelector("b");
+    // if (window.getSelection) {
+    //   // all browsers, except IE before version 9
+    //   var selection = window.getSelection();
+    //   var rangeToSelect = document.createRange();
+    //   rangeToSelect.selectNodeContents(elemToSelect);
+    //   selection.removeAllRanges();
+    //   selection.addRange(rangeToSelect);
+    // } else {
+    //   if (document.body.createTextRange) {
+    //     // Internet Explorer
+    //     var rangeToSelect2 = document.body.createTextRange();
+    //     rangeToSelect2.moveToElementText(elemToSelect);
+    //     rangeToSelect2.select();
+    //   }
+    // }
+    // document.onselectionchange = function() {
+    //   let selection = document.getSelection();
+    //   if (selection.type === "Range") {
+    //     console.log(selection);
+    //     let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+    //     // anchorNode and focusNode are text nodes usually
+    //     console.log(
+    //       `${anchorNode?.data}, offset ${anchorOffset}`,
+    //       `${focusNode?.data}, offset ${focusOffset}`
+    //     );
+    //     document.createTextR
+    //     // rangeToSelect2.select();
+    //   }
+    // };
+    // if (selection.rangeCount > 0) {
+    //   selection.removeAllRanges();
+    // }
+    // const p = window.getSelection();
+    // console.log(p);
+    // let range = new Range();
+    // range.setStart(p, 2);
+    // range.setEnd(p, 4);
+    // document.getSelection().addRange(range);
+  },
+  created() {
+    // if (this.getScreenSize.screen === "web") {
+    //   this.fontSizes = [
+    //     { id: 0, title: "Heading 1", value: "80px", size: "32px" },
+    //     { id: 1, title: "Heading 2", value: "64px", size: "30px" },
+    //     { id: 2, title: "Heading 3", value: "48px", size: "26px" },
+    //     { id: 3, title: "Heading 4", value: "40px", size: "22px" },
+    //     { id: 4, title: "Heading 5", value: "32px", size: "18px" },
+    //     { id: 5, title: "Heading 6", value: "24px", size: "14px" },
+    //     { id: 6, title: "Paragraph 1", value: "18px", size: "18px" },
+    //     { id: 7, title: "Paragraph 2", value: "16px", size: "16px" },
+    //     { id: 8, title: "Paragraph 3", value: "14px", size: "14px" },
+    //   ];
+    // } else {
+    //   this.fontSizes = [
+    //     { id: 0, title: "Heading 1", value: "44px", size: "32px" },
+    //     { id: 1, title: "Heading 2", value: "36px", size: "30px" },
+    //     { id: 2, title: "Heading 3", value: "32px", size: "26px" },
+    //     { id: 3, title: "Heading 4", value: "28px", size: "22px" },
+    //     { id: 4, title: "Heading 5", value: "24px", size: "18px" },
+    //     { id: 5, title: "Heading 6", value: "20px", size: "14px" },
+    //     { id: 6, title: "Paragraph 1", value: "18px", size: "18px" },
+    //     { id: 7, title: "Paragraph 2", value: "16px", size: "16px" },
+    //     { id: 8, title: "Paragraph 3", value: "14px", size: "14px" },
+    //   ];
+    // }
+    if (this.getScreenSize.screen === "web") {
+      this.fontSizes = [
+        {
+          id: 0,
+          title: "Heading 1",
+          value: "h1",
+          labelSize: "32px",
+          valueSize: "80px",
+        },
+        {
+          id: 1,
+          title: "Heading 2",
+          value: "h2",
+          labelSize: "30px",
+          valueSize: "64px",
+        },
+        {
+          id: 2,
+          title: "Heading 3",
+          value: "h3",
+          labelSize: "26px",
+          valueSize: "48px",
+        },
+        {
+          id: 3,
+          title: "Heading 4",
+          value: "h4",
+          labelSize: "22px",
+          valueSize: "40px",
+        },
+        {
+          id: 4,
+          title: "Heading 5",
+          value: "h5",
+          labelSize: "18px",
+          valueSize: "32px",
+        },
+        {
+          id: 5,
+          title: "Heading 6",
+          value: "h6",
+          labelSize: "14px",
+          valueSize: "32px",
+        },
+        {
+          id: 6,
+          title: "Paragraph 1",
+          value: "p1",
+          labelSize: "18px",
+          valueSize: "24px",
+        },
+        {
+          id: 7,
+          title: "Paragraph 2",
+          value: "p2",
+          labelSize: "16px",
+          valueSize: "16px",
+        },
+        {
+          id: 8,
+          title: "Paragraph 3",
+          value: "p3",
+          labelSize: "14px",
+          valueSize: "14px",
+        },
+      ];
+    } else {
+      this.fontSizes = [
+        {
+          id: 0,
+          title: "Heading 1",
+          value: "h1",
+          labelSize: "32px",
+          valueSize: "44px",
+        },
+        {
+          id: 1,
+          title: "Heading 2",
+          value: "h2",
+          labelSize: "30px",
+          valueSize: "36px",
+        },
+        {
+          id: 2,
+          title: "Heading 3",
+          value: "h3",
+          labelSize: "26px",
+          valueSize: "32px",
+        },
+        {
+          id: 3,
+          title: "Heading 4",
+          value: "h4",
+          labelSize: "22px",
+          valueSize: "28px",
+        },
+        {
+          id: 4,
+          title: "Heading 5",
+          value: "h5",
+          labelSize: "18px",
+          valueSize: "24px",
+        },
+        {
+          id: 5,
+          title: "Heading 6",
+          value: "h6",
+          labelSize: "14px",
+          valueSize: "20px",
+        },
+        {
+          id: 6,
+          title: "Paragraph 1",
+          value: "p1",
+          labelSize: "18px",
+          valueSize: "18px",
+        },
+        {
+          id: 7,
+          title: "Paragraph 2",
+          value: "p2",
+          labelSize: "16px",
+          valueSize: "16px",
+        },
+        {
+          id: 8,
+          title: "Paragraph 3",
+          value: "p3",
+          labelSize: "14px",
+          valueSize: "14px",
+        },
+      ];
+    }
   },
 };
 </script>
