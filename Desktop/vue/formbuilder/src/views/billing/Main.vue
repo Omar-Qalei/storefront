@@ -9,20 +9,20 @@
         <v-tab>
           Billing History
         </v-tab>
-             <v-tab>
+        <v-tab>
           Payment Methods
         </v-tab>
       </v-tabs>
       <v-divider></v-divider>
       <v-tabs-items v-model="tab">
-         <v-tab-item>
-          <Subscription/>  
+        <v-tab-item>
+          <Subscription @goToPath="goToPath($event)" />
         </v-tab-item>
         <v-tab-item>
-          <Invoices/>
+          <Invoices />
         </v-tab-item>
         <v-tab-item>
-          <PaymentMethods/>
+          <PaymentMethods />
         </v-tab-item>
       </v-tabs-items>
     </v-card>
@@ -30,32 +30,35 @@
 </template>
 
 <script>
-import Invoices from "./components/Invoices.vue"; 
-import Subscription from "./components/Subscription.vue"; 
-import PaymentMethods from "./components/PaymentMethods.vue"; 
+import Invoices from "./components/Invoices.vue";
+import Subscription from "./components/Subscription.vue";
+import PaymentMethods from "./components/PaymentMethods.vue";
 
 export default {
   name: "Main",
   components: {
-    Invoices,  
+    Invoices,
     Subscription,
-    PaymentMethods
+    PaymentMethods,
   },
   data() {
     return {
       tab: null,
-      plan:null,
-      hasPlans:null,
+      plan: null,
+      hasPlans: null,
     };
   },
-methods:{
-  updateSelectedPlan(plan){ 
-    this.plan= plan
+  methods: {
+    updateSelectedPlan(plan) {
+      this.plan = plan;
     },
-    showPlans(hasPlans){ 
-    this.hasPlans = hasPlans;
-    }
-  }
+    showPlans(hasPlans) {
+      this.hasPlans = hasPlans;
+    },
+    goToPath: function(path) {
+      this.$emit("goToPath", path);
+    },
+  },
 };
 </script>
 

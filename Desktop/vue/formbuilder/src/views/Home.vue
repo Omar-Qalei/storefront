@@ -5,11 +5,12 @@
       <v-main>
         <Navbar class="navbar" :path="path" @goToPath="goToPath($event)" />
         <v-slide-y-transition hide-on-leave>
-          <Contacts v-if="this.path === 'contacts'" />
-          <Sites v-if="this.path === 'sites'" />
-          <Billing v-if="this.path === 'billing'" />
-          <Marketing v-if="this.path === 'marketing'" />
-          <Account v-if="this.path === 'account'" />
+          <Contacts v-if="path === 'contacts'" />
+          <Sites v-if="path === 'sites'" />
+          <Billing v-if="path === 'billing'" @goToPath="goToPath($event)" />
+          <Marketing v-if="path === 'marketing'" />
+          <Account v-if="path === 'account'" />
+          <Plan v-if="path === 'plans'" />
         </v-slide-y-transition>
       </v-main>
     </div>
@@ -24,17 +25,28 @@ import Sidebar from "../layouts/home/Sidebar";
 import Marketing from "./marketing/Main";
 import Billing from "./billing/Main";
 import Account from "./account/Main";
+import Plan from "./plans/Main";
 
 export default {
   name: "Home",
-  components: { Sidebar, Navbar, Contacts, Sites, Billing, Marketing, Account },
+  components: {
+    Sidebar,
+    Navbar,
+    Contacts,
+    Sites,
+    Billing,
+    Marketing,
+    Account,
+    Plan,
+  },
   data() {
     return {
-      path: "sites",
+      path: "plans",
     };
   },
   methods: {
     goToPath: function(path) {
+      console.log(path);
       this.path = path;
     },
   },

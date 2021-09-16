@@ -17,7 +17,30 @@ export class ApiConfiguration {
     static contacts = {
         url: 'contacts',
     }
+    static plans = {
+        url: 'plans',
+    }
+    static subscriptions = {
+        url: 'subscriptions',
+    }
     static company = {
         url: 'company',
+    }
+    static account = {
+        url: 'user',
+    }
+    static invoices = {
+        url: 'invoices',
+    }
+    static paymentMethods = {
+        url: 'payment-methods',
+    }
+    static paymentMethodsDefault = {
+        url: 'payment-methods/default',
+    }
+    static marketing = {
+        url: 'marketing',
+        senders: 'marketing/senders',
+        storeSenders: 'marketing/senders/store'
     }
 }
