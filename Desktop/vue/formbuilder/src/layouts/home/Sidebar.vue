@@ -2,6 +2,7 @@
   <div>
     <div class="d-flex settings">
       <v-navigation-drawer
+        width="200"
         height="100%"
         v-model="drawer"
         :permanent="drawer"
@@ -110,7 +111,7 @@ export default {
             { text: "Mailing Lists", url: "mailingLists" },
             { text: "Sender", url: "sender" },
           ],
-        },
+        }
       ],
     };
   },
@@ -132,7 +133,6 @@ export default {
 
 <style scoped>
 .sidebar {
-  /* width: 240px; */
   box-shadow: 0 10px 20px 0 rgb(0 0 0 / 5%);
   justify-content: center;
   flex-wrap: wrap;

@@ -48,6 +48,8 @@
       "
       :style="{ textAlign: styles.textAlign }"
       unselectable="on"
+      @mouseleave="status = true"
+      @mouseover="status = false"
     >
       <!-- 
       @input="onInput"
@@ -106,6 +108,7 @@
 import TextSettingEditor from "./TextSettingEditor";
 import TextSetting from "./TextSetting";
 import { mapGetters, mapActions } from "vuex";
+import { SiteService } from "../../services/site/site";
 // import styles from "../../mixins/styles";
 
 export default {
@@ -117,6 +120,7 @@ export default {
   },
   data() {
     return {
+      status: false,
       hover: false,
       range: null,
       details: {},
@@ -150,9 +154,16 @@ export default {
     item: {},
     sectionId: Number,
     preventMove: Boolean,
+    siteId: Number,
+    pageId: Number,
   },
   computed: {
-    ...mapGetters(["getSelectedWidgetById", "getScreenSize"]),
+    ...mapGetters([
+      "getSelectedWidgetById",
+      "getScreenSize",
+      "getWebResources",
+      "getMobileResources",
+    ]),
   },
   watch: {
     getSelectedWidgetById: function(widget) {
@@ -173,6 +184,7 @@ export default {
       "onTextHeight",
       "onCheckGridHeight",
       "onCheckUpdateSectionLayoutResized",
+      "onHistoryPages",
     ]),
     onHover: function(elementHover) {
       if (this.hover) {
@@ -213,6 +225,7 @@ export default {
     },
     onInput: function(e) {
       this.item.properties.text = e.target.innerHTML;
+      console.log(this.item.properties.text);
     },
     onKeyEnter: function() {
       document.execCommand("defaultParagraphSeparator", false, "p");
@@ -538,6 +551,45 @@ export default {
         this.item.i
       ).innerHTML = this.item.properties.text;
     }
+    const thiz = this;
+    window.addEventListener("click", () => {
+      if (thiz.item.i !== thiz.getSelectedWidgetById.i && thiz.status) {
+        const webResources = JSON.stringify(thiz.getWebResources);
+        const mobileResources = JSON.stringify(thiz.getMobileResources);
+        thiz.onHistoryPages({
+          saved: false,
+          web: JSON.parse(webResources),
+          mobile: JSON.parse(mobileResources),
+        });
+        SiteService.addSitePageResourceWeb(
+          thiz.siteId,
+          thiz.pageId,
+          JSON.stringify(thiz.getWebResources)
+        )
+          .then((result) => {
+            console.log("Web posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        SiteService.addSitePageResourceMobile(
+          thiz.siteId,
+          thiz.pageId,
+          JSON.stringify(thiz.getMobileResources)
+        )
+          .then((result) => {
+            console.log("Mobile posted", result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+    // document
+    //   .getElementById(this.item.i)
+    //   .addEventListener("compositionupdate", () => {
+    //     console.log("checked");
+    //   });
   },
   updated() {
     this.onTextHeight();
@@ -614,6 +666,9 @@ export default {
     //   // range.insertNode(span);
     // }
   },
+  destroyed() {
+    console.log("destroyed");
+  },
 };
 </script>
 
@@ -663,6 +718,8 @@ textarea {
   height: 100%;
   max-height: 100%;
   flex-flow: column;
+  outline: none;
+  box-shadow: none;
   /* -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none; */
 }

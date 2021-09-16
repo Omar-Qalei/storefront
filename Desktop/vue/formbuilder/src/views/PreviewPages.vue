@@ -38,6 +38,8 @@
               width: getScreenSize.width,
             },
             item.properties.style,
+            getDefaultContent(item),
+            getDefaultDesign(item),
           ]"
         >
           <template v-if="item.properties.backgroundVideo">
@@ -252,6 +254,18 @@ export default {
     goTo: function(path) {
       this.$emit("pagePath", path);
       this.onShowMenu();
+    },
+    getDefaultDesign: function(item) {
+      console.log("design", item.properties.style);
+      if (item.properties.style)
+        if (item.properties.style.design)
+          if (item.properties.style.design[this.getScreenSize.screen]) {
+            return item.properties.style.design[this.getScreenSize.screen];
+          }
+    },
+    getDefaultContent: function(item) {
+      if (item.properties.style)
+        if (item.properties.style.content) return item.properties.style.content;
     },
   },
   created() {

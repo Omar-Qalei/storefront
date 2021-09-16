@@ -126,14 +126,14 @@ export default {
   data() {
     return {
       valid: true,
-      password: "123123",
+      password: "123123123",
       show1: false,
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
           (v && v.length <= 10) || "Password must be less than 10 characters",
       ],
-      email: "test@mail.com",
+      email: "ashraf@test.com",
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",

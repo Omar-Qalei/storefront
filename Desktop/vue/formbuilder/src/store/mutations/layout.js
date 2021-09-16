@@ -16,6 +16,9 @@ export const setSelectedPage = (state, payload) => {
 
 export const setLoadingPage = (state, payload) => {
     state.loading = payload;
+    // state.historyList.length = 1;
+    // state.undoRedo = state.historyList.length - 1;
+    // state.redoStatus = true;
 }
 
 export const setHistoryPages = (state, payload) => {
@@ -27,6 +30,7 @@ export const setHistoryPages = (state, payload) => {
     // state.undoRedo = state.historyList.length - 1;
     // state.undoStatus = false;
     // state.redoStatus = false;
+    console.log(state.historyList)
     state.undoRedo = state.historyList.length - 1;
     // Object.seal(state.webResources)
     if (state.historyList.length - 1 > 0) {
@@ -47,8 +51,12 @@ export const setUndoPage = (state) => {
     if (state.undoRedo <= 0) state.undoStatus = true;
     if (state.historyList.length) state.redoStatus = false;
     // const type = state.historyList[state.undoRedo].type;
-    state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
-    console.log(state.historyList, state.undoRedo)
+    const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
+    const sections = JSON.parse(page);
+    // state.webResources = sections;
+    // state.sections = state.webResources;
+    state.sections = sections;
+    // console.log(state.historyList, state.undoRedo)
     // state.sections = state.historyList[state.undoRedo];
 }
 
@@ -91,11 +99,14 @@ export const setRedoPage = (state) => {
     // state.historyWeb = payload;
 
     // console.log('undoRedo: ', state.undoRedo, 'undoStatus: ', state.undoStatus, 'redoStatus: ', state.redoStatus);
-    // console.log('undoRedo: ', state.undoRedo, state.historyList);
+    console.log('undoRedo: ', state.undoRedo, state.historyList);
     // console.log('undoRedo', state.historyList[1][0].resources[0])
     // state.sections = state.historyList[state.undoRedo];
     // state.mobileResources = state.mobileHistory[state.undoRedo];
     // const type = state.historyList[state.undoRedo].type;
-    console.log(state.historyList, state.undoRedo)
-    state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
+    const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
+    const sections = JSON.parse(page);
+    // state.webResources = sections;
+    // state.sections = state.webResources;
+    state.sections = sections;
 }

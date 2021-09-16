@@ -142,15 +142,19 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(item, i) in userprofile"
-            :key="i"
-            :to="item.to"
-            @click="href(item.to)"
-            link
-          >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
+          <template v-for="(item, i) in userprofile">
+            <v-list-item
+              :key="i"
+              @click="goToPath(item.url)"
+              link
+              v-if="item.status"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item :key="i" :to="item.url" link v-if="!item.status">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </template>
         </v-list>
       </v-menu>
       <!-- ---------------------------------- -->
@@ -200,27 +204,6 @@ export default {
         desc: "Just see the my new admin!",
         time: "9:30AM",
       },
-      {
-        title: "Event today",
-        iconbg: "success",
-        icon: "mdi-calendar-check",
-        desc: "Just a reminder that you have event",
-        time: "10:30AM",
-      },
-      {
-        title: "Settings",
-        iconbg: "info",
-        icon: "mdi-cog",
-        desc: "You can customize this template as you want",
-        time: "11:30AM",
-      },
-      {
-        title: "Pavan Kumar",
-        iconbg: "indigo",
-        icon: "mdi-account",
-        desc: "Sent you an notification",
-        time: "12:30AM",
-      },
     ],
     messages: [
       {
@@ -230,34 +213,11 @@ export default {
         desc: "Singing Show tonigh at 9pm!",
         time: "9:30AM",
       },
-      {
-        title: "Sonu Nigam",
-        avatar: "2",
-        avatarstatus: "error",
-        desc: "The greate malody songs ever sung",
-        time: "10:30AM",
-      },
-      {
-        title: "Arijit singh",
-        avatar: "3",
-        avatarstatus: "warning",
-        desc: "You can customize this template as you want",
-        time: "11:30AM",
-      },
-      {
-        title: "Pavan Kumar",
-        avatar: "4",
-        avatarstatus: "success",
-        desc: "Sent you an notification",
-        time: "12:30AM",
-      },
     ],
     userprofile: [
-      { title: "My Contacts", to: "/apps/contact" },
-      { title: "My Balance", to: "/apps/contact-grid" },
-      { title: "Inbox", to: "/apps/email/inbox" },
-      { title: "Account Setting", to: "/form-layouts/flformbasic" },
-      { title: "Logout", to: "/login" },
+      { title: "My Account", url: "account", status: true },
+      { title: "Payments and Billing", url: "billing", status: true },
+      { title: "Logout", url: "/login", status: false },
     ],
   }),
 
@@ -276,8 +236,10 @@ export default {
       this.showSearch = !this.showSearch;
     },
     href: function(path) {
-      console.log(path === "/login");
       if (path === "/login") localStorage.removeItem("user");
+    },
+    goToPath: function(path) {
+      this.$emit("goToPath", path);
     },
   },
 };

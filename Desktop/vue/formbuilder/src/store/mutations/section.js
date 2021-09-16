@@ -124,68 +124,74 @@ export const duplicateResourceMobile = (state, payload) => {
 };
 
 export const removeResource = (state, payload) => {
-    if (state.redoStatus) {
-        state.selectedWidget = { i: null };
-        let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
-        const index = state.sections.findIndex((item) => item.id === payload.id);
-        if (refIndex > -1 && index > -1) {
-            // This will not effect if I use web or mobile index will search by gridKey
-            let refGrid = state.mobileResources[index].resources.findIndex(element => element.gridKey === payload.gridKey);
-            state.properties.refGridLayout.$children.forEach(element => element.$refs.item.style.transition = "none");
-            state.webResources[index].resources.splice(refGrid, 1);
-            state.mobileResources[index].resources.splice(refGrid, 1);
-            // state.webResources[index].resources[refGrid] = null;
-            // state.mobileResources[index].resources[refGrid] = null;
-            // state.webResources[index].resources.filter(value => Object.keys(value).length !== 0);
-            // state.mobileResources[index].resources.filter(value => Object.keys(value).length !== 0)
-            // state.webResources[index].resources.splice(refGrid, 1);
-            // state.mobileResources[index].resources.splice(refGrid, 1);
-        }
-        const webResources = JSON.stringify(state.webResources);
-        const mobileResources = JSON.stringify(state.mobileResources);
-        const object = {
-            saved: false,
-            web: JSON.parse(webResources),
-            mobile: JSON.parse(mobileResources)
-        }
-        setHistoryPages(state, object);
-        SiteService.addSitePageResourceWeb(
-            state.siteId,
-            state.pageId,
-            JSON.stringify(state.webResources)
-        )
-            .then((result) => {
-                console.log("Web remove resources posted", result);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        SiteService.addSitePageResourceMobile(
-            state.siteId,
-            state.pageId,
-            JSON.stringify(state.mobileResources)
-        )
-            .then((result) => {
-                console.log("Mobile remove resources posted", result);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    } else {
-        let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
-        const index = state.sections.findIndex((item) => item.id === payload.id);
-        if (refIndex > -1 && index > -1) {
-            state.properties.refGridLayout.$children.forEach(element => element.$refs.item.style.transition = "none");
-            // This will not effect if I use web or mobile index will search by gridKey
-            let refGrid = state.historyList[state.undoRedo][state.screenSize.screen][index].resources.findIndex(element => element.gridKey === payload.gridKey);
-            const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
-            const sections = JSON.parse(page);
-            // console.log('',sections[index].resources);
-            state.sections = sections[index].resources.splice(refGrid, 1);
-            state.undoRedo = state.historyList.length - 1;
-            state.redoStatus = true;
-        }
+    // eslint-disable-next-line no-constant-condition
+    // if (false) {
+    state.selectedWidget = { i: null };
+    let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
+    const index = state.sections.findIndex((item) => item.id === payload.id);
+    if (refIndex > -1 && index > -1) {
+        // This will not effect if I use web or mobile index will search by gridKey
+        let refGrid = state.mobileResources[index].resources.findIndex(element => element.gridKey === payload.gridKey);
+        state.properties.refGridLayout.$children.forEach(element => element.$refs.item.style.transition = "none");
+        state.webResources[index].resources.splice(refGrid, 1);
+        state.mobileResources[index].resources.splice(refGrid, 1);
+        // state.webResources[index].resources[refGrid] = null;
+        // state.mobileResources[index].resources[refGrid] = null;
+        // state.webResources[index].resources.filter(value => Object.keys(value).length !== 0);
+        // state.mobileResources[index].resources.filter(value => Object.keys(value).length !== 0)
+        // state.webResources[index].resources.splice(refGrid, 1);
+        // state.mobileResources[index].resources.splice(refGrid, 1);
     }
+    const webResources = JSON.stringify(state.webResources);
+    const mobileResources = JSON.stringify(state.mobileResources);
+    const object = {
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources)
+    }
+    setHistoryPages(state, object);
+    SiteService.addSitePageResourceWeb(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.webResources)
+    )
+        .then((result) => {
+            console.log("Web remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    SiteService.addSitePageResourceMobile(
+        state.siteId,
+        state.pageId,
+        JSON.stringify(state.mobileResources)
+    )
+        .then((result) => {
+            console.log("Mobile remove resources posted", result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    // } else {
+    //     let refIndex = state.properties.refGridLayout.$children.findIndex(element => element.i === payload.i);
+    //     console.log(refIndex)
+    //     const index = state.sections.findIndex((item) => item.id === payload.id);
+    //     if (refIndex > -1 && index > -1) {
+    //         state.properties.refGridLayout.$children[refIndex].$refs.item.style.display = "none";
+    //         // let refGrid = state.historyList[state.undoRedo][state.screenSize.screen][index].resources.findIndex(element => element.gridKey === payload.gridKey);
+    //         // console.log('after', state.sections[index].resources[refGrid].i)
+    //         // state.sections[index].resources.splice(refGrid, 1);
+    //         // const webResources = JSON.stringify(state.historyList[state.undoRedo]['web']);
+    //         // const mobileResources = JSON.stringify(state.historyList[state.undoRedo]['mobile']);
+    //         // const object = {
+    //         //     saved: false,
+    //         //     web: JSON.parse(webResources),
+    //         //     mobile: JSON.parse(mobileResources)
+    //         // }
+    //         // setHistoryPages(state, object);
+    //         // state.undoStatus = false;
+    //     }
+    // }
     // state.historyList.push(state.webResources);
     // state.historyList.push(state.mobileResources);
 

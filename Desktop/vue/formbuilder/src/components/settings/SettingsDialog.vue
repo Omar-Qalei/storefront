@@ -45,16 +45,13 @@ export default {
     beforeClose() {
       // this.onHistoryPages(this.getWebResources);
       // this.onMobileHistoryPage(this.getMobileResources);
-      if (this.getScreenSize.screen === "web")
-        this.onHistoryPages({
-          type: "event",
-          resources: JSON.stringify(this.getWebResources),
-        });
-      if (this.getScreenSize.screen === "mobile")
-        this.onHistoryPages({
-          type: "event",
-          resources: JSON.stringify(this.getMobileResources),
-        });
+      const webResources = JSON.stringify(this.getWebResources);
+      const mobileResources = JSON.stringify(this.getMobileResources);
+      this.onHistoryPages({
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources),
+      });
       SiteService.addSitePageResourceWeb(
         this.siteId,
         this.pageId,

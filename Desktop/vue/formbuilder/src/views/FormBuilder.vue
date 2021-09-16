@@ -156,6 +156,15 @@ export default {
       let width = event.target.outerWidth - event.target.innerWidth;
       width = event.target.outerWidth - width;
       if (width <= 920) {
+        document.documentElement.style.setProperty("--h1", "44px");
+        document.documentElement.style.setProperty("--h2", "36px");
+        document.documentElement.style.setProperty("--h3", "32px");
+        document.documentElement.style.setProperty("--h4", "28px");
+        document.documentElement.style.setProperty("--h5", "24px");
+        document.documentElement.style.setProperty("--h6", "20px");
+        document.documentElement.style.setProperty("--p1", "18px");
+        document.documentElement.style.setProperty("--p2", "16px");
+        document.documentElement.style.setProperty("--p3", "14px");
         this.onResizeSectionScreen({
           width: "379px",
           responsive: false,
@@ -164,6 +173,15 @@ export default {
         });
         // this.setMobileStyles();
       } else {
+        document.documentElement.style.setProperty("--h1", "80px");
+        document.documentElement.style.setProperty("--h2", "64px");
+        document.documentElement.style.setProperty("--h3", "48px");
+        document.documentElement.style.setProperty("--h4", "40px");
+        document.documentElement.style.setProperty("--h5", "32px");
+        document.documentElement.style.setProperty("--h6", "24px");
+        document.documentElement.style.setProperty("--p1", "18px");
+        document.documentElement.style.setProperty("--p2", "16px");
+        document.documentElement.style.setProperty("--p3", "14px");
         this.onResizeSectionScreen({
           width: "100%",
           responsive: false,
@@ -173,71 +191,6 @@ export default {
         // this.setWebStyles();
       }
     },
-    // setWebStyles: function() {
-    //   var sheet = document.createElement("style");
-    //   sheet.innerHTML = `
-    //   .h1 {
-    //     font-size: 80px !important;
-    // }
-    // .h2 {
-    //     font-size: 64px !important;
-    // }
-    // .h3 {
-    //     font-size: 48px !important;
-    // }
-    // .h4 {
-    //     font-size: 40px !important;
-    // }
-    // .h5 {
-    //     font-size: 32px !important;
-    // }
-    // .h6 {
-    //     font-size: 24px !important;
-    // }
-    // .p1 {
-    //     font-size: 18px !important;
-    // }
-    // .p2 {
-    //     font-size: 16px !important;
-    // }
-    // .p3 {
-    //     font-size: 14px !important;
-    // }
-    //   `;
-    //   document.body.appendChild(sheet);
-    // },
-    // setMobileStyles: function() {
-    //   var sheet = document.createElement("style");
-    //   sheet.innerHTML = `
-    //   .h1 {
-    //     font-size: 44px !important;
-    // }
-    // .h2 {
-    //     font-size: 36px !important;
-    // }
-    // .h3 {
-    //     font-size: 32px !important;
-    // }
-    // .h4 {
-    //     font-size: 28px !important;
-    // }
-    // .h5 {
-    //     font-size: 24px !important;
-    // }
-    // .h6 {
-    //     font-size: 20px !important;
-    // }
-    // .p1 {
-    //     font-size: 18px !important;
-    // }
-    // .p2 {
-    //     font-size: 16px !important;
-    // }
-    // .p3 {
-    //     font-size: 14px !important;
-    // }`;
-    //   document.body.appendChild(sheet);
-    // },
   },
   watch: {
     getSelectedPage: function(pageId) {

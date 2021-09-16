@@ -68,7 +68,7 @@
                 selectedElement === item.i ? showElement : '',
               ]"
             >
-              {{ item.i }}////{{ item.gridKey }}
+              <!-- {{ item.i }}////{{ item.gridKey }} -->
 
               <label
                 v-show="hoverElement === item.i && selectedElement !== item.i"
@@ -151,6 +151,8 @@
                 :sectionId="sectionId"
                 :preventMove="preventMove"
                 @onPreventMove="preventMove = true"
+                :siteId="siteId"
+                :pageId="pageId"
               />
             </GridItem>
             <GridItem
@@ -228,6 +230,8 @@ export default {
     margin: Array,
     responsive: Boolean,
     rowHeight: Number,
+    siteId: Number,
+    pageId: Number,
   },
   data() {
     return {

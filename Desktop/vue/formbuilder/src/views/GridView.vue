@@ -172,6 +172,8 @@
             :cols="getScreenSize.cols"
             :section="item"
             :style="getDefaultDesign(item)"
+            :siteId="siteId"
+            :pageId="pageId"
           ></SectionWidget>
           <template v-if="getScreenSize.screen === 'web'">
             <v-btn
@@ -246,7 +248,7 @@ export default {
       padding: [0, 0],
       rowHeight: 24,
       displayPlaceholder: false,
-      currentSelectedSection: "",
+      currentSelectedSection: 0,
       selectedSectionByI: null,
       dialog: false,
       hoverElement: 0,
@@ -564,69 +566,26 @@ export default {
       return height;
     },
     setWebStyles: function() {
-      var sheet = document.createElement("style");
-      sheet.innerHTML = `
-      .h1 {
-        font-size: 80px !important;
-    }
-    .h2 {
-        font-size: 64px !important;
-    }
-    .h3 {
-        font-size: 48px !important;
-    }
-    .h4 {
-        font-size: 40px !important;
-    }
-    .h5 {
-        font-size: 32px !important;
-    }
-    .h6 {
-        font-size: 24px !important;
-    }
-    .p1 {
-        font-size: 18px !important;
-    }
-    .p2 {
-        font-size: 16px !important;
-    }
-    .p3 {
-        font-size: 14px !important;
-    }
-      `;
-      document.body.appendChild(sheet);
+      document.documentElement.style.setProperty("--h1", "80px");
+      document.documentElement.style.setProperty("--h2", "64px");
+      document.documentElement.style.setProperty("--h3", "48px");
+      document.documentElement.style.setProperty("--h4", "40px");
+      document.documentElement.style.setProperty("--h5", "32px");
+      document.documentElement.style.setProperty("--h6", "24px");
+      document.documentElement.style.setProperty("--p1", "18px");
+      document.documentElement.style.setProperty("--p2", "16px");
+      document.documentElement.style.setProperty("--p3", "14px");
     },
     setMobileStyles: function() {
-      var sheet = document.createElement("style");
-      sheet.innerHTML = `
-      .h1 {
-        font-size: 44px !important;
-    }
-    .h2 {
-        font-size: 36px !important;
-    }
-    .h3 {
-        font-size: 32px !important;
-    }
-    .h4 {
-        font-size: 28px !important;
-    }
-    .h5 {
-        font-size: 24px !important;
-    }
-    .h6 {
-        font-size: 20px !important;
-    }
-    .p1 {
-        font-size: 18px !important;
-    }
-    .p2 {
-        font-size: 16px !important;
-    }
-    .p3 {
-        font-size: 14px !important;
-    }`;
-      document.body.appendChild(sheet);
+      document.documentElement.style.setProperty("--h1", "44px");
+      document.documentElement.style.setProperty("--h2", "36px");
+      document.documentElement.style.setProperty("--h3", "32px");
+      document.documentElement.style.setProperty("--h4", "28px");
+      document.documentElement.style.setProperty("--h5", "24px");
+      document.documentElement.style.setProperty("--h6", "20px");
+      document.documentElement.style.setProperty("--p1", "18px");
+      document.documentElement.style.setProperty("--p2", "16px");
+      document.documentElement.style.setProperty("--p3", "14px");
     },
   },
   computed: {
@@ -669,20 +628,27 @@ export default {
         this.pageId = pages[0].id;
       }
     },
-    getScreenSize: function() {
-      // type
-      // let resource;
-      // if (type.screen === "web") {
-      //   // resource = this.getWebResources;
-      //   // this.setWebStyles();
-      //   // this.fetchSections(resource);
-      // }
-      // if (type.screen === "mobile") {
-      //   resource = this.getMobileResources;
-      //   // this.fetchSections(resource);
-      //   // this.setMobileStyles();
-      //   // this.onRearrangementResources();
-      // }
+    getScreenSize: function(type) {
+      let resource;
+      if (type.screen === "web") {
+        resource = this.getWebResources;
+        this.setWebStyles();
+        let cols = document.getElementsByClassName("h1");
+        for (let i = 0; i < cols.length; i++) {
+          cols[i].style.fontSize = "80px";
+        }
+        this.fetchSections(resource);
+      }
+      if (type.screen === "mobile") {
+        resource = this.getMobileResources;
+        this.fetchSections(resource);
+        this.setMobileStyles();
+        let cols = document.getElementsByClassName("h1");
+        for (let i = 0; i < cols.length; i++) {
+          cols[i].style.fontSize = "44px";
+        }
+        this.onRearrangementResources();
+      }
     },
     // getUndoPage: function(value) {
     //   console.log("getUndoPage", value);

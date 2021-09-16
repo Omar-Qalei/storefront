@@ -3,10 +3,13 @@
     <Sidebar @goToPath="goToPath($event)" />
     <div class="d-flex h-100">
       <v-main>
-        <Navbar class="navbar" :path="path" />
+        <Navbar class="navbar" :path="path" @goToPath="goToPath($event)" />
         <v-slide-y-transition hide-on-leave>
           <Contacts v-if="this.path === 'contacts'" />
           <Sites v-if="this.path === 'sites'" />
+          <Billing v-if="this.path === 'billing'" />
+          <Marketing v-if="this.path === 'marketing'" />
+          <Account v-if="this.path === 'account'" />
         </v-slide-y-transition>
       </v-main>
     </div>
@@ -18,10 +21,13 @@ import Contacts from "./contacts/Main.vue";
 import Sites from "./sites/Sites";
 import Navbar from "../layouts/home/Navbar";
 import Sidebar from "../layouts/home/Sidebar";
+import Marketing from "./marketing/Main";
+import Billing from "./billing/Main";
+import Account from "./account/Main";
 
 export default {
   name: "Home",
-  components: { Sidebar, Navbar, Contacts, Sites },
+  components: { Sidebar, Navbar, Contacts, Sites, Billing, Marketing, Account },
   data() {
     return {
       path: "sites",

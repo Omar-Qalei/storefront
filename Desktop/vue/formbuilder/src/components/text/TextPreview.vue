@@ -1,15 +1,14 @@
 <template>
   <!-- @mouseover="hover = true" @mouseleave="hover = false" -->
   <div class="widget">
-    <template v-if="selectedLinkTo === null">
-      <!-- onHover(item.properties.elementHover), -->
+    <div v-html="item.properties.text"></div>
+    <!-- <template v-if="selectedLinkTo === null">
       <label
         :id="item.i"
         :style="[item.properties.style ? item.properties.style : style]"
         >{{ item.properties.text }}</label
       >
     </template>
-    <!-- onHover(item.properties.elementHover), -->
     <template v-if="selectedLinkTo === 0">
       <label
         @click="goTo(item.properties)"
@@ -23,7 +22,6 @@
       >
     </template>
     <template v-if="selectedLinkTo && selectedLinkTo === 1">
-      <!-- onHover(item.properties.elementHover), -->
       <label
         @click="goToUrl(item.properties)"
         :id="item.i"
@@ -36,7 +34,6 @@
       >
     </template>
     <template v-if="selectedLinkTo && selectedLinkTo === 2">
-      <!-- onHover(item.properties.elementHover), -->
       <label
         @click="onCall(item.properties)"
         :id="item.i"
@@ -49,7 +46,6 @@
       >
     </template>
     <template v-if="selectedLinkTo && selectedLinkTo === 3">
-      <!--  onHover(item.properties.elementHover), -->
       <label
         @click="onEmail(item.properties)"
         :id="item.i"
@@ -60,7 +56,7 @@
         ]"
         >{{ item.properties.text }}</label
       >
-    </template>
+    </template> -->
   </div>
 </template>
 
