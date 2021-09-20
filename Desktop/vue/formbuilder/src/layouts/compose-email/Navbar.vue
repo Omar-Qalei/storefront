@@ -1,0 +1,245 @@
+<template>
+  <!-- <div class="navbar"> -->
+  <v-app-bar color="white" dense clipped-right clipped-left dark>
+    <a class="logo mr-6">
+      Wimmly
+    </a>
+    <!-- <div class="separator"></div> -->
+    <!-- <a class="pages ml-2" @click="onDrawerPages">
+      Pages: <b class="ml-1">{{ title }}</b>
+    </a> -->
+    <div class="spacer"></div>
+    <div class="settings d-flex">
+      <v-btn @click="onSave()" color="primary" v-show="!getRedoStatus" text
+        >Save</v-btn
+      >
+      <v-chip
+        v-show="getRedoStatus"
+        class="ma-2"
+        color="deep-purple accent-4"
+        outlined
+      >
+        <v-icon left>
+          mdi-check-decagram
+        </v-icon>
+        Auto Save
+      </v-chip>
+      <!-- onRearrangementResources(); -->
+      <a
+        class="link-icon"
+        @click="
+          fetchCols(4);
+          onResizeSectionScreen({
+            width: '379px',
+            responsive: true,
+            cols: 2,
+            screen: 'mobile',
+          });
+          onSelectedWidgetById({});
+        "
+      >
+        <span class="mdi mdi-cellphone-cog"></span>
+      </a>
+      <a
+        class="link-icon"
+        @click="
+          fetchCols(24);
+          onResizeSectionScreen({
+            width: '100%',
+            responsive: false,
+            cols: 24,
+            screen: 'web',
+          });
+          onSelectedWidgetById({});
+        "
+      >
+        <span class="mdi mdi-monitor"></span>
+      </a>
+      <v-btn
+        icon
+        small
+        color="primary"
+        @click.stop="onUndoPage()"
+        light
+        :disabled="getUndoStatus"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        small
+        color="primary"
+        light
+        @click.stop="onRedoPage()"
+        :disabled="getRedoStatus"
+      >
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-btn>
+      <v-btn icon small color="primary" @click.stop="onDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        text
+        :to="{ name: 'Preview', query: { siteId: siteId } }"
+        >Preview</v-btn
+      >
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        dark
+        x-large
+      >
+        Publish Website
+      </v-btn>
+    </div>
+  </v-app-bar>
+  <!-- </div> -->
+</template>
+
+<script>
+import { mapActions, mapGetters } from "vuex";
+import { SiteService } from "../../services/site/site";
+
+export default {
+  name: "Navbar",
+  data: function() {
+    return {
+      title: null,
+      siteId: null,
+      pageId: null,
+    };
+  },
+  methods: {
+    ...mapActions([
+      "fetchSections",
+      "onDrawer",
+      "onDrawerPages",
+      "onResizeSectionScreen",
+      "onRearrangementResources",
+      "onSortSectionsLayout",
+      "fetchCols",
+      "onSelectedWidgetById",
+      "onUndoPage",
+      "onRedoPage",
+    ]),
+    getQueryStringParams: function() {
+      if (this.$route.query.siteId) {
+        this.siteId = +this.$route.query.siteId;
+      }
+      if (this.$route.query.pageId) {
+        this.pageId = +this.$route.query.pageId;
+      }
+    },
+    onSave: function() {
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getWebResources)
+      )
+        .then((result) => {
+          console.log("Web Settings posted", result);
+          // this.onHistoryPages(this.getWebResources);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getMobileResources)
+      )
+        .then((result) => {
+          console.log("Mobile Settings posted", result);
+          // this.onMobileHistoryPage(this.getMobileResources);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  computed: {
+    ...mapGetters([
+      "getSelectedPage",
+      "getPages",
+      "getScreenSize",
+      "getCols",
+      "getWebResources",
+      "getMobileResources",
+      "getUndoStatus",
+      "getRedoStatus",
+    ]),
+  },
+  watch: {
+    getSelectedPage: function(pageId) {
+      this.pageId = pageId;
+      if (this.getPages.length > 0)
+        this.title = this.getPages.find((item) => item.id === pageId).name;
+    },
+    getPages: function(pages) {
+      if (this.getPages.length > 0) {
+        if (this.$route.query.pageId === undefined) {
+          this.pageId = pages[0].id;
+          this.title = this.getPages.find(
+            (item) => item.id === pages[0].id
+          ).name;
+        } else {
+          this.title = this.getPages.find(
+            (item) => item.id === this.pageId
+          ).name;
+        }
+      }
+    },
+  },
+  created() {
+    this.getQueryStringParams();
+  },
+};
+</script>
+
+<style scoped>
+.v-app-bar ::v-deep.v-toolbar__content {
+  padding-right: 0;
+}
+nav {
+  -webkit-box-shadow: 0 10px 20px 0 rgb(0 0 0 / 5%);
+  box-shadow: 0 10px 20px 0 rgb(0 0 0 / 5%);
+  align-items: center;
+  height: 58px;
+  padding-left: 25px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+  z-index: 15;
+}
+.logo {
+  font-weight: 700;
+}
+.link-icon {
+  height: 36px;
+  width: 36px;
+  min-width: 28px;
+  min-height: 28px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.settings {
+  align-items: center;
+}
+.separator {
+  width: 1px;
+  height: 16px;
+  margin: 0 6px;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.pages {
+  font-size: 13px;
+}
+::v-deep.v-btn.fs-14 {
+  font-size: 14px;
+}
+</style>

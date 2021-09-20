@@ -1,9 +1,9 @@
 <template>
   <v-container class="menu-design" fluid>
-    <v-switch v-model="position" label="Fixed Menu"></v-switch>
+    <!-- <v-switch v-model="position" label="Fixed Menu"></v-switch> -->
     <!-- v-model="panel" -->
     <v-expansion-panels>
-      <v-expansion-panel>
+      <v-expansion-panel id="colorPicker">
         <v-expansion-panel-header>Background</v-expansion-panel-header>
         <v-expansion-panel-content>
           <Background @styles="stylesBackground($event)" />

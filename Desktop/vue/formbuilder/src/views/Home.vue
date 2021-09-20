@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      path: "plans",
+      path: "sites",
     };
   },
   methods: {

@@ -17,7 +17,7 @@
     <!-- Background color -->
     <v-row v-if="selectedLinkTo === 0">
       <v-col cols="12">
-        <v-flex id="colorPicker">
+        <v-flex>
           <ColorPickerExpandWidget
             v-if="width"
             :width="width"
@@ -59,7 +59,7 @@
       <v-col cols="12">
         <v-expand-transition>
           <v-card v-show="showPickerColor">
-            <v-flex id="colorPicker">
+            <v-flex>
               <ColorPickerExpandWidget
                 v-if="width && currentGradientColor"
                 :width="width"
@@ -380,6 +380,7 @@ export default {
     this.width = Math.round(
       document.getElementById("colorPicker").getBoundingClientRect().width
     );
+    console.log(this.width);
     if (this.getSelectedWidgetById.properties.selectedLinkTo)
       this.selectedLinkTo = this.getSelectedWidgetById.properties.selectedLinkTo;
   },

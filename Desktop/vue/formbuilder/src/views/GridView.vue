@@ -648,6 +648,9 @@ export default {
           cols[i].style.fontSize = "44px";
         }
         this.onRearrangementResources();
+        this.onCheckUpdateSectionLayoutResized({
+          sectionId: this.selectedSection,
+        });
       }
     },
     // getUndoPage: function(value) {
