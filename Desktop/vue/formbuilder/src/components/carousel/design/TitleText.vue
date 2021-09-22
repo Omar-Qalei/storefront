@@ -223,7 +223,6 @@ export default {
   created() {
     if (this.getSelectedWidgetById.properties.style) {
       if (this.getSelectedWidgetById.properties.style.elements) {
-        console.log(this.getSelectedWidgetById.properties.style.elements.title);
         if (this.getSelectedWidgetById.properties.style.elements.title) {
           this.selectedTextHorizontal = this.findIndex(
             { list: this.textHorizontal, value: "title" },

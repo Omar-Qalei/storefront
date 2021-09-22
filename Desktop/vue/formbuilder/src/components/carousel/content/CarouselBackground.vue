@@ -532,7 +532,6 @@ export default {
             this.onDecodeBackgroundGradient(background);
             break;
           case "url":
-            console.log(background);
             this.backgroundImage = background;
             break;
         }

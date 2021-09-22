@@ -71,7 +71,6 @@ export default {
         lat: this.value.geometry.location.lat(),
         lng: this.value.geometry.location.lng(),
       };
-      console.log(marker);
       this.getSelectedWidgetById.properties.address = this.value.formatted_address;
       this.getSelectedWidgetById.properties.map = marker;
     }

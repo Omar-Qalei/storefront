@@ -180,7 +180,6 @@ export default {
     },
     goTo: function(properties) {
       let siteId, pageId, url, newTab, phone, email;
-      console.log(this.selectedButtonLinkTo);
       switch (this.selectedButtonLinkTo) {
         case 0:
           siteId = properties.page.site_id;

@@ -123,7 +123,7 @@ export default {
   data() {
     return {
       margin: [0, 0],
-      rowHeight: 30,
+      rowHeight: 24,
       siteId: null,
       pageId: null,
       drawer: false,
@@ -173,7 +173,6 @@ export default {
       }
     },
     getShowMenu: function(value) {
-      console.log(value);
       this.drawer = value;
     },
     getDataMenu: function(value) {

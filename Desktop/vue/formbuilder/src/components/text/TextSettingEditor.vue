@@ -898,7 +898,6 @@ export default {
     },
     onChangeFont: function(action) {
       let styles;
-      console.log("hello");
       switch (action) {
         case "bold":
           styles = {

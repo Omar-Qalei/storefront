@@ -300,7 +300,6 @@ export default {
     ...mapActions([""]),
   },
   created() {
-    console.log(this.getSelectedWidgetById.properties.style);
     if (this.getSelectedWidgetById.properties.style) {
       this.selectedTextHorizontal = this.findIndex(
         { list: this.textHorizontal, value: "title" },

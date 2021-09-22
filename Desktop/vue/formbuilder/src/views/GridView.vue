@@ -380,37 +380,37 @@ export default {
     resizedEvent: function() {
       // this.onHistoryPages(this.getWebResources);
       // this.onMobileHistoryPage(this.getMobileResources);
-      if (this.getSelectedWidgetById.type !== "section") {
-        const webResources = JSON.stringify(this.getWebResources);
-        const mobileResources = JSON.stringify(this.getMobileResources);
-        this.onHistoryPages({
-          saved: false,
-          web: JSON.parse(webResources),
-          mobile: JSON.parse(mobileResources),
+      // if (this.getSelectedWidgetById.type !== "section") {
+      const webResources = JSON.stringify(this.getWebResources);
+      const mobileResources = JSON.stringify(this.getMobileResources);
+      this.onHistoryPages({
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources),
+      });
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getWebResources)
+      )
+        .then((result) => {
+          console.log("Web posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        SiteService.addSitePageResourceWeb(
-          this.siteId,
-          this.pageId,
-          JSON.stringify(this.getWebResources)
-        )
-          .then((result) => {
-            console.log("Web posted", result);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        SiteService.addSitePageResourceMobile(
-          this.siteId,
-          this.pageId,
-          JSON.stringify(this.getMobileResources)
-        )
-          .then((result) => {
-            console.log("Mobile posted", result);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getMobileResources)
+      )
+        .then((result) => {
+          console.log("Mobile posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // }
     },
     onMoveGrid: function(event) {
       this.displayPlaceholder = event;

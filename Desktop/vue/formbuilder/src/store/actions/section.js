@@ -389,7 +389,6 @@ export const onDragend = ({ commit, state }) => {
             selectedLinkTo: null,
         }
     }
-    console.log(k)
     commit('setDragEnd', k)
 }
 

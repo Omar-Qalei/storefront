@@ -278,7 +278,6 @@ export default {
     },
     onSelectedStyles: function(event) {
       this.styles = event;
-      console.log("clicked");
       this.onSelectedContent();
       console.log(event);
     },

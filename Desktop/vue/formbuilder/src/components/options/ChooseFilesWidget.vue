@@ -191,7 +191,6 @@ export default {
     },
     getTypeChooseFileDialog: function(value) {
       this.selectedType = value;
-      console.log(this.selectedType);
     },
   },
   methods: {
@@ -229,7 +228,6 @@ export default {
       this.dialog = false;
     },
     getImages: function() {
-      console.log("getImages");
       MediaService.getImages()
         .then((event) => {
           const result = event.data.data;
@@ -240,8 +238,7 @@ export default {
     },
     onUpload: function(event) {
       MediaService.addImages(event)
-        .then((result) => {
-          console.log("result", result);
+        .then(() => {
           this.getImages();
         })
         .catch((error) => console.log(error));
