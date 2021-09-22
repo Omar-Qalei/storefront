@@ -57,3 +57,8 @@ export const onUndoPage = ({ commit }) => {
 export const onRedoPage = ({ commit }) => {
     commit('setRedoPage')
 }
+
+export const onSaveHistoryLayout = ({ commit }, payload) => {
+    console.log('onSaveHistoryLayout', payload)
+    commit('saveHistoryLayout', payload)
+}

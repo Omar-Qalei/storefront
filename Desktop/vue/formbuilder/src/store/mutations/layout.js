@@ -1,3 +1,5 @@
+import { SiteService } from "../../services/site/site";
+
 export const setDrawer = (state) => {
     state.drawer = !state.drawer;
 }
@@ -30,7 +32,7 @@ export const setHistoryPages = (state, payload) => {
     // state.undoRedo = state.historyList.length - 1;
     // state.undoStatus = false;
     // state.redoStatus = false;
-    console.log(state.historyList)
+    // console.log(state.historyList)
     state.undoRedo = state.historyList.length - 1;
     // Object.seal(state.webResources)
     if (state.historyList.length - 1 > 0) {
@@ -45,17 +47,23 @@ export const setUndoPage = (state) => {
     // if (state.undoRedo > 0) {
     //     state.undoRedo = state.undoRedo - 1;
     // }
+    console.log('---------------------------------------setUndoPage-------------------------------------------')
+    console.log('undoRedo: ', state.undoRedo);
     if (state.undoRedo > 0) state.undoRedo -= 1;
     // console.log(state.historyList.length)
     if (state.undoRedo < 0) return;
     if (state.undoRedo <= 0) state.undoStatus = true;
     if (state.historyList.length) state.redoStatus = false;
+    // console.log(state.historyList)
+
+    console.log('undoRedo: ', state.undoRedo);
+    console.log('---------------------------------------setUndoPage-------------------------------------------')
     // const type = state.historyList[state.undoRedo].type;
-    const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
-    const sections = JSON.parse(page);
+    // const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
+    // const sections = JSON.parse(page);
     // state.webResources = sections;
     // state.sections = state.webResources;
-    state.sections = sections;
+    state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
     // console.log(state.historyList, state.undoRedo)
     // state.sections = state.historyList[state.undoRedo];
 }
@@ -68,6 +76,8 @@ export const setRedoPage = (state) => {
     // if (state.undoRedo < state.historyList) {
     //     state.undoRedo = state.undoRedo + 1;
     // }
+    console.log('---------------------------------------setRedoPage-------------------------------------------')
+    console.log('undoRedo: ', state.undoRedo);
     if (state.historyList.length - 1 >= state.undoRedo) state.undoRedo += 1;
     // console.log(state.historyList.length)
     if (state.historyList.length - 1 <= state.undoRedo) { state.redoStatus = true; state.undoStatus = false }
@@ -99,14 +109,57 @@ export const setRedoPage = (state) => {
     // state.historyWeb = payload;
 
     // console.log('undoRedo: ', state.undoRedo, 'undoStatus: ', state.undoStatus, 'redoStatus: ', state.redoStatus);
-    console.log('undoRedo: ', state.undoRedo, state.historyList);
+    console.log('undoRedo: ', state.undoRedo);
+    console.log('---------------------------------------setRedoPage-------------------------------------------')
+
     // console.log('undoRedo', state.historyList[1][0].resources[0])
     // state.sections = state.historyList[state.undoRedo];
     // state.mobileResources = state.mobileHistory[state.undoRedo];
     // const type = state.historyList[state.undoRedo].type;
-    const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
-    const sections = JSON.parse(page);
+    // const page = JSON.stringify(state.historyList[state.undoRedo][state.screenSize.screen]);
+    // const sections = JSON.parse(page);
     // state.webResources = sections;
     // state.sections = state.webResources;
-    state.sections = sections;
+    state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
+}
+
+
+export const saveHistoryLayout = (state, payload) => {
+    state.redoStatus = true; state.undoStatus = true;
+    state.webResources = state.historyList[state.undoRedo]['web'];
+    state.mobileResources = state.historyList[state.undoRedo]['mobile'];
+    state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
+    const webResources = JSON.stringify(state.webResources);
+    const mobileResources = JSON.stringify(state.mobileResources);
+    state.historyList = [];
+    state.historyList.push({
+        saved: false,
+        web: JSON.parse(webResources),
+        mobile: JSON.parse(mobileResources),
+    });
+    state.undoRedo = state.historyList.length;
+    SiteService.addSitePageResourceWeb(
+        payload.siteId,
+        payload.pageId,
+        JSON.stringify(state.historyList[state.undoRedo]['web'])
+    )
+        .then((result) => {
+            console.log("Web Settings posted", result);
+            // this.onHistoryPages(this.getWebResources);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    SiteService.addSitePageResourceMobile(
+        payload.siteId,
+        payload.pageId,
+        JSON.stringify(state.historyList[state.undoRedo]['mobile'])
+    )
+        .then((result) => {
+            console.log("Mobile Settings posted", result);
+            // this.onMobileHistoryPage(this.getMobileResources);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }

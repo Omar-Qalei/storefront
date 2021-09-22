@@ -63,8 +63,8 @@
             </v-list-item-content>
           </v-list-item>
         </v-list> -->
-
-        <v-menu left :nudge-width="350" offset-y>
+        <nav></nav>
+        <v-menu left attach eager nudge-width="350">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               dark
@@ -259,5 +259,8 @@ nav {
 }
 .absolute {
   position: absolute;
+}
+.v-menu ::v-deep.v-menu__content {
+  left: -25px !important;
 }
 </style>

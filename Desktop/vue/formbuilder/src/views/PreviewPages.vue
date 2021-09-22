@@ -256,7 +256,6 @@ export default {
       this.onShowMenu();
     },
     getDefaultDesign: function(item) {
-      console.log("design", item.properties.style);
       if (item.properties.style)
         if (item.properties.style.design)
           if (item.properties.style.design[this.getScreenSize.screen]) {

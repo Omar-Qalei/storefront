@@ -46,6 +46,7 @@ export default {
   },
   watch: {
     currentColor: function(value) {
+      this.$emit("canEdit", this.isColored);
       switch (this.type) {
         case "element":
           this.$emit("colorElement", value);
@@ -59,6 +60,10 @@ export default {
   },
   created() {
     if (this.color) this.currentColor = this.color;
+  },
+  updated() {
+    if (this.color === undefined) this.currentColor = "black";
+    else this.currentColor = this.color;
   },
 };
 </script>

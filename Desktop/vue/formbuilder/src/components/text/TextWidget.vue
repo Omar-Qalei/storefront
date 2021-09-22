@@ -8,7 +8,7 @@
     ></SettingsWidget> -->
     <!-- onHover(item.properties.elementHover), -->
     <!-- {{ item.i }} -->
-    <template v-if="!displayEditor">
+    <template v-if="editor && !displayEditor">
       <TextSetting
         :show="item.i === getSelectedWidgetById.i"
         :item="item"
@@ -16,11 +16,11 @@
         @displayEditor="onDisplayEditor($event)"
       />
     </template>
-
     <!-- @styles="onSelectedStyles($event)" -->
     <template v-else>
       <TextSettingEditor
-        :v-if="item.i === getSelectedWidgetById.i"
+        v-if="item.i === getSelectedWidgetById.i"
+        :editor="editor"
         @onChangeFontSize="onChangeFontSize($event)"
         @onChangeFontFamily="onChangeFontFamily($event)"
         @onChangeFontColor="onChangeFontColor($event)"
@@ -34,7 +34,13 @@
     <!-- 
       :style="[item.properties.style ? item.properties.style : style]"
      -->
-    <div
+    <!-- Test -->
+    <div>
+      <!-- <menu-bar class="editor__header" :editor="editor" /> -->
+      <editor-content :id="item.i" :editor="editor" />
+    </div>
+    <!-- Test -->
+    <!-- <div
       class="d-flex textarea unselectable"
       contenteditable="true"
       :id="item.i"
@@ -50,8 +56,8 @@
       unselectable="on"
       @mouseleave="status = true"
       @mouseover="status = false"
-    >
-      <!-- 
+    > -->
+    <!-- 
       @input="onInput"
       @keydown="onTextHeight;"
       @keyup="
@@ -60,11 +66,11 @@
         })
       "
      -->
-      <!-- <p>{{ item.properties.text }}</p> -->
-      <!-- <span v-for="text in this.greetText">
+    <!-- <p>{{ item.properties.text }}</p> -->
+    <!-- <span v-for="text in this.greetText">
       <span> {{ text }} </span>
     </span> -->
-    </div>
+    <!-- </div> -->
 
     <!-- <div
       class="d-flex"
@@ -109,6 +115,14 @@ import TextSettingEditor from "./TextSettingEditor";
 import TextSetting from "./TextSetting";
 import { mapGetters, mapActions } from "vuex";
 import { SiteService } from "../../services/site/site";
+import { Editor, EditorContent } from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
+import TextStyle from "@tiptap/extension-text-style";
+import FontFamily from "@tiptap/extension-font-family";
+import AddClass from "./extensions/extension-add-class";
+import { Color } from "@tiptap/extension-color";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
 // import styles from "../../mixins/styles";
 
 export default {
@@ -117,9 +131,11 @@ export default {
     // SettingsWidget,
     TextSettingEditor,
     TextSetting,
+    EditorContent,
   },
   data() {
     return {
+      editor: null,
       status: false,
       hover: false,
       range: null,
@@ -541,15 +557,55 @@ export default {
     }
   },
   mounted() {
+    this.editor = new Editor({
+      extensions: [
+        StarterKit,
+        TextStyle,
+        FontFamily,
+        Color,
+        AddClass,
+        Underline,
+        Link,
+      ],
+      // content: `
+      //   Write your text here
+      // `,
+      content: `
+        
+      `,
+    });
+
     // console.log(this.item.properties.text);
     if (this.item.properties.text === "Write your text here") {
-      document.getElementById(
-        this.item.i
-      ).innerHTML = `<p style="font-size: 48px">Write your text here</p>`;
+      this.editor.commands.setContent(
+        `<h2 style="font-size:64px" >Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
+      );
+      // this.editor.value.commands.setContent(
+      //   `<h2>Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
+      // );
+      // document.getElementById(
+      //   this.item.i
+      // ).innerHTML = `<h3>Write your text here</h3>`;
+      // this.editor.commands.setContent({
+      //   type: "doc",
+      //   content: [
+      //     {
+      //       type: "paragraph",
+      //       content: [
+      //         {
+      //           type: "text",
+      //           text: "Example Text",
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // });
+      // this.editor.commands.setContent("<p class='h3'>Write your text here</p>");
     } else {
-      document.getElementById(
-        this.item.i
-      ).innerHTML = this.item.properties.text;
+      // this.editor.setContent(this.item.properties.text);
+      // document.getElementById(
+      //   this.item.i
+      // ).innerHTML = this.item.properties.text;
     }
     const thiz = this;
     window.addEventListener("click", () => {
@@ -591,7 +647,11 @@ export default {
     //     console.log("checked");
     //   });
   },
+  beforeUnmount() {
+    this.editor.destroy();
+  },
   updated() {
+    console.log(this.editor.getJSON(), this.editor.getHTML());
     this.onTextHeight();
     // const x = window.getSelection();
     // if (x.toString().length) {
@@ -687,6 +747,9 @@ export default {
 }
 .d-flex {
   display: flex;
+}
+h3 {
+  font-size: 48px;
 }
 textarea {
   color: inherit;

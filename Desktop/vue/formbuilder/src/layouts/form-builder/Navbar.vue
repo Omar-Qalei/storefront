@@ -10,7 +10,11 @@
     </a>
     <div class="spacer"></div>
     <div class="settings d-flex">
-      <v-btn @click="onSave()" color="primary" v-show="!getRedoStatus" text
+      <v-btn
+        @click="onSaveHistoryLayout({ siteId: siteId, pageId: pageId })"
+        color="primary"
+        v-show="!getRedoStatus"
+        text
         >Save</v-btn
       >
       <v-chip
@@ -100,7 +104,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { SiteService } from "../../services/site/site";
 
 export default {
   name: "Navbar",
@@ -123,6 +126,7 @@ export default {
       "onSelectedWidgetById",
       "onUndoPage",
       "onRedoPage",
+      "onSaveHistoryLayout",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -131,32 +135,6 @@ export default {
       if (this.$route.query.pageId) {
         this.pageId = +this.$route.query.pageId;
       }
-    },
-    onSave: function() {
-      SiteService.addSitePageResourceWeb(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(this.getWebResources)
-      )
-        .then((result) => {
-          console.log("Web Settings posted", result);
-          // this.onHistoryPages(this.getWebResources);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      SiteService.addSitePageResourceMobile(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(this.getMobileResources)
-      )
-        .then((result) => {
-          console.log("Mobile Settings posted", result);
-          // this.onMobileHistoryPage(this.getMobileResources);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
   },
   computed: {
