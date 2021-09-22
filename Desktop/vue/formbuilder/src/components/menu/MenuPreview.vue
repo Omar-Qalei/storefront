@@ -63,38 +63,38 @@
             </v-list-item-content>
           </v-list-item>
         </v-list> -->
-        <nav></nav>
-        <v-menu left attach eager nudge-width="350">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              dark
-              v-bind="attrs"
-              v-on="on"
-              :style="[
-                { color: textStyle().color },
-                onHover(item.properties.elementHover),
-              ]"
-              icon
-              small
-              @click="onFetchDataMenu(item.properties.style, list)"
-            >
-              <v-icon>mdi-menu</v-icon>
-            </v-btn>
-          </template>
-
-          <v-list :style="[textStyle(), menuStyle()]">
-            <v-list-item
-              v-for="item in list"
-              :key="item.title"
-              @click="goToPath(item.path)"
-              link
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{ item.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <v-window>
+          <v-menu left nudge-width="350">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+                :style="[
+                  { color: textStyle().color },
+                  onHover(item.properties.elementHover),
+                ]"
+                icon
+                small
+                @click="onFetchDataMenu(item.properties.style, list)"
+              >
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
+            <v-list :style="[textStyle(), menuStyle()]">
+              <v-list-item
+                v-for="item in list"
+                :key="item.title"
+                @click="goToPath(item.path)"
+                link
+              >
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-window>
       </template>
     </nav>
   </div>
@@ -259,8 +259,5 @@ nav {
 }
 .absolute {
   position: absolute;
-}
-.v-menu ::v-deep.v-menu__content {
-  left: -25px !important;
 }
 </style>

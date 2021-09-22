@@ -436,6 +436,7 @@ export default {
       if (this.$route.query.pageId) {
         this.pageId = +this.$route.query.pageId;
       }
+      this.onFetchData();
     },
     onFetchData: function() {
       let resource;
@@ -609,7 +610,6 @@ export default {
     ]),
   },
   created() {
-    // this.onSelectedWidgetById({});
     this.getQueryStringParams();
     this.onSelectedSection({ index: 0, id: 0 });
     if (typeof this.getSelectedWidgetById === "object")
@@ -638,6 +638,7 @@ export default {
           cols[i].style.fontSize = "80px";
         }
         this.fetchSections(resource);
+        this.onRearrangementResources();
       }
       if (type.screen === "mobile") {
         resource = this.getMobileResources;
@@ -653,32 +654,6 @@ export default {
         });
       }
     },
-    // getUndoPage: function(value) {
-    //   console.log("getUndoPage", value);
-    //   let resource;
-    //   if (this.getScreenSize.screen === "web") {
-    //     resource = this.getWebHistoryPage[value];
-    //     this.fetchSections(resource);
-    //   }
-    //   if (this.getScreenSize.screen === "mobile") {
-    //     resource = this.getMobileHistoryPage[value];
-    //     this.fetchSections(resource);
-    //     this.onRearrangementResources();
-    //   }
-    // },
-    // getRedoPage: function(value) {
-    //   console.log("getRedoPage", value);
-    //   let resource;
-    //   if (this.getScreenSize.screen === "web") {
-    //     resource = this.getWebHistoryPage[value];
-    //     this.fetchSections(resource);
-    //   }
-    //   if (this.getScreenSize.screen === "mobile") {
-    //     resource = this.getMobileHistoryPage[value];
-    //     this.fetchSections(resource);
-    //     this.onRearrangementResources();
-    //   }
-    // },
   },
   mounted() {
     const thiz = this;

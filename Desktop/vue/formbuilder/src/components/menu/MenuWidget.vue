@@ -43,14 +43,6 @@
         </v-btn>
       </template>
     </nav>
-    <!-- <v-btn
-      v-for="(item, index) in list"
-      :key="index"
-      text
-      :style="[textStyle(), onHover(item.properties.elementHover)]"
-    >
-      {{ item.name }}
-    </v-btn> -->
   </div>
 </template>
 

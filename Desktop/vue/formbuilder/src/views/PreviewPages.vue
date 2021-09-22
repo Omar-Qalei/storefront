@@ -198,6 +198,7 @@ export default {
       if (this.$route.query.pageId) {
         this.pageId = +this.$route.query.pageId;
       }
+      this.onFetchData();
     },
     onFetchData: function() {
       let resource;

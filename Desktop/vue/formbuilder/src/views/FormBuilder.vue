@@ -130,15 +130,20 @@ export default {
           const data = result.data.data;
           if (data) {
             this.fetchWebResources(JSON.parse(data.web));
+            this.fetchMobileResources(JSON.parse(data.mobile));
             this.onHistoryPages({
               saved: false,
               web: JSON.parse(data.web),
               mobile: JSON.parse(data.mobile),
             });
-            this.fetchMobileResources(JSON.parse(data.mobile));
-            JSON.parse(data.web)
-              ? this.fetchSections(this.getWebResources)
-              : this.fetchSections([]);
+            if (this.getScreenSize.screen === "web")
+              JSON.parse(data.web)
+                ? this.fetchSections(this.getWebResources)
+                : this.fetchSections([]);
+            if (this.getScreenSize.screen === "mobile")
+              JSON.parse(data.mobile)
+                ? this.fetchSections(this.getMobileResources)
+                : this.fetchSections([]);
 
             this.onSelectedWidgetById(this.getSections[0]);
           } else {
@@ -205,7 +210,7 @@ export default {
     },
   },
   created() {
-    this.fetchCols(24);
+    // this.fetchCols(24);
     this.getQueryStringParams();
     // if (window.innerWidth <= 920) {
     //   this.onResizeSectionScreen({
