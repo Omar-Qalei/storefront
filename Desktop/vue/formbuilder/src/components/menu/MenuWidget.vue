@@ -58,10 +58,10 @@ export default {
     return {
       drawer: false,
       list: [],
-      textAlign: "center",
+      textAlign: "right",
       image: "../../assets/images/menu-logo.png",
       text: {
-        alignSelf: "center",
+        alignSelf: "right",
         fontWeight: "",
         fontStyle: "",
         textDecoration: "",
@@ -85,21 +85,41 @@ export default {
   },
   watch: {
     getPages: function() {
-      if (this.item.properties.fields.length > 0) {
-        const pages = this.getPages.map((element) => element.id).sort();
-        this.getPages.forEach((element) => (element.status = true));
-        this.list = this.getPages;
-        const fields = this.item.properties.fields
-          .map((element) => element.id)
-          .sort();
+      if (this.getPages.length > 0) {
+        // if (this.getPages.length < this.item.properties.fields.length) {
+        //   console.log(this.item.properties.fields, this.getPages);
+        // }
         const thiz = this;
-        pages.forEach(function(element) {
-          if (fields.indexOf(element) === -1) {
+        if (this.getPages.length < this.item.properties.fields.length) {
+          this.item.properties.fields.forEach(function(element) {
+            const index = thiz.getPages.indexOf((obj) => obj.id !== element);
+            if (index === -1) {
+              thiz.item.properties.fields = thiz.item.properties.fields.filter(
+                (obj) => obj.id !== element.id
+              );
+            }
+          });
+        }
+        // const pages = this.getPages.map((element) => element.id).sort();
+        this.getPages.forEach((element) => (element.status = true));
+        // this.list = pages;
+        const fields = this.getPages.map((element) => element.id).sort();
+        fields.forEach(function(element) {
+          // console.log(thiz.item.properties.fields.indexOf(element) === -1);
+          const newPage = thiz.item.properties.fields.find(
+            (ele) => ele.id === element
+          );
+          // We can use it if happened any error
+          // const s = thiz.item.properties.fields.indexOf(
+          //   (obj) => obj.id === element
+          // );
+          if (newPage === undefined) {
             const object = thiz.getPages.find((obj) => obj.id === element);
             thiz.item.properties.fields.push(object);
           }
         });
-        this.list = thiz.item.properties.fields.map((element) => {
+
+        this.list = this.item.properties.fields.map((element) => {
           return {
             id: element.id,
             name: element.name,

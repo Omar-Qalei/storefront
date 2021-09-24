@@ -172,7 +172,7 @@
                 Text Alignment
               </h2>
             </v-col>
-            <v-col cols="6">
+            <!-- <v-col cols="6">
               <v-btn-toggle
                 return-object
                 v-model="button.selectedTextHorizontal"
@@ -187,7 +187,7 @@
                   <v-icon>{{ text.icon }}</v-icon>
                 </v-btn>
               </v-btn-toggle>
-            </v-col>
+            </v-col> -->
             <v-col cols="6">
               <v-btn-toggle
                 return-object
@@ -223,12 +223,12 @@
             </v-col>
             <v-col cols="3">
               <ColorPickerWidget
-                @colorElement="button.textColor = $event"
+                @colorElement="button.color = $event"
                 @colorElementHover="button.textColorHover = $event"
                 :type="elementStatus"
-                :color="button.textColor"
+                :color="button.color"
               />
-              {{ button.textColor }} {{ button.textColorHover }}
+              {{ button.color }} {{ button.textColorHover }}
             </v-col>
             <v-col cols="9">
               <h2 class="body-1 font-weight-medium">
@@ -307,7 +307,7 @@ export default {
         borderRadius: 40,
       },
       button: {
-        textColor: "#FFFFFFFF",
+        color: "#FFFFFFFF",
         backgroundColor: "#4E00BBFF",
         textColorHover: "#FFFFFFFF",
         backgroundColorHover: "#A05CFFFF",
@@ -322,9 +322,9 @@ export default {
         { id: 2, title: "right", icon: "mdi-format-align-right" },
       ],
       textHorizontal: [
-        { id: 0, title: "flex-start", icon: "mdi-format-align-left" },
+        { id: 0, title: "start-flex", icon: "mdi-format-align-left" },
         { id: 1, title: "center", icon: "mdi-format-align-center" },
-        { id: 2, title: "flex-end", icon: "mdi-format-align-right" },
+        { id: 2, title: "end-flex", icon: "mdi-format-align-right" },
       ],
       textVertical: [
         { id: 0, title: "flex-start", icon: "mdi-format-align-top" },
@@ -350,7 +350,7 @@ export default {
         field: this.field,
         button: this.button,
       };
-      this.$set(this.getSelectedWidgetById.properties.style, "form", null);
+      // this.$set(this.getSelectedWidgetById.properties.style, "form", null);
     } else {
       if (this.getSelectedWidgetById.properties.style.form) {
         this.form.textAlign = this.findIndex(
@@ -379,10 +379,10 @@ export default {
       }
       // Button
       if (this.getSelectedWidgetById.properties.style.button) {
-        this.button.selectedTextHorizontal = this.findIndex(
-          { list: this.textHorizontal, value: "title" },
-          this.getSelectedWidgetById.properties.style.button.justifyContent
-        );
+        // this.button.selectedTextHorizontal = this.findIndex(
+        //   { list: this.textHorizontal, value: "title" },
+        //   this.getSelectedWidgetById.properties.style.button.justifyContent
+        // );
         this.button.selectedTextVertical = this.findIndex(
           { list: this.textVertical, value: "title" },
           this.getSelectedWidgetById.properties.style.button.alignItems
@@ -390,7 +390,7 @@ export default {
         this.button.borderRadius = this.convertPxToNumber(
           this.getSelectedWidgetById.properties.style.button.borderRadius
         );
-        this.button.textColor = this.getSelectedWidgetById.properties.style.button.color;
+        this.button.color = this.getSelectedWidgetById.properties.style.button.color;
         this.button.backgroundColor = this.getSelectedWidgetById.properties.style.button.backgroundColor;
         this.button.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
         this.button.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
@@ -400,7 +400,7 @@ export default {
   updated() {
     this.getSelectedWidgetById.properties.style = {
       form: {
-        textAlign: this.textHorizontal[this.form.textAlign].title,
+        textAlign: this.textAlignments[this.form.textAlign].title,
         border: this.form.border,
         backgroundColor: this.form.backgroundColor,
         borderRadius: this.form.borderRadius + "px",
@@ -414,11 +414,11 @@ export default {
         borderRadius: this.field.borderRadius + "px",
       },
       button: {
-        justifyContent: this.textHorizontal[this.button.selectedTextHorizontal]
-          .title,
+        // justifyContent: this.textHorizontal[this.button.selectedTextHorizontal]
+        //   .title,
         alignItems: this.textVertical[this.button.selectedTextVertical].title,
         borderRadius: this.button.borderRadius + "px",
-        color: this.button.textColor,
+        color: this.button.color,
         backgroundColor: this.button.backgroundColor,
       },
     };

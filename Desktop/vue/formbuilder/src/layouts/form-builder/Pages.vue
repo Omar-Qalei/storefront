@@ -259,6 +259,7 @@ export default {
           this.getSiteById();
           this.name = null;
           this.path = null;
+          this.onSaveLayout();
         })
         .catch((err) => console.log(err));
     },
@@ -280,6 +281,7 @@ export default {
           this.getSiteById();
           this.name = null;
           this.path = null;
+          this.onSaveLayout();
         })
         .catch((err) => console.log(err));
     },
@@ -293,6 +295,7 @@ export default {
           this.removeDialog = false;
           this.drawer = true;
           this.getSiteById();
+          this.onSaveLayout();
         })
         .catch((err) => console.log(err));
     },
@@ -301,6 +304,30 @@ export default {
         this.selectedPage = page.id;
         this.onDrawerPages();
       }
+    },
+    onSaveLayout: function() {
+      SiteService.addSitePageResourceWeb(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getWebResources)
+      )
+        .then((result) => {
+          console.log("Web Settings posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      SiteService.addSitePageResourceMobile(
+        this.siteId,
+        this.pageId,
+        JSON.stringify(this.getMobileResources)
+      )
+        .then((result) => {
+          console.log("Mobile Settings posted", result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   computed: {

@@ -5,10 +5,10 @@
       :item="item"
       :sectionId="sectionId"
     ></SettingsWidget>
-    <form :style="formStyle" id="form">
+    <form :style="formStyle" :id="item.i">
       <h2
         class="h5 font-weight-medium mb-2"
-        v-show="!item.properties.hideFormName"
+        v-show="item.properties.hideFormName"
       >
         {{ item.properties.name }}
       </h2>
@@ -130,6 +130,8 @@ export default {
         backgroundColor: "#EBEBEBFF",
         borderRadius: "21px",
       },
+      margin: [0, 0],
+      rowHeight: 24,
       field: {
         fontSize: "16px",
         color: "#000000de",
@@ -211,17 +213,28 @@ export default {
       this.select = null;
       this.checkbox = false;
     },
-    calcHeight: function() {
-      let h = document.getElementById("form").getBoundingClientRect().height;
-      let out = {
-        height: h === Infinity ? h : Math.round((h - 0) / 30),
-      };
+    // calcHeight: function() {
+    //   let h = document.getElementById("form").getBoundingClientRect().height;
+    //   let out = {
+    //     height: h === Infinity ? h : Math.round((h - 0) / 30),
+    //   };
 
-      if (out.height % 2 !== 0) {
-        out.height += 1;
+    //   if (out.height % 2 !== 0) {
+    //     out.height += 1;
+    //   }
+
+    //   console.log(h);
+    //   // this.item.y = out.height;
+    //   // return out.height;
+    // },
+    calcContainerHeightByRow: function() {
+      let h = document.getElementById(this.item.i).getBoundingClientRect()
+        .height;
+      let height = Math.round((h - this.margin[1]) / this.rowHeight);
+      if (height % 2 !== 0) {
+        height += 1;
       }
-      // this.item.y = out.height;
-      // return out.height;
+      this.getSelectedWidgetById.h = height;
     },
     onHover: function(elementHover) {
       if (this.hover) {
@@ -235,11 +248,13 @@ export default {
       }
     },
   },
-  created() {
-    this.item.properties.hideFormName = true;
-  },
   updated() {
-    this.calcHeight();
+    if (
+      this.item.i === this.getSelectedWidgetById.i &&
+      this.item.type === "form"
+    ) {
+      this.calcContainerHeightByRow();
+    }
   },
 };
 </script>

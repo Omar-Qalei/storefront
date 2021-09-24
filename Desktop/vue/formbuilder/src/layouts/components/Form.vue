@@ -27,7 +27,7 @@ export default {
       element: {
         type: "form",
         width: 6,
-        height: 12,
+        height: 14,
       },
     };
   },

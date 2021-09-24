@@ -173,6 +173,7 @@
               @resize="resizeEvent"
               @resized="onResizedWidget(item)"
               :style="[
+                selectedElement === item.i ? activeSection : '',
                 hoverElement === item.i ? activeSection : '',
                 selectedElement === item.i ? showElement : '',
               ]"

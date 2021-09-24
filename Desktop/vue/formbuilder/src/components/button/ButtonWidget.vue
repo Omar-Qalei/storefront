@@ -11,6 +11,7 @@
       class="draggable"
       draggable="true"
       unselectable="on"
+      text
       :style="[
         item.properties.style ? item.properties.style : style,
         onHover(item.properties.elementHover),

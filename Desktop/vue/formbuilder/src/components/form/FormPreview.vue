@@ -1,5 +1,5 @@
 <template>
-  <div class="widget" @mouseover="hover = true" @mouseleave="hover = false">
+  <div class="widget">
     <v-form :style="formStyle" id="form" v-model="isValid">
       <h2
         class="h5 font-weight-medium mb-2"
@@ -41,7 +41,9 @@
       <v-btn
         class="mr-4 mt-4"
         @click="submit(item.properties)"
-        :style="buttonStyle"
+        :style="[buttonStyle, onHover(item.properties.elementHover)]"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
       >
         {{
           item.properties.submitBtnName
@@ -230,18 +232,6 @@ export default {
       this.select = null;
       this.checkbox = false;
     },
-    calcHeight: function() {
-      let h = document.getElementById("form").getBoundingClientRect().height;
-      let out = {
-        height: h === Infinity ? h : Math.round((h - 0) / 30),
-      };
-
-      if (out.height % 2 !== 0) {
-        out.height += 1;
-      }
-      // this.item.y = out.height;
-      // return out.height;
-    },
     onHover: function(elementHover) {
       if (this.hover) {
         if (elementHover !== undefined) {
@@ -260,9 +250,6 @@ export default {
       if (this.item.properties.selectedLinkTo !== undefined)
         this.selectedLinkTo = this.item.properties.selectedLinkTo;
     }
-  },
-  updated() {
-    this.calcHeight();
   },
 };
 </script>

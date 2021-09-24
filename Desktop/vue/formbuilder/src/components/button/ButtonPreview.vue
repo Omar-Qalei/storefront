@@ -5,6 +5,7 @@
         @mouseover="hover = true"
         @mouseleave="hover = false"
         @click="goTo(item.properties)"
+        text
         :style="[
           item.properties.style ? item.properties.style : style,
           onHover(item.properties.elementHover),
