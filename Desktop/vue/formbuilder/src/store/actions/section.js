@@ -14,6 +14,7 @@ export const fetchCols = ({ commit }, payload) => {
 
 // Action to fetch sections and set in state through the mutation
 export const fetchSections = ({ commit, state }, payload) => {
+    console.log('clicked fetchSections')
     let g = lib.guid()
     let k = {
         id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0, resize: {
@@ -36,6 +37,7 @@ export const fetchSections = ({ commit, state }, payload) => {
 }
 
 export const fetchWebResources = ({ commit, state }, payload) => {
+    console.log('clicked fetchWebResources')
     let g = lib.guid();
     let k = {
         id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0, resize: {
@@ -57,6 +59,7 @@ export const fetchWebResources = ({ commit, state }, payload) => {
     }
 };
 export const fetchMobileResources = ({ commit, state }, payload) => {
+    console.log('clicked fetchMobileResources')
     let g = lib.guid();
     let k = {
         id: 0, 'x': 0, 'y': 0, 'w': 12, 'h': 10, 'i': g, 'type': 'section', resources: [], refGridLayout: [], selectedIndex: 0, resize: {
@@ -347,6 +350,7 @@ export const onSetElement = ({ commit }, payload) => {
 }
 
 export const onSetLayout = ({ commit }, payload) => {
+    console.log('clicked onSetLayout')
     commit('setLayout', payload)
 }
 

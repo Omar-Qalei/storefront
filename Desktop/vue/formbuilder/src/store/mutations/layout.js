@@ -163,3 +163,19 @@ export const saveHistoryLayout = (state, payload) => {
             console.log(error);
         });
 }
+// eslint-disable-next-line no-unused-vars
+export const setClearHistoryLayout = (state) => {
+    // state.redoStatus = true; state.undoStatus = true;
+    // state.webResources = [];
+    // state.mobileResources = [];
+    // state.sections = state.historyList[state.undoRedo][state.screenSize.screen];
+    // const webResources = JSON.stringify(state.webResources);
+    // const mobileResources = JSON.stringify(state.mobileResources);
+    // state.historyList = [];
+    // state.historyList.push({
+    //     saved: false,
+    //     web: JSON.parse(webResources),
+    //     mobile: JSON.parse(mobileResources),
+    // });
+    // state.undoRedo = state.historyList.length;
+}

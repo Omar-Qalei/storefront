@@ -279,6 +279,7 @@ export default {
       "fetchMobileResources",
       "onRearrangementResources",
       "onHistoryPages",
+      "onClearHistoryLayout",
     ]),
     onDragElement: function(event) {
       this.statusSection = event;
@@ -449,6 +450,9 @@ export default {
         this.fetchSections(resource);
         this.onRearrangementResources();
       }
+      this.onCheckUpdateSectionLayoutResized({
+        sectionId: this.selectedSection,
+      });
     },
     onMovedWidget: function() {
       if (this.$route.query.pageId && this.$route.query.pageId !== this.pageId)
@@ -638,7 +642,6 @@ export default {
           cols[i].style.fontSize = "80px";
         }
         this.fetchSections(resource);
-        this.onRearrangementResources();
       }
       if (type.screen === "mobile") {
         resource = this.getMobileResources;
@@ -649,10 +652,10 @@ export default {
           cols[i].style.fontSize = "44px";
         }
         this.onRearrangementResources();
-        this.onCheckUpdateSectionLayoutResized({
-          sectionId: this.selectedSection,
-        });
       }
+      this.onCheckUpdateSectionLayoutResized({
+        sectionId: this.selectedSection,
+      });
     },
   },
   mounted() {
@@ -707,6 +710,7 @@ export default {
   destroyed() {
     // this.selectedSection
     console.log("destoryed Grid View");
+    this.onClearHistoryLayout();
     this.onSelectedWidgetById({});
     this.selectedSection = 0;
     this.onCheckUpdateSectionLayoutResized({

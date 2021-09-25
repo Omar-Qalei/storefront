@@ -97,6 +97,7 @@ export default {
       "onResizeSectionScreen",
       "addNewSection",
       "onHistoryPages",
+      "onClearHistoryLayout",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -207,6 +208,7 @@ export default {
       this.onSelectedWidgetById({});
       this.pageId = null;
       this.getQueryStringParams();
+      this.onClearHistoryLayout();
     },
   },
   created() {

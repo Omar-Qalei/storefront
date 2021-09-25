@@ -61,3 +61,7 @@ export const onRedoPage = ({ commit }) => {
 export const onSaveHistoryLayout = ({ commit }, payload) => {
     commit('saveHistoryLayout', payload)
 }
+
+export const onClearHistoryLayout = ({ commit }) => {
+    commit('setClearHistoryLayout')
+}

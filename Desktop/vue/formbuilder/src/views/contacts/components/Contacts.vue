@@ -42,8 +42,16 @@
     </v-row>
 
     <!-- Add Contact -->
-    <v-dialog v-model="addDialog" width="500">
-      <v-card>
+    <v-navigation-drawer
+      v-model="addDialog"
+      class="mx-auto"
+      right
+      fixed
+      temporary
+      width="500"
+    >
+      <!-- <v-dialog v-model="addDialog" width="500"> -->
+      <v-card flat>
         <v-card-title class="text-h5 grey lighten-2">
           Add Contact
         </v-card-title>
@@ -107,12 +115,21 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+      <!-- </v-dialog> -->
+    </v-navigation-drawer>
     <!-- Add Contact -->
 
     <!-- Edit Contact -->
-    <v-dialog v-model="editDialog" width="500">
-      <v-card>
+    <v-navigation-drawer
+      v-model="editDialog"
+      class="mx-auto"
+      right
+      fixed
+      temporary
+      width="500"
+    >
+      <!-- <v-dialog v-model="editDialog" width="500"> -->
+      <v-card flat>
         <v-card-title class="text-h5 grey lighten-2">
           Modify Contact
         </v-card-title>
@@ -176,7 +193,8 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+      <!-- </v-dialog> -->
+    </v-navigation-drawer>
     <!-- Edit Contact -->
   </div>
 </template>

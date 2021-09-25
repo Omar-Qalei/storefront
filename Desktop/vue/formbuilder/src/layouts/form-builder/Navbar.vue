@@ -116,7 +116,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      "fetchSections",
       "onDrawer",
       "onDrawerPages",
       "onResizeSectionScreen",

@@ -296,6 +296,10 @@ export default {
           this.drawer = true;
           this.getSiteById();
           this.onSaveLayout();
+          this.$router.replace({
+            path: "formBuilder",
+            query: { siteId: this.siteId, pageId: this.getPages[0].id },
+          });
         })
         .catch((err) => console.log(err));
     },

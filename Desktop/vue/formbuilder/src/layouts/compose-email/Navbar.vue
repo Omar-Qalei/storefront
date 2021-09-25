@@ -78,21 +78,6 @@
       <v-btn icon small color="primary" @click.stop="onDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
-      <v-btn
-        class="text-capitalize font-weight-light fs-14"
-        color="primary"
-        text
-        :to="{ name: 'Preview', query: { siteId: siteId } }"
-        >Preview</v-btn
-      >
-      <v-btn
-        class="text-capitalize font-weight-light fs-14"
-        color="primary"
-        dark
-        x-large
-      >
-        Publish Website
-      </v-btn>
     </div>
   </v-app-bar>
   <!-- </div> -->
@@ -113,7 +98,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      "fetchSections",
       "onDrawer",
       "onDrawerPages",
       "onResizeSectionScreen",

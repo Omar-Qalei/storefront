@@ -78,7 +78,7 @@
       <v-col cols="9" align-self="center">
         <input v-model="borderRadius" type="range" min="0" max="100" />
       </v-col>
-      <v-col cols="2">
+      <v-col cols="3">
         <v-text-field
           outlined
           v-model="borderRadius"

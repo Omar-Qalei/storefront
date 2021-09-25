@@ -1,11 +1,11 @@
 <template>
   <div>
+    <!-- v-model="drawer"
+        :permanent="drawer" -->
     <div class="d-flex settings">
       <v-navigation-drawer
         width="200"
         height="100%"
-        v-model="drawer"
-        :permanent="drawer"
         left
         app
         clipped
@@ -111,7 +111,7 @@ export default {
             { text: "Mailing Lists", url: "mailingLists" },
             { text: "Sender", url: "sender" },
           ],
-        }
+        },
       ],
     };
   },

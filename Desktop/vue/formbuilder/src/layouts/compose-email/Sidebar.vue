@@ -1,5 +1,10 @@
 <template>
-  <v-navigation-drawer v-model="drawer" :permanent="drawer">
+  <v-navigation-drawer
+    class="mx-auto"
+    v-model="drawer"
+    :permanent="drawer"
+    right
+  >
     <!-- <v-list-item class="px-2">
           <v-list-item-title>Add Element</v-list-item-title>
         </v-list-item>
@@ -18,9 +23,9 @@
       <v-col cols="6">
         <ImageView />
       </v-col>
-      <v-col cols="6">
+      <!-- <v-col cols="6">
         <Menu />
-      </v-col>
+      </v-col> -->
       <v-col cols="6">
         <Map />
       </v-col>
@@ -39,7 +44,7 @@ import TextView from "../components/TextView";
 import ImageView from "../components/ImageView";
 // import Form from "../components/Form";
 // import Video from "../components/Video";
-import Menu from "../components/Menu";
+// import Menu from "../components/Menu";
 import Map from "../components/Map";
 // import Audio from "../components/Audio";
 
@@ -52,7 +57,7 @@ export default {
     ImageView,
     // Form,
     // Video,
-    Menu,
+    // Menu,
     Map,
     // Audio,
   },
