@@ -1,7 +1,7 @@
 <template>
   <!-- @mouseover="hover = true" @mouseleave="hover = false" -->
   <div class="widget">
-    <div v-html="item.properties.text"></div>
+    <div v-html="onSetInnerHTML(item.properties.style)"></div>
     <!-- <template v-if="selectedLinkTo === null">
       <label
         :id="item.i"
@@ -75,13 +75,13 @@ export default {
     sectionId: Number,
   },
   methods: {
-    onHover: function(elementHover) {
-      if (this.hover) {
-        if (elementHover !== undefined) {
-          return elementHover;
+    onSetInnerHTML: function(style) {
+      if (style) {
+        if (style.html !== undefined) {
+          return style.html;
         }
       } else {
-        return "";
+        return `"<p><span class="h3">Write your text here...</span></p>"`;
       }
     },
     goTo: function(properties) {

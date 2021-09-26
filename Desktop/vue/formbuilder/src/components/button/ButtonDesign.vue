@@ -211,7 +211,6 @@ export default {
       this.textColorHover = this.getSelectedWidgetById.properties.elementHover.color;
       this.backgroundColorHover = this.getSelectedWidgetById.properties.elementHover.backgroundColor;
     }
-    console.log(this.getSelectedWidgetById.properties.style);
     if (this.getSelectedWidgetById.properties.style === null) {
       this.getSelectedWidgetById.properties.style = {
         justifyContent: this.textHorizontal[this.selectedTextHorizontal].title,

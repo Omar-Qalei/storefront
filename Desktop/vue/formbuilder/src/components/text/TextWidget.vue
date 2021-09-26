@@ -1,5 +1,5 @@
 <template>
-  <div class="widget" contenteditable="false">
+  <div class="widget">
     <template v-if="editor && !displayEditor">
       <TextSetting
         :show="item.i === getSelectedWidgetById.i"
@@ -119,11 +119,6 @@ export default {
         sectionId: this.sectionId,
       });
     }
-    if (this.item.properties.style === null) {
-      this.style = {
-        // fontSize: "48px",
-      };
-    }
   },
   mounted() {
     this.editor = new Editor({
@@ -161,18 +156,15 @@ export default {
         ],
       },
     });
-
-    // console.log(this.item.properties.text);
-    if (this.item.properties.text === "Write your text here") {
-      // this.editor.commands.setContent(
-      //   `<h2 style="font-size:64px" >Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
-      // );
-      // this.editor.commands.setContent();
-    } else {
-      // this.editor.setContent(this.item.properties.text);
-      // document.getElementById(
-      //   this.item.i
-      // ).innerHTML = this.item.properties.text;
+    if (this.item.properties.style === null) {
+      this.item.properties.style = {
+        html: this.editor.getHTML(),
+        json: this.editor.getJSON(),
+      };
+      console.log(this.editor.getHTML());
+    }
+    if (this.item.properties.style !== null) {
+      this.editor.commands.setContent(this.item.properties.style.json);
     }
     const thiz = this;
     window.addEventListener("click", () => {
@@ -216,6 +208,8 @@ export default {
             console.log(error);
           });
       }
+      if (thiz.item.i === thiz.getSelectedWidgetById.i) thiz.status = true;
+      else thiz.status = false;
     });
     window.addEventListener("mouseup", () => {
       if (
@@ -252,6 +246,7 @@ export default {
           });
         }
     });
+    // else thiz.status = false;
   },
   updated() {
     if (
@@ -287,46 +282,10 @@ export default {
   /* position: absolute; */
   width: 100%;
   height: 100%;
+  /* contain: content;
+  content-visibility: auto; */
 }
 .d-flex {
   display: flex;
-}
-h3 {
-  font-size: 48px;
-}
-textarea {
-  color: inherit;
-  text-decoration: inherit;
-  text-transform: inherit;
-  text-align: inherit;
-  font-size: inherit;
-  resize: none;
-  overflow: hidden;
-  background-color: inherit;
-  height: 100%;
-  min-height: 100%;
-}
-.textarea {
-  /* color: inherit;
-  text-decoration: inherit;
-  text-transform: inherit;
-  text-align: inherit;
-  font-size: inherit;
-  resize: none;
-  box-shadow: none;
-  outline: none;
-  overflow: hidden;
-  background-color: inherit; */
-  /* height: 100%;
-  min-height: 100%; */
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  flex-flow: column;
-  outline: none;
-  box-shadow: none;
-  /* -webkit-font-variant-ligatures: none;
-  font-variant-ligatures: none; */
 }
 </style>

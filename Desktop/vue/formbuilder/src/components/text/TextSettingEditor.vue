@@ -315,32 +315,29 @@
             :items="getPages"
             item-text="name"
             return-object
-            v-model="getSelectedWidgetById.properties.page"
+            v-model="selectedPage"
             outlined
           ></v-select>
           <template v-if="selectedLinkTo === 1">
             <v-text-field
               placeholder="https://www.example.com"
-              v-model="getSelectedWidgetById.properties.url"
+              v-model="selectedUrl"
               outlined
               hide-details
             ></v-text-field>
-            <v-switch
-              label="Open a new tab"
-              v-model="getSelectedWidgetById.properties.newTab"
-            ></v-switch>
+            <v-switch label="Open a new tab" v-model="statusNewTab"></v-switch>
           </template>
           <v-text-field
             v-if="selectedLinkTo === 2"
             placeholder="Ex. 079-501-218"
-            v-model="getSelectedWidgetById.properties.phone"
+            v-model="selectedPhone"
             outlined
             hide-details
           ></v-text-field>
           <v-text-field
             v-if="selectedLinkTo === 3"
             placeholder="example@example.com"
-            v-model="getSelectedWidgetById.properties.email"
+            v-model="selectedEmail"
             outlined
             hide-details
           ></v-text-field>
@@ -559,6 +556,8 @@ export default {
       selectedPage: null,
       selectedUrl: null,
       statusNewTab: false,
+      selectedPhone: null,
+      selectedEmail: null,
       tags: [
         { id: 0, title: "Page" },
         { id: 1, title: "URL" },
@@ -660,22 +659,19 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: `?siteId=${this.getSelectedWidgetById.properties.page.site_id}&pageId=${this.getSelectedWidgetById.properties.page.id}`,
+              href: `?siteId=${this.selectedPage.site_id}&pageId=${this.selectedPage.id}`,
               target: "_self",
             })
             .run();
           break;
         case 1:
-          console.log(this.getSelectedWidgetById.properties.newTab);
           this.editor
             .chain()
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: this.getSelectedWidgetById.properties.url,
-              target: this.getSelectedWidgetById.properties.newTab
-                ? "_blank"
-                : "_self",
+              href: this.selectedUrl,
+              target: this.statusNewTab ? "_blank" : "_self",
             })
             .run();
           break;
@@ -685,7 +681,7 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: `tel:${this.getSelectedWidgetById.properties.phone}`,
+              href: `tel:${this.selectedPhone}`,
               target: "_self",
             })
             .run();
@@ -696,7 +692,7 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: `mailTo:${this.getSelectedWidgetById.properties.email}`,
+              href: `mailTo:${this.selectedEmail}`,
               target: "_self",
             })
             .run();
@@ -704,6 +700,36 @@ export default {
       }
       this.linkStatus = false;
       // update link
+    },
+    getLink() {
+      // if (Object.keys(this.editor.getAttributes("link")).length > 0) {
+      //   const str = this.editor.getAttributes("link").href;
+      //   if (str.includes("pageId=")) {
+      //     this.selectedLinkTo = 0;
+      //     if (str.split("pageId=")) {
+      //       const href = +str.split("pageId=")[1];
+      //       console.log(href);
+      //     }
+      //   }
+      //   if (str.includes("//www.")) {
+      //     this.selectedLinkTo = 1;
+      //     this.selectedUrl = str;
+      //     this.statusNewTab =
+      //       this.editor.getAttributes("link").target === "_blank"
+      //         ? true
+      //         : false;
+      //   }
+      //   if (str.includes("tel:")) {
+      //     const href = href.split("tel:")[1];
+      //     this.selectedLinkTo = 2;
+      //     this.selectedPhone = href;
+      //   }
+      //   if (str.includes("mailTo:")) {
+      //     const href = href.split("mailTo:")[1];
+      //     this.selectedLinkTo = 3;
+      //     this.selectedEmail = href;
+      //   }
+      // }
     },
   },
   watch: {
@@ -854,10 +880,11 @@ export default {
   },
   updated() {
     this.textColor = this.editor.getAttributes("textStyle").color;
-    console.log(
-      Object.keys(this.editor.getAttributes("textStyle")).length,
-      this.editor.getAttributes("textStyle")
-    );
+    // if (!this.linkStatus) this.getLink();
+    this.getSelectedWidgetById.properties.style = {
+      json: this.editor.getJSON(),
+      html: this.editor.getHTML(),
+    };
   },
   created() {
     if (this.getScreenSize.screen === "web") {

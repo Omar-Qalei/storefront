@@ -273,8 +273,8 @@ export default {
 .widget {
   width: 100%;
   height: 100%;
-  contain: content;
-  content-visibility: auto;
+  /* contain: content;
+  content-visibility: auto; */
 }
 form {
   position: absolute !important;
