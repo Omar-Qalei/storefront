@@ -148,3 +148,11 @@ label.headline {
         font-size: 14px !important;
     }
 } */
+.ProseMirror {
+    outline: none;
+    box-shadow: none;
+}
+.v-application ::v-deep a {
+    color: inherit !important;
+    text-decoration: none !important;
+}

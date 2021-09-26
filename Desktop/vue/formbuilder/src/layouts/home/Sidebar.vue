@@ -52,18 +52,21 @@
                   </v-list-item-content>
                 </template>
 
-                <v-list-item
-                  v-for="child in item.submenu"
-                  :key="child.title"
-                  @click="goToPath(item.url)"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title
-                      class="silver-blue-text"
-                      v-text="child.text"
-                    ></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
+                <template>
+                  <v-list-item
+                    v-for="child in item.submenu"
+                    :key="child.title"
+                    :to="item.url"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title
+                        class="silver-blue-text"
+                        v-text="child.text"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <template> </template>
               </v-list-group>
             </template>
           </v-list-item-group>

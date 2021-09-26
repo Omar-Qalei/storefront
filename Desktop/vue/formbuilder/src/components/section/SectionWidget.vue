@@ -33,11 +33,9 @@
               onMoveElement(index);
               onCheckWidget($event, item);
             "
-            @dblclick="
-              selectedElement = null;
-              onPreventMove();
-            "
+            @dblclick="onPreventMove()"
           >
+            <!-- selectedElement = null; -->
             <GridItem
               v-if="item.type != 'form' && item.type != 'text'"
               :class="{ editMode: !preview, dropped: item.i === 'drop' }"
@@ -68,8 +66,6 @@
                 selectedElement === item.i ? showElement : '',
               ]"
             >
-              <!-- {{ item.i }}////{{ item.gridKey }} -->
-
               <label
                 v-show="hoverElement === item.i && selectedElement !== item.i"
                 class="hint text-capitalize"
@@ -165,7 +161,6 @@
               :i="item.i"
               :minW="1"
               :autoSize="true"
-              :is-resizable-vertical="false"
               :static="statusPreventCollision"
               ref="gridItem"
               @move="moveElementY(item)"
@@ -291,13 +286,7 @@ export default {
         sectionId: this.sectionId,
         h: layoutH !== 0 ? layoutH : this.minHLayout,
       };
-      // console.log(data);
-      // this.$emit(
-      //   "sectionHeight",
-      //   document.getElementById("layout").style.height
-      // );
       this.updateSectionLayout(data);
-      // this.$emit("layout-height", layoutH);
     },
     resizeEvent: function() {
       this.onResizeSection(true);
@@ -376,6 +365,7 @@ export default {
   /* border: 1px solid black; */
 }
 .vue-grid-item:not(.vue-grid-placeholder) {
+  /* content-visibility: auto; */
   /* background: #ccc; */
   /* border: 1px solid black; */
 }

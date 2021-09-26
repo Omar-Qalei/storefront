@@ -1,328 +1,5 @@
 <template>
   <v-sheet class="settings rounded-pill" elevation="1">
-    <!-- <div v-if="editor">
-      Font Type
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleBold()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('bold') }"
-      >
-        bold
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleItalic()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('italic') }"
-      >
-        italic
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleStrike()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('strike') }"
-      >
-        strike
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleCode()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('code') }"
-      >
-        code
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .unsetAllMarks()
-            .run()
-        "
-      >
-        clear marks
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .clearNodes()
-            .run()
-        "
-      >
-        clear nodes
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setParagraph()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('paragraph') }"
-      >
-        paragraph
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 1 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
-      >
-        h1
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 2 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
-      >
-        h2
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 3 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
-      >
-        h3
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 4 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
-      >
-        h4
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 5 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
-      >
-        h5
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleHeading({ level: 6 })
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
-      >
-        h6
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleBulletList()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-      >
-        bullet list
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleOrderedList()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-      >
-        ordered list
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleCodeBlock()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('codeBlock') }"
-      >
-        code block
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .toggleBlockquote()
-            .run()
-        "
-        :class="{ 'is-active': editor.isActive('blockquote') }"
-      >
-        blockquote
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setHorizontalRule()
-            .run()
-        "
-      >
-        horizontal rule
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setHardBreak()
-            .run()
-        "
-      >
-        hard break
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .undo()
-            .run()
-        "
-      >
-        undo
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .redo()
-            .run()
-        "
-      >
-        redo
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setFontFamily('serif')
-            .run()
-        "
-        :class="{
-          'is-active': editor.isActive('textStyle', {
-            fontFamily: 'serif',
-          }),
-        }"
-      >
-        serif
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setFontFamily('monospace')
-            .run()
-        "
-        :class="{
-          'is-active': editor.isActive('textStyle', {
-            fontFamily: 'monospace',
-          }),
-        }"
-      >
-        monospace
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setColor('#958DF1')
-            .run()
-        "
-        :class="{
-          'is-active': editor.isActive('textStyle', { color: '#958DF1' }),
-        }"
-      >
-        purple
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setAddClass('h100')
-            .run()
-        "
-        :class="{
-          'is-active': editor.isActive('textStyle', { addClass: 'h100' }),
-        }"
-      >
-        100px
-      </button>
-      <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setAddClass('h50')
-            .run()
-        "
-        :class="{
-          'is-active': editor.isActive('textStyle', { addClass: 'h50' }),
-        }"
-      >
-        50px
-      </button>
-    </div> -->
     <!-- Font Size -->
     <v-menu
       bottom
@@ -388,7 +65,7 @@
         <v-btn color="black" icon v-bind="attrs" v-on="on" class="mr-4">
           <v-icon
             :class="{
-              'is-active': statusIsActiveList(),
+              'is-active': statusIsActiveFontFamilyList(),
             }"
             >mdi-fountain-pen</v-icon
           >
@@ -408,15 +85,15 @@
               .run()
           "
           :style="
-            statusIsActive(item.value)
+            statusIsActiveFontFamily(item.value)
               ? { color: '#6200ea', backgroundColor: '#ede1fd' }
               : ''
           "
         >
           <v-list-item-icon class="mr-2">
             <v-icon
-              :color="statusIsActive(item.value) ? 'primary' : ''"
-              v-show="statusIsActive(item.value)"
+              :color="statusIsActiveFontFamily(item.value) ? 'primary' : ''"
+              v-show="statusIsActiveFontFamily(item.value)"
               >mdi-check</v-icon
             >
           </v-list-item-icon>
@@ -428,7 +105,7 @@
 
     <!-- Color -->
     <span class="mr-4">
-      <ColorPickerWidget
+      <ColorPickerTextEditorWidget
         @colorElement="
           textColor = $event;
           canChangeColor
@@ -525,29 +202,81 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn color="black" icon v-bind="attrs" v-on="on" class="mr-4">
-          <v-icon>mdi-format-align-left</v-icon>
+          <v-icon
+            :class="{
+              'is-active': statusIsActiveTextAlignList(),
+            }"
+            >mdi-format-align-left</v-icon
+          >
         </v-btn>
       </template>
-
-      <v-btn-toggle return-object v-model="selectedTextHorizontal">
+      <v-card>
+        <!-- Text Align Left -->
         <v-btn
-          v-for="text in textHorizontal"
-          :key="text.id"
-          :value="text.id"
-          @click="onChangeTextAlignment(text.title)"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setTextAlign('left')
+              .run()
+          "
+          icon
+          color="black"
+          class="ma-0 mr-4"
         >
-          <v-icon>{{ text.icon }}</v-icon>
+          <v-icon
+            :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
+            >mdi-format-align-left</v-icon
+          >
         </v-btn>
-      </v-btn-toggle>
+
+        <!-- Text Align Center -->
+        <v-btn
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setTextAlign('center')
+              .run()
+          "
+          icon
+          color="black"
+          class="ma-0 mr-4"
+        >
+          <v-icon
+            :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
+            >mdi-format-align-center</v-icon
+          >
+        </v-btn>
+
+        <!-- Text Align Right -->
+        <v-btn
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setTextAlign('right')
+              .run()
+          "
+          icon
+          color="black"
+          class="ma-0 mr-4"
+        >
+          <v-icon
+            :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
+            >mdi-format-align-right</v-icon
+          >
+        </v-btn>
+      </v-card>
     </v-menu>
     <!-- Alignment -->
 
     <!-- Links -->
     <v-menu
+      v-model="linkStatus"
       offset-y
       :nudge-width="200"
       :close-on-content-click="false"
-      :close-on-click="false"
       :style="{ minHeight: '400px' }"
       attach
     >
@@ -557,7 +286,7 @@
         </v-btn>
       </template>
 
-      <v-row class="pa-4 bg-white">
+      <v-row class="pa-4 bg-white text-left">
         <v-col cols="12">
           <h2 class="headline font-weight-medium mb-2">
             Link Settings
@@ -622,11 +351,47 @@
       </v-row>
     </v-menu>
     <!-- Links -->
+
+    <!-- History -->
+    <!-- Undo -->
+    <v-btn
+      @click="
+        editor
+          .chain()
+          .focus()
+          .undo()
+          .run()
+      "
+      icon
+      color="black"
+      class="ma-0 mr-4"
+    >
+      <v-icon>mdi-undo</v-icon>
+    </v-btn>
+    <!-- Undo -->
+
+    <!-- Redo -->
+    <v-btn
+      @click="
+        editor
+          .chain()
+          .focus()
+          .redo()
+          .run()
+      "
+      icon
+      color="black"
+      class="ma-0 mr-4"
+    >
+      <v-icon>mdi-redo</v-icon>
+    </v-btn>
+    <!-- Redo -->
+    <!-- History -->
   </v-sheet>
 </template>
 
 <script>
-import ColorPickerWidget from "../ColorPickerWidget";
+import ColorPickerTextEditorWidget from "../ColorPickerTextEditorWidget.vue";
 import { mapGetters } from "vuex";
 export default {
   name: "TextSettingEditor",
@@ -637,11 +402,12 @@ export default {
     },
   },
   components: {
-    ColorPickerWidget,
+    ColorPickerTextEditorWidget,
   },
   data() {
     return {
       canChangeColor: false,
+      linkStatus: false,
       textColor: "#000000de",
       elementStatus: "element",
       fontSizes: [
@@ -835,48 +601,7 @@ export default {
     },
   },
   methods: {
-    onChangeFontSize: function(value) {
-      // if (this.getScreenSize.screen === "web") {
-      //   // this.fontSizeScreen.web = value;
-      //   // if (this.fontSizeScreen.mobile === null)
-      //   //   this.fontSizeScreen.mobile = value;
-      // }
-
-      // if (this.getScreenSize.screen === "mobile") {
-      //   this.fontSizeScreen.mobile = value;
-      // }
-
-      const styles = {
-        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-        fontWeight: this.fontWeight,
-        fontStyle: this.fontStyle,
-        textDecoration: this.textDecoration,
-        color: this.textColor,
-        textTransform: this.letterCases[this.selectedLetterCase].value,
-        fontSize: value,
-        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-      };
-      this.$emit("onChangeFontSize", styles);
-    },
-    onChangeFontFamily: function() {
-      const styles = {
-        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-        fontWeight: this.fontWeight,
-        fontStyle: this.fontStyle,
-        textDecoration: this.textDecoration,
-        color: this.textColor,
-        textTransform: this.letterCases[this.selectedLetterCase].value,
-        // fontSize: this.fontSizes[this.selectedFontSize].value,
-        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-      };
-      this.$emit("onChangeFontFamily", styles);
-    },
     onChangeFontColor: function() {
-      // this.editor
-      //   .chain()
-      //   .focus()
-      //   .setColor(this.textColor)
-      //   .run();
       if (this.canChangeColor) {
         this.editor
           .chain()
@@ -884,94 +609,11 @@ export default {
           .setColor(this.textColor)
           .run();
       }
-      const styles = {
-        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-        fontWeight: this.fontWeight,
-        fontStyle: this.fontStyle,
-        textDecoration: this.textDecoration,
-        color: this.textColor,
-        textTransform: this.letterCases[this.selectedLetterCase].value,
-        // fontSize: this.fontSizes[this.selectedFontSize].value,
-        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-      };
-      this.$emit("onChangeFontColor", styles);
     },
-    onChangeFont: function(action) {
-      let styles;
-      switch (action) {
-        case "bold":
-          styles = {
-            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-            fontWeight: this.fontWeight,
-            fontStyle: this.fontStyle,
-            textDecoration: this.textDecoration,
-            color: this.textColor,
-            textTransform: this.letterCases[this.selectedLetterCase].value,
-            // fontSize: this.fontSizes[this.selectedFontSize].value,
-            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-          };
-          this.$emit("onChangeFontBold", styles);
-          break;
-
-        case "italic":
-          styles = {
-            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-            fontWeight: this.fontWeight,
-            fontStyle: this.fontStyle,
-            textDecoration: this.textDecoration,
-            color: this.textColor,
-            textTransform: this.letterCases[this.selectedLetterCase].value,
-            // fontSize: this.fontSizes[this.selectedFontSize].value,
-            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-          };
-          this.$emit("onChangeFontStyle", styles);
-          break;
-
-        case "underline":
-          styles = {
-            textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-            fontWeight: this.fontWeight,
-            fontStyle: this.fontStyle,
-            textDecoration: this.textDecoration,
-            color: this.textColor,
-            textTransform: this.letterCases[this.selectedLetterCase].value,
-            // fontSize: this.fontSizes[this.selectedFontSize].value,
-            fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-          };
-          this.$emit("onChangeFontUnderline", styles);
-          break;
-      }
-    },
-    onChangeFontTransform: function() {
-      const styles = {
-        textAlign: this.textHorizontal[this.selectedTextHorizontal].title,
-        fontWeight: this.fontWeight,
-        fontStyle: this.fontStyle,
-        textDecoration: this.textDecoration,
-        color: this.textColor,
-        textTransform: this.letterCases[this.selectedLetterCase].value,
-        // fontSize: this.fontSizes[this.selectedFontSize].value,
-        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-      };
-      this.$emit("onChangeFontTransform", styles);
-    },
-    onChangeTextAlignment: function(value) {
-      const styles = {
-        textAlign: value,
-        fontWeight: this.fontWeight,
-        fontStyle: this.fontStyle,
-        textDecoration: this.textDecoration,
-        color: this.textColor,
-        textTransform: this.letterCases[this.selectedLetterCase].value,
-        // fontSize: this.fontSizes[this.selectedFontSize].value,
-        fontFamily: this.fontFamilies[this.selectedFontFamily].value,
-      };
-      this.$emit("onChangeTextAlignment", styles);
-    },
-    statusIsActive: function(value) {
+    statusIsActiveFontFamily: function(value) {
       return this.editor.isActive("textStyle", { fontFamily: value });
     },
-    statusIsActiveList: function() {
+    statusIsActiveFontFamilyList: function() {
       for (let index = 0; index < this.fontFamilies.length; index++) {
         const status = this.editor.isActive("textStyle", {
           fontFamily: this.fontFamilies[index].value,
@@ -981,7 +623,7 @@ export default {
       return false;
     },
     statusIsActiveClass: function(value) {
-      return this.editor.isActive("textStyle", { addClass: value });
+      if (value) return this.editor.isActive("textStyle", { addClass: value });
     },
     statusIsActiveClassList: function() {
       for (let index = 0; index < this.fontSizes.length; index++) {
@@ -999,9 +641,18 @@ export default {
         valueSize: "48px",
       };
     },
+    statusIsActiveTextAlignList: function() {
+      for (let index = 0; index < this.textHorizontal.length; index++) {
+        const status = this.editor.isActive("textStyle", {
+          textAlign: this.textHorizontal[index].title,
+        });
+        if (status) return true;
+      }
+      return false;
+    },
     setLink() {
       const previousUrl = this.editor.getAttributes("link").href;
-      console.log(previousUrl);
+      console.log("previousUrl", previousUrl);
       switch (this.selectedLinkTo) {
         case 0:
           this.editor
@@ -1009,19 +660,22 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: this.getSelectedWidgetById.properties.page,
+              href: `?siteId=${this.getSelectedWidgetById.properties.page.site_id}&pageId=${this.getSelectedWidgetById.properties.page.id}`,
               target: "_self",
             })
             .run();
           break;
         case 1:
+          console.log(this.getSelectedWidgetById.properties.newTab);
           this.editor
             .chain()
             .focus()
             .extendMarkRange("link")
             .setLink({
               href: this.getSelectedWidgetById.properties.url,
-              target: "_blank",
+              target: this.getSelectedWidgetById.properties.newTab
+                ? "_blank"
+                : "_self",
             })
             .run();
           break;
@@ -1031,7 +685,7 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: this.getSelectedWidgetById.properties.phone,
+              href: `tel:${this.getSelectedWidgetById.properties.phone}`,
               target: "_self",
             })
             .run();
@@ -1042,17 +696,18 @@ export default {
             .focus()
             .extendMarkRange("link")
             .setLink({
-              href: this.getSelectedWidgetById.properties.email,
+              href: `mailTo:${this.getSelectedWidgetById.properties.email}`,
               target: "_self",
             })
             .run();
           break;
       }
+      this.linkStatus = false;
       // update link
     },
   },
   watch: {
-    statusIsActive: function(value) {
+    statusIsActiveFontFamily: function(value) {
       return this.editor.isActive("textStyle", { fontFamily: value });
     },
     statusIsActiveClass: function(value) {
@@ -1198,90 +853,13 @@ export default {
     },
   },
   updated() {
-    if (this.editor.getAttributes("textStyle"))
-      this.textColor = this.editor.getAttributes("textStyle").color;
-    // if (this.i < 2) {
-    //   const p = document.querySelector("#p");
-    //   let range = new Range();
-    //   range.setStart(p.firstChild, 1);
-    //   range.setEnd(p.firstChild, 4);
-    //   // alert(range); // ample: italic and bol
-    //   // use this range for selection (explained later)
-    //   document.getSelection().removeAllRanges();
-    //   window.getSelection().addRange(range);
-    //   var inputRange = p.createTextRange();
-    //   inputRange.moveStart("character", 1);
-    //   inputRange.collapse();
-    //   inputRange.moveEnd("character", 1);
-    //   inputRange.select();
-    //   this.i++;
-    // }
-    // var elemToSelect = document.querySelector("b");
-    // if (window.getSelection) {
-    //   // all browsers, except IE before version 9
-    //   var selection = window.getSelection();
-    //   var rangeToSelect = document.createRange();
-    //   rangeToSelect.selectNodeContents(elemToSelect);
-    //   selection.removeAllRanges();
-    //   selection.addRange(rangeToSelect);
-    // } else {
-    //   if (document.body.createTextRange) {
-    //     // Internet Explorer
-    //     var rangeToSelect2 = document.body.createTextRange();
-    //     rangeToSelect2.moveToElementText(elemToSelect);
-    //     rangeToSelect2.select();
-    //   }
-    // }
-    // document.onselectionchange = function() {
-    //   let selection = document.getSelection();
-    //   if (selection.type === "Range") {
-    //     console.log(selection);
-    //     let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
-    //     // anchorNode and focusNode are text nodes usually
-    //     console.log(
-    //       `${anchorNode?.data}, offset ${anchorOffset}`,
-    //       `${focusNode?.data}, offset ${focusOffset}`
-    //     );
-    //     document.createTextR
-    //     // rangeToSelect2.select();
-    //   }
-    // };
-    // if (selection.rangeCount > 0) {
-    //   selection.removeAllRanges();
-    // }
-    // const p = window.getSelection();
-    // console.log(p);
-    // let range = new Range();
-    // range.setStart(p, 2);
-    // range.setEnd(p, 4);
-    // document.getSelection().addRange(range);
+    this.textColor = this.editor.getAttributes("textStyle").color;
+    console.log(
+      Object.keys(this.editor.getAttributes("textStyle")).length,
+      this.editor.getAttributes("textStyle")
+    );
   },
   created() {
-    // if (this.getScreenSize.screen === "web") {
-    //   this.fontSizes = [
-    //     { id: 0, title: "Heading 1", value: "80px", size: "32px" },
-    //     { id: 1, title: "Heading 2", value: "64px", size: "30px" },
-    //     { id: 2, title: "Heading 3", value: "48px", size: "26px" },
-    //     { id: 3, title: "Heading 4", value: "40px", size: "22px" },
-    //     { id: 4, title: "Heading 5", value: "32px", size: "18px" },
-    //     { id: 5, title: "Heading 6", value: "24px", size: "14px" },
-    //     { id: 6, title: "Paragraph 1", value: "18px", size: "18px" },
-    //     { id: 7, title: "Paragraph 2", value: "16px", size: "16px" },
-    //     { id: 8, title: "Paragraph 3", value: "14px", size: "14px" },
-    //   ];
-    // } else {
-    //   this.fontSizes = [
-    //     { id: 0, title: "Heading 1", value: "44px", size: "32px" },
-    //     { id: 1, title: "Heading 2", value: "36px", size: "30px" },
-    //     { id: 2, title: "Heading 3", value: "32px", size: "26px" },
-    //     { id: 3, title: "Heading 4", value: "28px", size: "22px" },
-    //     { id: 4, title: "Heading 5", value: "24px", size: "18px" },
-    //     { id: 5, title: "Heading 6", value: "20px", size: "14px" },
-    //     { id: 6, title: "Paragraph 1", value: "18px", size: "18px" },
-    //     { id: 7, title: "Paragraph 2", value: "16px", size: "16px" },
-    //     { id: 8, title: "Paragraph 3", value: "14px", size: "14px" },
-    //   ];
-    // }
     if (this.getScreenSize.screen === "web") {
       this.fontSizes = [
         {
@@ -1422,8 +1000,8 @@ export default {
 <style scoped>
 .settings {
   position: absolute;
-  min-width: 700px;
-  max-width: 700px;
+  min-width: 800px;
+  max-width: 800px;
   top: -40px;
 }
 .text-grey {

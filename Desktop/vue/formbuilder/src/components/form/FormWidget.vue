@@ -249,12 +249,12 @@ export default {
     },
   },
   updated() {
-    if (
-      this.item.i === this.getSelectedWidgetById.i &&
-      this.item.type === "form"
-    ) {
-      this.calcContainerHeightByRow();
-    }
+    // if (
+    //   this.item.i === this.getSelectedWidgetById.i &&
+    //   this.item.type === "form"
+    // ) {
+    //   this.calcContainerHeightByRow();
+    // }
   },
 };
 </script>
@@ -273,6 +273,8 @@ export default {
 .widget {
   width: 100%;
   height: 100%;
+  contain: content;
+  content-visibility: auto;
 }
 form {
   position: absolute !important;

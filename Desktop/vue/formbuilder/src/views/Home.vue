@@ -8,7 +8,7 @@
           <Contacts v-if="path === 'contacts'" />
           <Sites v-if="path === 'sites'" />
           <Billing v-if="path === 'billing'" @goToPath="goToPath($event)" />
-          <Marketing v-if="path === 'marketing'" />
+          <!-- <Marketing v-if="path === 'marketing'" /> -->
           <Account v-if="path === 'account'" />
           <Plan v-if="path === 'plans'" />
         </v-slide-y-transition>
@@ -22,7 +22,7 @@ import Contacts from "./contacts/Main.vue";
 import Sites from "./sites/Sites";
 import Navbar from "../layouts/home/Navbar";
 import Sidebar from "../layouts/home/Sidebar";
-import Marketing from "./marketing/Main";
+// import Marketing from "./marketing/Main";
 import Billing from "./billing/Main";
 import Account from "./account/Main";
 import Plan from "./plans/Main";
@@ -35,7 +35,7 @@ export default {
     Contacts,
     Sites,
     Billing,
-    Marketing,
+    // Marketing,
     Account,
     Plan,
   },

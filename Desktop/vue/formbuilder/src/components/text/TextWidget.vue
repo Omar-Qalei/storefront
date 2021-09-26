@@ -14,10 +14,9 @@
         :editor="editor"
       />
     </template>
-    <div>
-      <!-- <menu-bar class="editor__header" :editor="editor" /> -->
+    <template v-if="editor">
       <editor-content :id="item.i" :editor="editor" />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -30,11 +29,13 @@ import { Editor, EditorContent } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
 import TextStyle from "@tiptap/extension-text-style";
 import FontFamily from "@tiptap/extension-font-family";
-import AddClass from "./extensions/extension-add-class";
 import { Color } from "@tiptap/extension-color";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
-// import styles from "../../mixins/styles";
+import AddClass from "./extensions/extension-add-class";
+import TextAlign from "./extensions/extension-text-align";
+
+const EXTRA_EXTENSIONS = [AddClass, TextAlign];
 
 export default {
   name: "TextWidget",
@@ -55,26 +56,9 @@ export default {
       rtl: false,
       disabledTitle: null,
       selection: null,
-      containers: "p, span",
-      style: {
-        textAlign: "",
-        fontWeight: "",
-        fontStyle: "",
-        textDecoration: "",
-        color: "black",
-        textTransform: "",
-        // fontSize: "56px",
-      },
+      margin: [0, 0],
+      rowHeight: 24,
       displayEditor: false,
-      styles: {
-        textAlign: "",
-        fontWeight: "",
-        fontStyle: "",
-        textDecoration: "",
-        color: "black",
-        textTransform: "",
-        fontSize: "",
-      },
     };
   },
   props: {
@@ -99,11 +83,6 @@ export default {
     preventMove: function(value) {
       this.displayEditor = value;
     },
-    // getScreenSize: function(event) {
-    //   if(event.screen) {
-
-    //   }
-    // }
   },
   methods: {
     ...mapActions([
@@ -113,8 +92,33 @@ export default {
       "onCheckUpdateSectionLayoutResized",
       "onHistoryPages",
     ]),
+    calcContainerHeightByRow: function() {
+      if (document.getElementById(this.item.i)) {
+        let h = document.getElementById(this.item.i).getBoundingClientRect()
+          .height;
+        let height = Math.round((h - this.margin[1]) / this.rowHeight);
+        if (height % 2 !== 0) {
+          height += 1;
+        }
+        if (this.getSelectedWidgetById.h < height)
+          this.getSelectedWidgetById.h = height;
+      }
+    },
+    onDisplayEditor: function(event) {
+      this.displayEditor = event;
+      this.$emit("onPreventMove", event);
+    },
   },
   created() {
+    if (
+      this.item.i === this.getSelectedWidgetById.i &&
+      this.item.type === "text"
+    ) {
+      this.calcContainerHeightByRow();
+      this.onCheckUpdateSectionLayoutResized({
+        sectionId: this.sectionId,
+      });
+    }
     if (this.item.properties.style === null) {
       this.style = {
         // fontSize: "48px",
@@ -128,44 +132,42 @@ export default {
         TextStyle,
         FontFamily,
         Color,
-        AddClass,
         Underline,
         Link,
+        ...EXTRA_EXTENSIONS,
       ],
-      // content: `
-      //   Write your text here
-      // `,
-      content: `
-        
-      `,
+      content: {
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                marks: [
+                  {
+                    type: "textStyle",
+                    attrs: {
+                      fontFamily: null,
+                      color: null,
+                      addClass: "h3",
+                    },
+                  },
+                ],
+                text: "Write your text here...",
+              },
+            ],
+          },
+        ],
+      },
     });
 
     // console.log(this.item.properties.text);
     if (this.item.properties.text === "Write your text here") {
-      this.editor.commands.setContent(
-        `<h2 style="font-size:64px" >Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
-      );
-      // this.editor.value.commands.setContent(
-      //   `<h2>Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
+      // this.editor.commands.setContent(
+      //   `<h2 style="font-size:64px" >Hi there,</h2><p><span class="h6">this is a </span><em><span class="h6">basic</span></em><span class="h6"> example of </span><strong><span class="h6">tiptap</span></strong><span class="h6">. Sure, there are all kind of basic text styles you’d probably expect from a t</span><span class="h1">ext editor. But wait unti</span><span class="h6">l you see the lists:</span></p><ul><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class="language-css">body {\n  display: none;\n}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little That’s a bullet list with one …</p><ul><li><p>bit around. Don’t forget to check the other examples too.</p></li></ul><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Mom</p></blockquote>'`
       // );
-      // document.getElementById(
-      //   this.item.i
-      // ).innerHTML = `<h3>Write your text here</h3>`;
-      // this.editor.commands.setContent({
-      //   type: "doc",
-      //   content: [
-      //     {
-      //       type: "paragraph",
-      //       content: [
-      //         {
-      //           type: "text",
-      //           text: "Example Text",
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // });
-      // this.editor.commands.setContent("<p class='h3'>Write your text here</p>");
+      // this.editor.commands.setContent();
     } else {
       // this.editor.setContent(this.item.properties.text);
       // document.getElementById(
@@ -174,6 +176,15 @@ export default {
     }
     const thiz = this;
     window.addEventListener("click", () => {
+      if (
+        thiz.item.i === thiz.getSelectedWidgetById.i &&
+        thiz.item.type === "text"
+      ) {
+        thiz.calcContainerHeightByRow();
+        thiz.onCheckUpdateSectionLayoutResized({
+          sectionId: thiz.sectionId,
+        });
+      }
       if (thiz.item.i !== thiz.getSelectedWidgetById.i && thiz.status) {
         const webResources = JSON.stringify(thiz.getWebResources);
         const mobileResources = JSON.stringify(thiz.getMobileResources);
@@ -206,21 +217,60 @@ export default {
           });
       }
     });
-    // document
-    //   .getElementById(this.item.i)
-    //   .addEventListener("compositionupdate", () => {
-    //     console.log("checked");
-    //   });
+    window.addEventListener("mouseup", () => {
+      if (
+        thiz.item.i === thiz.getSelectedWidgetById.i &&
+        thiz.item.type === "text"
+      ) {
+        thiz.calcContainerHeightByRow();
+        thiz.onCheckUpdateSectionLayoutResized({
+          sectionId: thiz.sectionId,
+        });
+      }
+    });
+    window.addEventListener("keyup", (event) => {
+      if (event.code !== "Backspace" || event.code !== "Delete")
+        if (
+          thiz.item.i === thiz.getSelectedWidgetById.i &&
+          thiz.item.type === "text"
+        ) {
+          thiz.calcContainerHeightByRow();
+          thiz.onCheckUpdateSectionLayoutResized({
+            sectionId: thiz.sectionId,
+          });
+        }
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.code !== "Backspace" || event.code !== "Delete")
+        if (
+          thiz.item.i === thiz.getSelectedWidgetById.i &&
+          thiz.item.type === "text"
+        ) {
+          thiz.calcContainerHeightByRow();
+          thiz.onCheckUpdateSectionLayoutResized({
+            sectionId: thiz.sectionId,
+          });
+        }
+    });
+  },
+  updated() {
+    if (
+      this.item.i === this.getSelectedWidgetById.i &&
+      this.item.type === "text"
+    ) {
+      this.calcContainerHeightByRow();
+      this.onCheckUpdateSectionLayoutResized({
+        sectionId: this.sectionId,
+      });
+    }
   },
   beforeUnmount() {
     this.editor.destroy();
   },
-  updated() {
-    console.log(this.editor.getJSON(), this.editor.getHTML());
-    this.onTextHeight();
-  },
   destroyed() {
     console.log("destroyed");
+    window.removeEventListener("click", () => {});
+    window.removeEventListener("mouseup", () => {});
   },
 };
 </script>
@@ -278,11 +328,5 @@ textarea {
   box-shadow: none;
   /* -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none; */
-}
-.v-application a {
-  text-decoration: none !important;
-}
-::v-deep .v-application a {
-  color: inherit !important;
 }
 </style>
