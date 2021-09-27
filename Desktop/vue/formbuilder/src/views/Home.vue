@@ -11,6 +11,9 @@
           <!-- <Marketing v-if="path === 'marketing'" /> -->
           <Account v-if="path === 'account'" />
           <Plan v-if="path === 'plans'" />
+          <Campaigns v-if="path === 'campaigns'" />
+          <MailingLists v-if="path === 'mailingLists'" />
+          <Senders v-if="path === 'senders'" />
         </v-slide-y-transition>
       </v-main>
     </div>
@@ -26,7 +29,9 @@ import Sidebar from "../layouts/home/Sidebar";
 import Billing from "./billing/Main";
 import Account from "./account/Main";
 import Plan from "./plans/Main";
-
+import Campaigns from "./marketing/components/campaigns/Campaigns.vue";
+import MailingLists from "./marketing/components/mailing-lists/MailingLists.vue";
+import Senders from "./marketing/components/senders/Senders.vue";
 export default {
   name: "Home",
   components: {
@@ -38,6 +43,9 @@ export default {
     // Marketing,
     Account,
     Plan,
+    Campaigns,
+    MailingLists,
+    Senders,
   },
   data() {
     return {

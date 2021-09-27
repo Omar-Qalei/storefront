@@ -15,7 +15,9 @@
       />
     </template>
     <template v-if="editor">
-      <editor-content :id="item.i" :editor="editor" />
+      <div class="widget-content">
+        <editor-content :id="item.i" :editor="editor" />
+      </div>
     </template>
   </div>
 </template>
@@ -109,17 +111,6 @@ export default {
       this.$emit("onPreventMove", event);
     },
   },
-  created() {
-    if (
-      this.item.i === this.getSelectedWidgetById.i &&
-      this.item.type === "text"
-    ) {
-      this.calcContainerHeightByRow();
-      this.onCheckUpdateSectionLayoutResized({
-        sectionId: this.sectionId,
-      });
-    }
-  },
   mounted() {
     this.editor = new Editor({
       extensions: [
@@ -167,16 +158,7 @@ export default {
       this.editor.commands.setContent(this.item.properties.style.json);
     }
     const thiz = this;
-    window.addEventListener("click", () => {
-      if (
-        thiz.item.i === thiz.getSelectedWidgetById.i &&
-        thiz.item.type === "text"
-      ) {
-        thiz.calcContainerHeightByRow();
-        thiz.onCheckUpdateSectionLayoutResized({
-          sectionId: thiz.sectionId,
-        });
-      }
+    window.addEventListener("mouseup", () => {
       if (thiz.item.i !== thiz.getSelectedWidgetById.i && thiz.status) {
         const webResources = JSON.stringify(thiz.getWebResources);
         const mobileResources = JSON.stringify(thiz.getMobileResources);
@@ -211,42 +193,18 @@ export default {
       if (thiz.item.i === thiz.getSelectedWidgetById.i) thiz.status = true;
       else thiz.status = false;
     });
-    window.addEventListener("mouseup", () => {
+    // else thiz.status = false;
+    window.addEventListener("keyup", () => {
       if (
-        thiz.item.i === thiz.getSelectedWidgetById.i &&
-        thiz.item.type === "text"
+        this.item.i === this.getSelectedWidgetById.i &&
+        this.item.type === "text"
       ) {
-        thiz.calcContainerHeightByRow();
-        thiz.onCheckUpdateSectionLayoutResized({
-          sectionId: thiz.sectionId,
+        this.calcContainerHeightByRow();
+        this.onCheckUpdateSectionLayoutResized({
+          sectionId: this.sectionId,
         });
       }
     });
-    window.addEventListener("keyup", (event) => {
-      if (event.code !== "Backspace" || event.code !== "Delete")
-        if (
-          thiz.item.i === thiz.getSelectedWidgetById.i &&
-          thiz.item.type === "text"
-        ) {
-          thiz.calcContainerHeightByRow();
-          thiz.onCheckUpdateSectionLayoutResized({
-            sectionId: thiz.sectionId,
-          });
-        }
-    });
-    window.addEventListener("keydown", (event) => {
-      if (event.code !== "Backspace" || event.code !== "Delete")
-        if (
-          thiz.item.i === thiz.getSelectedWidgetById.i &&
-          thiz.item.type === "text"
-        ) {
-          thiz.calcContainerHeightByRow();
-          thiz.onCheckUpdateSectionLayoutResized({
-            sectionId: thiz.sectionId,
-          });
-        }
-    });
-    // else thiz.status = false;
   },
   updated() {
     if (
@@ -287,5 +245,10 @@ export default {
 }
 .d-flex {
   display: flex;
+}
+.widget-content {
+  contain: content;
+  content-visibility: auto;
+  height: 100%;
 }
 </style>

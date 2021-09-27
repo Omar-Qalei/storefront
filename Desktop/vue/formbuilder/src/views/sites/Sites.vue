@@ -32,75 +32,166 @@
           </v-card>
           <v-row class="my-4">
             <v-col v-for="(item, index) in websites" :key="index">
-              <v-card class="mx-auto" max-width="344">
-                <v-img
-                  src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-                  height="200px"
-                ></v-img>
+              <div class="mx-auto">
+                <v-card
+                  class="mb-10"
+                  max-width="344"
+                  height="193"
+                  @mouseover="showSettings = item.id"
+                  @mouseleave="showSettings = null"
+                >
+                  <v-row class="position-absolute three-dots">
+                    <v-col>
+                      <v-icon
+                        :color="showSettings === item.id ? 'red' : ''"
+                        x-small
+                      >
+                        {{
+                          showSettings === item.id
+                            ? "mdi-circle"
+                            : "mdi-circle-outline"
+                        }}
+                      </v-icon>
+                      <v-icon
+                        :color="showSettings === item.id ? 'yellow' : ''"
+                        x-small
+                      >
+                        {{
+                          showSettings === item.id
+                            ? "mdi-circle"
+                            : "mdi-circle-outline"
+                        }}
+                      </v-icon>
+                      <v-icon
+                        :color="showSettings === item.id ? 'green' : ''"
+                        x-small
+                      >
+                        {{
+                          showSettings === item.id
+                            ? "mdi-circle"
+                            : "mdi-circle-outline"
+                        }}
+                      </v-icon>
+                    </v-col>
+                  </v-row>
+                  <v-img
+                    height="100%"
+                    src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+                  >
+                    <v-fade-transition>
+                      <v-row
+                        v-show="showSettings === item.id"
+                        class="position-absolute h-100 show-settings"
+                      >
+                        <v-col class="text-end" cols="12">
+                          <v-menu
+                            bottom
+                            origin="center center"
+                            transition="scale-transition"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn dark icon v-bind="attrs" v-on="on">
+                                <v-icon>mdi-cog-outline</v-icon>
+                              </v-btn>
+                            </template>
 
-                <v-card-title>
-                  {{ item.name }}
-                </v-card-title>
+                            <v-list>
+                              <v-list-item @click="removeSite(item.id)" link>
+                                <v-list-item-title>Delete</v-list-item-title>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                        </v-col>
+                        <v-col class="text-center" cols="12">
+                          <div>
+                            <v-btn
+                              class="text-capitalize"
+                              light
+                              :to="{
+                                path: 'formBuilder',
+                                query: { siteId: item.id },
+                              }"
+                              >Edit Website</v-btn
+                            >
+                          </div>
+                          <div class="mt-4">
+                            <v-btn class="text-capitalize" light
+                              >Settings</v-btn
+                            >
+                          </div>
+                        </v-col>
+                      </v-row>
+                    </v-fade-transition>
+                  </v-img>
 
-                <v-card-subtitle>
-                  {{ item.domain }}
-                </v-card-subtitle>
-
-                <v-card-actions>
+                  <!-- <v-card-actions>
                   <v-btn
                     color="orange lighten-2"
                     text
-                    :to="{ path: 'formBuilder', query: { siteId: item.id } }"
+                    
                   >
                     Explore
                   </v-btn>
                   <v-btn
                     color="red lighten-2"
                     text
-                    @click="removeSite(item.id)"
+                    
                   >
                     Remove
                   </v-btn>
-
-                  <v-spacer></v-spacer>
-
-                  <v-btn icon @click="show = !show">
-                    <v-icon>{{
-                      show ? "mdi-chevron-up" : "mdi-chevron-down"
-                    }}</v-icon>
-                  </v-btn>
-                </v-card-actions>
-
-                <v-expand-transition>
-                  <div v-show="show">
-                    <v-divider></v-divider>
-
-                    <v-card-text>
-                      I'm a thing. But, like most politicians, he promised more
-                      than he could deliver. You won't have time for sleeping,
-                      soldier, not with all the bed making you'll be doing. Then
-                      we'll go with that data file! Hey, you add a one and two
-                      zeros to that or we walk! You're going to do his laundry?
-                      I've got to find a way to escape.
-                    </v-card-text>
-                  </div>
-                </v-expand-transition>
-              </v-card>
+                </v-card-actions> -->
+                </v-card>
+                <p class="name-webiste">{{ item.name }}</p>
+                <p class="domain-website">{{ item.domain }}</p>
+              </div>
             </v-col>
           </v-row>
         </v-tab-item>
         <v-tab-item>
           <v-card flat>
-            <!-- <v-card-text v-text="text"></v-card-text> -->
             Test2
           </v-card>
         </v-tab-item>
+
+        <!-- Tempaltes -->
         <v-tab-item>
-          <v-card flat>
-            <!-- <v-card-text v-text="text"></v-card-text> -->
-            Test3
+          <v-card class="pa-4" flat>
+            <div>
+              <h2>What kind of websites will you be building?</h2>
+              <p class="template">
+                Pick the option that best applies to the purpose of your
+                websites. You'll be able to edit the contents later.
+              </p>
+              <v-tabs
+                light
+                next-icon="mdi-arrow-right-bold-box-outline"
+                prev-icon="mdi-arrow-left-bold-box-outline"
+                show-arrows
+                v-model="selectedChooseTemplateTab"
+              >
+                <v-tabs-slider></v-tabs-slider>
+                <v-tab
+                  v-for="(item, index) of chooseTemplateTabs"
+                  :key="index"
+                  :href="'#tab-' + index"
+                >
+                  {{ item }}
+                </v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="selectedChooseTemplateTab">
+                <v-tab-item
+                  v-for="(item, index) of chooseTemplateTabs"
+                  :key="index"
+                >
+                  <v-card flat>
+                    <v-card-text v-text="item"></v-card-text>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs-items>
+            </div>
           </v-card>
         </v-tab-item>
+        <!-- Tempaltes -->
       </v-tabs-items>
     </v-card>
 
@@ -169,6 +260,9 @@ export default {
       siteName: null,
       domainName: null,
       siteId: null,
+      chooseTemplateTabs: ["General", "Commerce", "Announcements", "Saved"],
+      selectedChooseTemplateTab: null,
+      showSettings: 0,
     };
   },
   methods: {
@@ -226,4 +320,32 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+p.template {
+  line-height: 30px;
+  color: #70767c;
+  margin-bottom: 30px;
+}
+.name-webiste {
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+.domain-website {
+  color: #9da3a9;
+  font-size: 16px;
+}
+.show-settings {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.three-dots {
+  top: -10px !important;
+  max-height: 40px;
+  position: relative;
+}
+</style>

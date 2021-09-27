@@ -57,10 +57,25 @@ const routes = [
     component: () => import(/* webpackChunkName: "register" */ '../views/authentication/Register.vue'),
   },
   {
-    path: '/marketing',
-    name: 'Marketing',
-    component: () => import(/* webpackChunkName: "marketing" */ '../views/marketing/Main.vue'),
+    path: '/marketing/compose',
+    name: 'Compose',
+    component: () => import(/* webpackChunkName: "compose" */ '../views/marketing/components/compose/Compose.vue'),
   },
+  // {
+  //   path: '/marketing/campaigns',
+  //   name: 'Campaigns',
+  //   component: () => import(/* webpackChunkName: "campaigns" */ '../views/marketing/components/campaigns/Campaigns.vue'),
+  // },
+  // {
+  //   path: '/marketing/mail-lists',
+  //   name: 'MailingLists',
+  //   component: () => import(/* webpackChunkName: "mail-lists" */ '../views/marketing/components/mailing-lists/MailingLists.vue'),
+  // },
+  // {
+  //   path: '/marketing/senders',
+  //   name: 'Senders',
+  //   component: () => import(/* webpackChunkName: "senders" */ '../views/marketing/components/senders/Senders.vue'),
+  // },
 ]
 
 const router = new VueRouter({

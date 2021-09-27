@@ -1,16 +1,20 @@
 <template>
   <!-- <div class="navbar"> -->
-  <v-app-bar color="white" dense clipped-right clipped-left dark>
-    <a class="logo mr-6">
+  <v-app-bar app color="white" dense clipped-right clipped-left dark>
+    <!-- <a class="logo mr-6">
       Wimmly
     </a>
-    <!-- <div class="separator"></div> -->
-    <!-- <a class="pages ml-2" @click="onDrawerPages">
+    <div class="separator"></div>
+    <a class="pages ml-2" @click="onDrawerPages">
       Pages: <b class="ml-1">{{ title }}</b>
     </a> -->
     <div class="spacer"></div>
     <div class="settings d-flex">
-      <v-btn @click="onSave()" color="primary" v-show="!getRedoStatus" text
+      <v-btn
+        @click="onSaveHistoryLayout({ siteId: siteId, pageId: pageId })"
+        color="primary"
+        v-show="!getRedoStatus"
+        text
         >Save</v-btn
       >
       <v-chip
@@ -78,6 +82,21 @@
       <v-btn icon small color="primary" @click.stop="onDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        text
+        :to="{ name: 'Preview', query: { siteId: siteId } }"
+        >Preview</v-btn
+      >
+      <v-btn
+        class="text-capitalize font-weight-light fs-14"
+        color="primary"
+        dark
+        x-large
+      >
+        Publish Website
+      </v-btn>
     </div>
   </v-app-bar>
   <!-- </div> -->
@@ -85,7 +104,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { SiteService } from "../../services/site/site";
 
 export default {
   name: "Navbar",
@@ -107,6 +125,7 @@ export default {
       "onSelectedWidgetById",
       "onUndoPage",
       "onRedoPage",
+      "onSaveHistoryLayout",
     ]),
     getQueryStringParams: function() {
       if (this.$route.query.siteId) {
@@ -115,32 +134,6 @@ export default {
       if (this.$route.query.pageId) {
         this.pageId = +this.$route.query.pageId;
       }
-    },
-    onSave: function() {
-      SiteService.addSitePageResourceWeb(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(this.getWebResources)
-      )
-        .then((result) => {
-          console.log("Web Settings posted", result);
-          // this.onHistoryPages(this.getWebResources);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      SiteService.addSitePageResourceMobile(
-        this.siteId,
-        this.pageId,
-        JSON.stringify(this.getMobileResources)
-      )
-        .then((result) => {
-          console.log("Mobile Settings posted", result);
-          // this.onMobileHistoryPage(this.getMobileResources);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
   },
   computed: {

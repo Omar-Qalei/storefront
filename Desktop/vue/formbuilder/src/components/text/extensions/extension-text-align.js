@@ -23,7 +23,7 @@ const TextAlign = core.Extension.create({
                                 return {};
                             }
                             return {
-                                style: `text-align:${attributes.textAlign};`,
+                                style: `text-align:${attributes.textAlign}`,
                             };
                         },
                     },

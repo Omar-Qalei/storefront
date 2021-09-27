@@ -5,56 +5,58 @@
       :item="item"
       :sectionId="sectionId"
     ></SettingsWidget>
-    <form :style="formStyle" :id="item.i">
-      <h2
-        class="h5 font-weight-medium mb-2"
-        v-show="item.properties.hideFormName"
-      >
-        {{ item.properties.name }}
-      </h2>
-      <template v-if="item.properties.fields.length > 0">
-        <v-text-field
-          class="mt-2"
-          v-for="(field, index) in item.properties.fields"
-          :key="index"
-          v-model="name"
-          :error-messages="nameErrors"
-          :label="field.label"
-          :placeholder="field.placeholder"
-          :required="field.isRequired"
-          @input="$v.name.$touch()"
-          @blur="$v.name.$touch()"
-          :style="fieldStyle"
-          hide-details
-          outlined
-        ></v-text-field>
-      </template>
-      <template v-else>
-        <v-text-field
-          class="mt-4"
-          v-for="(field, index) in fields"
-          :key="index + 'disabled'"
-          v-model="name"
-          :error-messages="nameErrors"
-          :label="field.label"
-          :disabled="true"
-          hide-details
-          :placeholder="field.placeholder"
-          :required="field.isRequired"
-          @input="$v.name.$touch()"
-          @blur="$v.name.$touch()"
-          :style="fieldStyle"
-          outlined
-        ></v-text-field>
-      </template>
-      <v-btn class="mr-4 mt-4" @click="submit" :style="buttonStyle">
-        {{
-          item.properties.submitBtnName
-            ? item.properties.submitBtnName
-            : "Submit"
-        }}
-      </v-btn>
-    </form>
+    <div class="widget-content">
+      <form :style="formStyle" :id="item.i">
+        <h2
+          class="h5 font-weight-medium mb-2"
+          v-show="item.properties.hideFormName"
+        >
+          {{ item.properties.name }}
+        </h2>
+        <template v-if="item.properties.fields.length > 0">
+          <v-text-field
+            class="mt-2"
+            v-for="(field, index) in item.properties.fields"
+            :key="index"
+            v-model="name"
+            :error-messages="nameErrors"
+            :label="field.label"
+            :placeholder="field.placeholder"
+            :required="field.isRequired"
+            @input="$v.name.$touch()"
+            @blur="$v.name.$touch()"
+            :style="fieldStyle"
+            hide-details
+            outlined
+          ></v-text-field>
+        </template>
+        <template v-else>
+          <v-text-field
+            class="mt-4"
+            v-for="(field, index) in fields"
+            :key="index + 'disabled'"
+            v-model="name"
+            :error-messages="nameErrors"
+            :label="field.label"
+            :disabled="true"
+            hide-details
+            :placeholder="field.placeholder"
+            :required="field.isRequired"
+            @input="$v.name.$touch()"
+            @blur="$v.name.$touch()"
+            :style="fieldStyle"
+            outlined
+          ></v-text-field>
+        </template>
+        <v-btn class="mr-4 mt-4" @click="submit" :style="buttonStyle">
+          {{
+            item.properties.submitBtnName
+              ? item.properties.submitBtnName
+              : "Submit"
+          }}
+        </v-btn>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -292,6 +294,11 @@ form {
 }
 .widget .v-btn ::v-deep.v-btn__content {
   align-items: inherit;
+  height: 100%;
+}
+.widget-content {
+  contain: content;
+  content-visibility: auto;
   height: 100%;
 }
 </style>

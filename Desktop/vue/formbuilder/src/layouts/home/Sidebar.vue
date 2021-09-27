@@ -52,11 +52,23 @@
                   </v-list-item-content>
                 </template>
 
-                <template>
+                <template v-for="child in item.submenu">
                   <v-list-item
-                    v-for="child in item.submenu"
+                    v-if="child.newPage"
                     :key="child.title"
-                    :to="item.url"
+                    :to="`${item.url}/${child.url}`"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title
+                        class="silver-blue-text"
+                        v-text="child.text"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item
+                    v-if="!child.newPage"
+                    :key="child.title"
+                    @click="goToPath(child.url)"
                   >
                     <v-list-item-content>
                       <v-list-item-title
@@ -66,7 +78,6 @@
                     </v-list-item-content>
                   </v-list-item>
                 </template>
-                <template> </template>
               </v-list-group>
             </template>
           </v-list-item-group>
@@ -109,10 +120,10 @@ export default {
           icon: "mdi-shopping-outline",
           url: "marketing",
           submenu: [
-            { text: "Compose", url: "compose" },
-            { text: "Campaigns", url: "campaigns" },
-            { text: "Mailing Lists", url: "mailingLists" },
-            { text: "Sender", url: "sender" },
+            { text: "Compose", newPage: true, url: "compose" },
+            { text: "Campaigns", newPage: false, url: "campaigns" },
+            { text: "Mailing Lists", newPage: false, url: "mailingLists" },
+            { text: "Senders", newPage: false, url: "senders" },
           ],
         },
       ],
